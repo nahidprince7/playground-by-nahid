@@ -65,4 +65,9 @@ bring their own styling (Tailwind CDN for DevOps, Canvas 2D for Fish Brain).
 
 ---
 
-**Playground by Nahid** · [github.com/nahidprince7](https://github.com/nahidprince7)
+**Playground by Nahid**
+
+[GitHub](https://github.com/nahidprince7) ·
+[YouTube](https://www.youtube.com/@devAI070) ·
+[LinkedIn](https://www.linkedin.com/in/iammdnahidhasan/) ·
+[Facebook](https://www.facebook.com/search/top?q=dev%20ai)
