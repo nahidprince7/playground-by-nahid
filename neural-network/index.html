@@ -34,10 +34,13 @@
           "Noto Sans Bengali", "Hind Siliguri", sans-serif;
     -webkit-font-smoothing: antialiased;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
   }
 
   .app {
-    height: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
     display: grid;
     grid-template-columns: minmax(0, 1fr) 336px;
     grid-template-rows: auto minmax(0, 1fr);
@@ -360,6 +363,42 @@
 </style>
 </head>
 <body>
+
+<!-- ===================== Playground chrome (shared with the hub) ===================== -->
+<style>
+  .pg-bar,.pg-foot,.pg-bar *,.pg-foot *{box-sizing:border-box;}
+  .pg-bar{position:relative;z-index:40;flex:0 0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;height:54px;padding:0 20px;background:#070d15;border-bottom:1px solid #1b2c44;color:#eaf1fb;font-family:"Space Grotesk","Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;}
+  .pg-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#eaf1fb;}
+  .pg-mono{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-weight:700;font-size:16px;color:#fff;background:linear-gradient(140deg,#7c9cff,#a78bfa);box-shadow:0 6px 18px -6px rgba(124,156,255,.53);}
+  .pg-wm{display:flex;flex-direction:column;line-height:1.05;}
+  .pg-name{font-weight:600;font-size:15px;letter-spacing:-.01em;}
+  .pg-by{font-size:10.5px;color:#61748f;font-weight:500;}
+  .pg-right{display:flex;align-items:center;gap:8px;}
+  .pg-back{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#9db0c9;font-size:13px;font-weight:600;padding:8px 12px;border-radius:9px;border:1px solid #1b2c44;background:#ffffff06;transition:all .2s;}
+  .pg-back:hover{color:#fff;background:#ffffff0f;border-color:#2b3f5e;}
+  .pg-soc{width:34px;height:34px;border-radius:9px;display:inline-grid;place-items:center;color:#9db0c9;border:1px solid #1b2c44;background:#ffffff06;text-decoration:none;transition:all .2s;}
+  .pg-soc svg{width:16px;height:16px;fill:currentColor;}
+  .pg-soc:hover{color:#fff;transform:translateY(-1px);}
+  .pg-soc.yt:hover{color:#ff5c5c;border-color:rgba(255,59,59,.4);}
+  .pg-soc.li:hover{color:#4c9be8;border-color:rgba(10,102,194,.4);}
+  .pg-soc.fb:hover{color:#5a9cf5;border-color:rgba(24,119,242,.4);}
+  .pg-foot{flex:0 0 auto;border-top:1px solid #1b2c44;padding:20px;display:flex;flex-direction:column;align-items:center;gap:11px;background:#070d15;color:#9db0c9;text-align:center;font-family:"Space Grotesk","Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;}
+  .pg-foot-top{display:flex;align-items:center;gap:10px;font-size:13.5px;}
+  .pg-socs{display:flex;gap:8px;}
+  .pg-copy{color:#61748f;font-size:12.5px;}
+  @media (max-width:560px){ .pg-back{display:none;} .pg-bar{padding:0 14px;} }
+</style>
+
+<div class="pg-bar">
+  <a class="pg-brand" href="../index.html" aria-label="Playground by Nahid — home">
+    <span class="pg-mono">N</span>
+    <span class="pg-wm"><span class="pg-name">Playground</span><span class="pg-by">by Nahid</span></span>
+  </a>
+  <div class="pg-right">
+    <a class="pg-back" href="../index.html#projects">← All projects</a>
+    <a class="pg-soc gh" href="https://github.com/nahidprince7" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.75.4-1.27.73-1.56-2.56-.29-5.26-1.28-5.26-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.41-5.28 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg></a>
+  </div>
+</div>
 
 <div class="app">
 
@@ -1235,5 +1274,21 @@
   requestAnimationFrame(frame);
 })();
 </script>
+
+<!-- ===================== Playground chrome: footer ===================== -->
+<div class="pg-foot">
+  <div class="pg-foot-top">
+    <span class="pg-mono" style="width:28px;height:28px;font-size:14px;">N</span>
+    <span><strong style="color:#eaf1fb;">Playground by Nahid</strong> — interactive learning, made to play.</span>
+  </div>
+  <div class="pg-socs">
+    <a class="pg-soc gh" href="https://github.com/nahidprince7" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.75.4-1.27.73-1.56-2.56-.29-5.26-1.28-5.26-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.41-5.28 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg></a>
+    <a class="pg-soc yt" href="https://www.youtube.com/@devAI070" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.11-2.13C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.57A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.13C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.57a3 3 0 0 0 2.11-2.13A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.2 3.6-6.2 3.6Z"/></svg></a>
+    <a class="pg-soc li" href="https://www.linkedin.com/in/iammdnahidhasan/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg></a>
+    <a class="pg-soc fb" href="https://www.facebook.com/search/top?q=dev%20ai" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a>
+  </div>
+  <div class="pg-copy">© 2026 Playground by Nahid · Made with curiosity.</div>
+</div>
+
 </body>
 </html>
