@@ -1,0 +1,15 @@
+# Editor / IDE
+.idea/
+.vscode/
+*.iml
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Logs / runtime
+*.log
+plays.log
+
+# Dependencies (none needed, but just in case)
+node_modules/

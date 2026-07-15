@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta property="og:title" content="Are You DevOps?">
+    <meta property="og:description" content="System Design Simulation Game">
+    <meta property="og:image" content="https://devops-challange.devadda.site/preview.png">
+    <meta property="og:url" content="https://devops-challange.devadda.site/">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <title>DevOps Challenge</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        /* Connection Pipe Animation */
+        @keyframes flow {
+            to {
+                stroke-dashoffset: -20;
+            }
+        }
+        .connection-line {
+            stroke-dasharray: 6, 4;
+            animation: flow 1s linear infinite;
+        }
+        .connection-line-fast {
+            stroke-dasharray: 6, 4;
+            animation: flow 0.4s linear infinite;
+        }
+        .connection-line-static {
+            stroke-dasharray: none;
+        }
+        /* Pulse Animation */
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(16, 185, 129, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(16, 185, 129, 0.6); }
+        }
+        .active-node {
+            animation: pulse-glow 2s infinite;
+        }
+        /* Floating particles */
+        .particle {
+            pointer-events: none;
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #38bdf8;
+            filter: drop-shadow(0 0 2px #38bdf8);
+            transform: translate(-50%, -50%);
+            z-index: 30;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen overflow-x-hidden flex flex-col selection:bg-indigo-500 selection:text-white">
+
+    <!-- TOP HEADER BAR -->
+    <header class="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50 px-4 py-3">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 text-white p-2 rounded-xl shadow-lg shadow-indigo-500/20">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-slate-200 to-indigo-400">Are You DevOps ? </h1>
+                    <p class="text-xs text-slate-400 font-medium">System Design Simulation</p>
+                </div>
+            </div>
+
+            <!-- SIMULATOR STATE SUMMARY -->
+            <div class="flex flex-wrap items-center gap-4 md:gap-6 bg-slate-950/60 py-2 px-4 rounded-xl border border-slate-800">
+                <div class="text-center">
+                    <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Uptime</p>
+                    <p id="stat-uptime" class="text-sm font-bold code-font text-emerald-400">100.0%</p>
+                </div>
+                <div class="h-8 w-px bg-slate-800"></div>
+                <div class="text-center">
+                    <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Users / req/s</p>
+                    <p id="stat-traffic" class="text-sm font-bold code-font text-sky-400">0 /s</p>
+                </div>
+                <div class="h-8 w-px bg-slate-800"></div>
+                <div class="text-center">
+                    <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Avg Latency</p>
+                    <p id="stat-latency" class="text-sm font-bold code-font text-purple-400">45ms</p>
+                </div>
+                <div class="h-8 w-px bg-slate-800"></div>
+                <div class="text-center">
+                    <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Balance</p>
+                    <p id="stat-budget" class="text-sm font-bold code-font text-amber-400">$2,000</p>
+                </div>
+                <div class="h-8 w-px bg-slate-800"></div>
+                <div class="text-center">
+                    <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Ops Cost</p>
+                    <p id="stat-cost" class="text-sm font-bold code-font text-rose-400">-$0/s</p>
+                </div>
+            </div>
+
+            <!-- PLAYERS ONLINE & BUTTONS -->
+            <div class="flex items-center gap-2">
+                <div id="players-online" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300" title="Online Players">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span id="players-online-count" class="text-xs font-bold code-font text-emerald-400">1</span>
+                    <span class="text-[10px] text-slate-400 font-medium">online</span>
+                </div>
+                <button id="btn-sound" class="p-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 transition text-slate-300" title="Toggle Sound">
+                    <svg id="icon-sound-on" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+                    </svg>
+                    <svg id="icon-sound-off" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zm10.122-4.121l4.242 4.242m0-4.242l-4.242 4.242"></path>
+                    </svg>
+                </button>
+                <button id="btn-wiki" class="flex items-center gap-1.5 px-3 py-2 text-xs font-semibold rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 transition text-slate-300">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                    Architecture Wiki
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN BODY SECTION -->
+    <main class="flex-grow max-w-7xl mx-auto w-full p-4 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- LEFT PANEL: LEVEL SELECTION, SYSTEM CONTROLS, TERMINAL DIAGNOSTICS -->
+        <section class="lg:col-span-4 flex flex-col gap-5 h-full">
+            
+            <!-- LEVEL SELECTOR & CAMPAIGN BOARD -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
+                <div class="flex items-center justify-between mb-3">
+                    <h2 class="font-extrabold text-sm text-slate-200 tracking-wide uppercase flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-indigo-500 animate-ping"></span>
+                        Simulation Stage
+                    </h2>
+                    <span id="level-badge" class="px-2 py-0.5 bg-indigo-950 text-indigo-400 border border-indigo-800 rounded text-[10px] font-bold">STAGE 1</span>
+                </div>
+                
+                <h3 id="level-title" class="text-lg font-bold text-white mb-1">The Reddit Rush</h3>
+                <p id="level-desc" class="text-xs text-slate-400 leading-relaxed mb-4">Your simple blog was posted on Reddit! Upgrade compute capabilities and keep the server from melting under 200 req/s.</p>
+                
+                <div class="border-t border-slate-800/80 pt-3">
+                    <div class="flex justify-between items-center text-xs mb-1.5">
+                        <span class="text-slate-400 font-medium">Scenario Goal:</span>
+                        <span id="level-goal" class="font-bold text-slate-200">Survive 45 seconds at 95% uptime</span>
+                    </div>
+                    <div class="w-full bg-slate-950 rounded-full h-2 overflow-hidden border border-slate-800">
+                        <div id="level-progress-bar" class="bg-gradient-to-r from-indigo-500 to-emerald-500 h-full w-0 transition-all duration-300"></div>
+                    </div>
+                    <div class="flex justify-between text-[10px] text-slate-500 mt-1 font-semibold">
+                        <span id="level-time-left">0s elapsed</span>
+                        <span id="level-target-time">Goal: 45s</span>
+                    </div>
+                </div>
+
+                <!-- CONTROLS PLAY / PAUSE / RESTART -->
+                <div class="grid grid-cols-3 gap-2 mt-4">
+                    <button id="btn-play" class="flex items-center justify-center gap-1 py-2 px-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold transition shadow-lg shadow-emerald-600/10">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                        Run
+                    </button>
+                    <button id="btn-pause" class="flex items-center justify-center gap-1 py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition border border-slate-700">
+                        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        Pause
+                    </button>
+                    <button id="btn-restart" class="flex items-center justify-center gap-1 py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-bold transition border border-slate-700">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 15H19M9 5a9 9 0 0112.423-1.077L21 9"></path>
+                        </svg>
+                        Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- LEVEL COMPLIANCE CHECKLIST (Real-time Checklist for System Design) -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 shadow-xl">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">Architectural Requirements</h3>
+                <div class="space-y-2.5" id="objective-list">
+                    <!-- Dynamic Checklist -->
+                </div>
+            </div>
+
+            <!-- LIVE DIAGNOSTIC MONITOR / SENIOR ADVISOR CONSOLE -->
+            <div class="bg-slate-950 border border-slate-800 rounded-2xl p-4 flex-grow flex flex-col min-h-[180px] shadow-xl relative overflow-hidden">
+                <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-indigo-950/10 via-transparent to-transparent pointer-events-none"></div>
+                <div class="flex items-center gap-2 pb-2 mb-2 border-b border-slate-800">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <h3 class="text-xs font-bold tracking-wider uppercase text-slate-400 code-font">Senior Architect Log</h3>
+                </div>
+                <div id="diagnostics-logs" class="flex-grow overflow-y-auto space-y-2 text-xs code-font max-h-[160px] pr-1">
+                    <div class="text-cyan-400">[SYSTEM] Reverting back to standard visual environment. Monitoring active state.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CENTER & RIGHT PANEL: VIRTUAL SYSTEM CANVASES & TOPOLOGY BOARD -->
+        <section class="lg:col-span-8 flex flex-col gap-6">
+            
+            <!-- THE INTERACTIVE TOPOLOGY PIPELINE BOARD -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl relative min-h-[460px] flex flex-col justify-between overflow-hidden">
+                
+                <!-- Background grid design pattern -->
+                <div class="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_50%,#000_70%,transparent_100%)] opacity-25"></div>
+
+                <div class="relative z-10 flex items-center justify-between mb-4 border-b border-slate-800/80 pb-3">
+                    <div>
+                        <h2 class="text-md font-bold text-white flex items-center gap-2">
+                            Deployment Architecture Blueprint
+                        </h2>
+                        <p class="text-xs text-slate-400">Click components to deploy upgrades, scale, or configure settings.</p>
+                    </div>
+                    <div class="flex gap-2 text-xs">
+                        <span id="sandbox-badge" class="hidden px-2 py-0.5 bg-purple-950 text-purple-400 border border-purple-800 rounded font-bold">SANDBOX MODE</span>
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                            <span class="text-slate-400 font-semibold text-[10px] uppercase">Simulation Hot</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DIAGRAM CONTAINER: Contains dynamic absolute wires and layered layout nodes -->
+                <div id="canvas-container" class="relative flex flex-col items-center justify-center gap-6 py-4 flex-grow">
+                    
+                    <!-- SVG CONNECTION PATHWAYS -->
+                    <svg class="absolute inset-0 w-full h-full pointer-events-none" id="connections-svg">
+                        <path id="path-client-cdn" d="M0,0" stroke="#475569" stroke-width="2.5" fill="none" class="connection-line-static" />
+                        <path id="path-cdn-lb" d="M0,0" stroke="#475569" stroke-width="2.5" fill="none" class="connection-line-static" />
+                        <path id="path-lb-servers" d="M0,0" stroke="#475569" stroke-width="2.5" fill="none" class="connection-line-static" />
+                        <path id="path-servers-cache" d="M0,0" stroke="#475569" stroke-width="2.5" fill="none" class="connection-line-static" />
+                        <path id="path-servers-db" d="M0,0" stroke="#475569" stroke-width="2.5" fill="none" class="connection-line-static" />
+                    </svg>
+
+                    <!-- NODE LAYER 1: CLIENT USERS (SPAWN POINT) -->
+                    <div id="node-clients" class="z-20 relative bg-slate-950 border border-slate-700/80 rounded-2xl p-4 w-60 text-center shadow-lg active-node transition hover:border-sky-400 duration-300">
+                        <div class="flex items-center justify-center gap-3 mb-2">
+                            <div class="p-1.5 bg-sky-950 text-sky-400 rounded-lg">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="text-left">
+                                <h4 class="text-sm font-bold text-white leading-tight">Global Client Base</h4>
+                                <p class="text-[10px] text-slate-400">Target Request Ingress</p>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mt-2 bg-slate-900/60 p-2 rounded-lg border border-slate-800/80 text-[11px] code-font">
+                            <div class="text-left">
+                                <span class="text-slate-400 block text-[9px] uppercase tracking-wider">Spike Latency</span>
+                                <span id="client-latency-stat" class="font-bold text-slate-300">15ms</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-slate-400 block text-[9px] uppercase tracking-wider">Failure Rate</span>
+                                <span id="client-fail-stat" class="font-bold text-emerald-400">0.0%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CONNECTIONS MIDDLE LAYER CONTAINER (CDN & LOAD BALANCER) -->
+                    <div class="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-8 z-20">
+                        
+                        <!-- CDN EDGE LAYER -->
+                        <div id="node-cdn" class="bg-slate-950 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-lg relative cursor-pointer hover:border-indigo-500/80 transition duration-300 group opacity-50">
+                            <!-- Absolute Locked overlay -->
+                            <div id="cdn-lock-overlay" class="absolute inset-0 bg-slate-950/80 rounded-2xl flex flex-col items-center justify-center p-3 text-center transition duration-300 z-30">
+                                <span class="p-1.5 bg-slate-900 text-slate-400 border border-slate-800 rounded-lg mb-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                </span>
+                                <p class="text-[11px] font-bold text-slate-300 uppercase tracking-wide">Edge Content CDN</p>
+                                <button onclick="buyComponent('cdn')" class="mt-2 text-[10px] font-extrabold bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded transition">Deploy - $500</button>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                <div class="p-2 bg-indigo-950 text-indigo-400 rounded-xl group-hover:scale-110 transition duration-300">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 002 2h1.5a3 3 0 013 3V16.5a1.5 1.5 0 00-3 0V15a2 2 0 00-2-2h-1.5a2 2 0 01-2-2v-1a2 2 0 00-2-2H9a2 2 0 01-2-2v-.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white flex items-center gap-1.5">CDN Cache <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span></h4>
+                                    <p class="text-[10px] text-slate-400">Absorbs static file assets (40% load reduction)</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-900 grid grid-cols-2 gap-2 text-[10px] code-font">
+                                <div>
+                                    <span class="text-slate-500 block uppercase tracking-wider">Hit Ratio</span>
+                                    <span class="font-bold text-indigo-400">85%</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-500 block uppercase tracking-wider">Edge Locations</span>
+                                    <span class="font-bold text-slate-300">32 Points</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- LOAD BALANCER LAYER -->
+                        <div id="node-lb" class="bg-slate-950 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-lg relative cursor-pointer hover:border-pink-500/80 transition duration-300 group opacity-50">
+                            <!-- Absolute Locked overlay -->
+                            <div id="lb-lock-overlay" class="absolute inset-0 bg-slate-950/80 rounded-2xl flex flex-col items-center justify-center p-3 text-center transition duration-300 z-30">
+                                <span class="p-1.5 bg-slate-900 text-slate-400 border border-slate-800 rounded-lg mb-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                </span>
+                                <p class="text-[11px] font-bold text-slate-300 uppercase tracking-wide">NGINX Load Balancer</p>
+                                <button onclick="buyComponent('lb')" class="mt-2 text-[10px] font-extrabold bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded transition">Deploy - $300</button>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                <div class="p-2 bg-pink-950/60 text-pink-400 rounded-xl group-hover:scale-110 transition duration-300">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white flex items-center gap-1.5">Load Balancer <span id="lb-status-dot" class="w-2 h-2 rounded-full bg-emerald-500"></span></h4>
+                                    <p class="text-[10px] text-slate-400">Routes incoming requests evenly</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-900 grid grid-cols-2 gap-2 text-[10px] code-font">
+                                <div>
+                                    <span class="text-slate-500 block uppercase tracking-wider">Algorithm</span>
+                                    <span id="lb-algo-stat" class="font-bold text-pink-400">Round Robin</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-500 block uppercase tracking-wider">Active Routes</span>
+                                    <span id="lb-routes-stat" class="font-bold text-slate-300">1 Server</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- COMPUTE WEBSERVERS FARM LAYER -->
+                    <div id="node-servers" class="z-20 relative bg-slate-950 border border-slate-700/80 rounded-2xl p-4 w-full max-w-2xl shadow-lg transition duration-300">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4 pb-3 border-b border-slate-800">
+                            <div class="flex items-center gap-3">
+                                <div class="p-2 bg-emerald-950 text-emerald-400 rounded-xl">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14M5 12a2 2 0 012-2h10a2 2 0 012 2m-14 0a2 2 0 002 2h10a2 2 0 002-2M7 4h10a2 2 0 012 2v1a2 2 0 01-2 2H7a2 2 0 01-2-2V6a2 2 0 012-2zM7 14h10a2 2 0 012 2v1a2 2 0 01-2 2H7a2 2 0 01-2-2v-1a2 2 0 012-2z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white flex items-center gap-1.5">Auto-Scaling Web Servers</h4>
+                                    <p class="text-[10px] text-slate-400">Node cluster executing backend request handling</p>
+                                </div>
+                            </div>
+                            
+                            <!-- HORIZONTAL AND VERTICAL SCALE CONTROLS -->
+                            <div class="flex flex-wrap items-center gap-2">
+                                <button onclick="addHorizontalServer()" class="px-2.5 py-1 text-[10px] font-extrabold bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded transition text-emerald-400 flex items-center gap-1">
+                                    <span class="text-xs">+</span> Server (+$200)
+                                </button>
+                                <button onclick="upgradeVerticalServer()" class="px-2.5 py-1 text-[10px] font-extrabold bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded transition text-indigo-400 flex items-center gap-1">
+                                    <span>⚡</span> Vert Upgrade (+$250)
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- SERVERS LIST & LOAD VISUALIZER -->
+                        <div id="servers-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                            <!-- Dynamic Servers Rendered via JS -->
+                        </div>
+                    </div>
+
+                    <!-- CACHE & DATABASE LAYER (DATA PERSISTENCE) -->
+                    <div class="w-full max-w-2xl grid grid-cols-1 md:grid-cols-2 gap-8 z-20">
+                        
+                        <!-- REDIS CACHE STORAGE -->
+                        <div id="node-cache" class="bg-slate-950 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between shadow-lg relative cursor-pointer hover:border-sky-500/80 transition duration-300 group opacity-50">
+                            <!-- Absolute Locked overlay -->
+                            <div id="cache-lock-overlay" class="absolute inset-0 bg-slate-950/80 rounded-2xl flex flex-col items-center justify-center p-3 text-center transition duration-300 z-30">
+                                <span class="p-1.5 bg-slate-900 text-slate-400 border border-slate-800 rounded-lg mb-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                </span>
+                                <p class="text-[11px] font-bold text-slate-300 uppercase tracking-wide">Redis In-Memory Cache</p>
+                                <button onclick="buyComponent('cache')" class="mt-2 text-[10px] font-extrabold bg-indigo-600 hover:bg-indigo-500 text-white px-2.5 py-1 rounded transition">Deploy - $400</button>
+                            </div>
+
+                            <div class="flex items-center gap-3">
+                                <div class="p-2 bg-sky-950 text-sky-400 rounded-xl group-hover:scale-110 transition duration-300">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <h4 class="text-sm font-bold text-white flex items-center gap-1.5">Redis Cache <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span></h4>
+                                    <p class="text-[10px] text-slate-400">Absorbs 80% of backend database read actions</p>
+                                </div>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-slate-900 grid grid-cols-2 gap-2 text-[10px] code-font">
+                                <div>
+                                    <span class="text-slate-500 block uppercase tracking-wider">Total Memory</span>
+                                    <span class="font-bold text-sky-400">8 GB</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-500 block uppercase tracking-wider">Hit Ratio</span>
+                                    <span class="font-bold text-slate-300">78%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PERSISTENT DATABASE SYSTEM -->
+                        <div id="node-db" class="bg-slate-950 border border-slate-700/80 rounded-2xl p-4 flex flex-col justify-between shadow-lg relative transition duration-300">
+                            <div class="flex items-center justify-between gap-3 mb-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="p-2 bg-amber-950 text-amber-500 rounded-xl">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-sm font-bold text-white">Database Cluster</h4>
+                                        <p id="db-type-subtitle" class="text-[10px] text-slate-400">Single SQLite Node</p>
+                                    </div>
+                                </div>
+                                <button onclick="upgradeDatabase()" class="px-2 py-0.5 text-[9px] font-extrabold bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded text-amber-400 flex items-center gap-1 transition">
+                                    Upgrade (+$350)
+                                </button>
+                            </div>
+
+                            <!-- Live DB usage/capacity indicator -->
+                            <div class="space-y-1.5 mt-2">
+                                <div class="flex justify-between text-[11px] code-font">
+                                    <span class="text-slate-400">Database Load:</span>
+                                    <span id="db-load-stat" class="font-bold text-emerald-400">0%</span>
+                                </div>
+                                <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden border border-slate-800">
+                                    <div id="db-load-bar" class="bg-emerald-500 h-full w-0 transition-all duration-300"></div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-3 border-t border-slate-900 grid grid-cols-2 gap-2 text-[10px] code-font">
+                                <div>
+                                    <span class="text-slate-500 block uppercase tracking-wider">Capacity limit</span>
+                                    <span id="db-cap-stat" class="font-bold text-slate-300">120 req/s</span>
+                                </div>
+                                <div>
+                                    <span class="text-slate-500 block uppercase tracking-wider">DB Scale</span>
+                                    <span id="db-tier-stat" class="font-bold text-amber-500">Tier I</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- SIMULATED TRAFFIC PATTERN CONTROLLER (Manual Sandbox Sliders) -->
+                <div id="sandbox-controls" class="hidden mt-4 pt-4 border-t border-slate-800 bg-slate-950/60 p-4 rounded-xl relative z-10">
+                    <h3 class="text-xs font-bold uppercase tracking-wider text-purple-400 mb-2">Sandbox Simulator Traffic Injector</h3>
+                    <div class="flex flex-col md:flex-row items-center gap-6">
+                        <div class="flex-grow w-full">
+                            <label class="flex justify-between text-xs text-slate-400 font-semibold mb-1">
+                                Inject Constant Traffic Pattern
+                                <span id="sandbox-slider-val" class="text-purple-400 font-bold code-font">150 req/s</span>
+                            </label>
+                            <input id="slider-traffic" type="range" min="10" max="1500" value="150" class="w-full h-1 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-purple-500">
+                        </div>
+                        <div class="flex gap-2 w-full md:w-auto">
+                            <button onclick="injectSandboxBurst(400)" class="px-3 py-1.5 text-xs font-bold bg-purple-950/40 hover:bg-purple-900/60 text-purple-300 border border-purple-800 rounded-lg transition">Inject +400 Burst</button>
+                            <button onclick="injectSandboxBurst(800)" class="px-3 py-1.5 text-xs font-bold bg-pink-950/40 hover:bg-pink-900/60 text-pink-300 border border-pink-800 rounded-lg transition">Inject +800 Storm</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- FLOATING DIAGNOSTIC WARNING MODAL / CARD FOR BOTTLENECKS (Slide In Overlay) -->
+    <div id="warning-card" class="fixed bottom-6 right-6 z-50 w-full max-w-sm bg-slate-900 border border-rose-500/50 rounded-2xl shadow-2xl p-4 shadow-rose-950/30 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="flex gap-3">
+            <div class="p-2 bg-rose-950 text-rose-400 rounded-xl h-fit">
+                <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+            </div>
+            <div>
+                <h4 id="warning-title" class="font-bold text-white text-sm">System Bottleneck!</h4>
+                <p id="warning-desc" class="text-xs text-slate-400 mt-1 leading-relaxed">Your database is crying. Add Redis Cache to filter read requests directly from RAM memory!</p>
+                <div class="mt-3 flex gap-2">
+                    <button id="warning-action-btn" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-500 transition text-[10px] font-bold text-white rounded">Solve Now</button>
+                    <button onclick="dismissWarningCard()" class="px-2 py-1 text-[10px] text-slate-400 hover:text-slate-300 transition">Dismiss</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LEVEL SUCCESS OR OVER OVERLAY MODAL -->
+    <div id="status-modal" class="fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl relative text-center">
+            
+            <div id="modal-decor-icon" class="w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-4">
+                <!-- SVG injected dynamically -->
+            </div>
+
+            <h2 id="modal-heading" class="text-2xl font-extrabold text-white mb-2">Stage Completed!</h2>
+            <p id="modal-body-text" class="text-sm text-slate-400 leading-relaxed mb-6">Excellent architect work. You successfully managed horizontal web servers under viral Reddit traffic.</p>
+            
+            <div class="bg-slate-950 border border-slate-800/80 rounded-2xl p-4 mb-6 grid grid-cols-2 gap-4 text-left code-font text-xs">
+                <div>
+                    <span class="text-slate-500 block uppercase tracking-wider text-[10px]">Peak traffic</span>
+                    <span id="modal-stat-peak" class="font-bold text-sky-400">220 req/s</span>
+                </div>
+                <div>
+                    <span class="text-slate-500 block uppercase tracking-wider text-[10px]">Final balance</span>
+                    <span id="modal-stat-budget" class="font-bold text-amber-400">$1,450</span>
+                </div>
+                <div>
+                    <span class="text-slate-500 block uppercase tracking-wider text-[10px]">Total runtime</span>
+                    <span id="modal-stat-runtime" class="font-bold text-indigo-400">45 seconds</span>
+                </div>
+                <div>
+                    <span class="text-slate-500 block uppercase tracking-wider text-[10px]">Status grade</span>
+                    <span id="modal-stat-grade" class="font-bold text-emerald-400">Rank: Senior</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button id="modal-btn-retry" class="flex-1 py-3 px-4 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-bold transition border border-slate-700 text-sm">Retry Level</button>
+                <button id="modal-btn-next" class="flex-1 py-3 px-4 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-bold transition text-sm shadow-lg shadow-indigo-600/20">Next Stage</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ARCHITECTURE WIKI SIDEBAR / SLIDE PANEL -->
+    <div id="wiki-panel" class="fixed top-0 right-0 h-full w-full max-w-md bg-slate-900 border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col justify-between">
+        <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-950/60">
+            <div class="flex items-center gap-2">
+                <svg class="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                <h3 class="font-bold text-white text-md">System Design Manual</h3>
+            </div>
+            <button id="btn-close-wiki" class="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        <div class="flex-grow p-6 overflow-y-auto space-y-6 text-sm leading-relaxed text-slate-300">
+            <div>
+                <h4 class="font-bold text-white mb-2 flex items-center gap-2">
+                    <span class="text-emerald-400">01.</span> Vertical vs Horizontal Scaling
+                </h4>
+                <p class="text-xs text-slate-400 mb-2">
+                    <strong>Vertical Scaling (Scaling Up):</strong> Adding more power (CPU, RAM) to an existing server. It has hard physical limits and represents a Single Point of Failure (SPOF).
+                </p>
+                <p class="text-xs text-slate-400">
+                    <strong>Horizontal Scaling (Scaling Out):</strong> Deploying multiple server units. Combats traffic limits perfectly but requires a Load Balancer to split the requests.
+                </p>
+            </div>
+
+            <div class="border-t border-slate-800/80 pt-4">
+                <h4 class="font-bold text-white mb-2 flex items-center gap-2">
+                    <span class="text-pink-400">02.</span> Load Balancers (LB)
+                </h4>
+                <p class="text-xs text-slate-400">
+                    An entry point proxy that forwards client requests evenly to backing application servers. Without a load balancer, even with multiple servers running, only Server 1 receives incoming packets, causing a single instance crash.
+                </p>
+            </div>
+
+            <div class="border-t border-slate-800/80 pt-4">
+                <h4 class="font-bold text-white mb-2 flex items-center gap-2">
+                    <span class="text-sky-400">03.</span> Redis In-Memory Caching
+                </h4>
+                <p class="text-xs text-slate-400">
+                    Databases read from spinning or solid-state disks, which is slow and limited in active IOPS. A cache acts as a temporary memory space (RAM) intercepting standard read commands, directly absorbing up to 80% of database load.
+                </p>
+            </div>
+
+            <div class="border-t border-slate-800/80 pt-4">
+                <h4 class="font-bold text-white mb-2 flex items-center gap-2">
+                    <span class="text-indigo-400">04.</span> CDNs (Content Delivery Networks)
+                </h4>
+                <p class="text-xs text-slate-400">
+                    Global edge servers distributing static assets (HTML, images, videos) closer to the physical users. They dramatically cut load speeds (latency) and instantly relieve backend server farms of resource requests.
+                </p>
+            </div>
+
+            <div class="border-t border-slate-800/80 pt-4">
+                <h4 class="font-bold text-white mb-2 flex items-center gap-2">
+                    <span class="text-amber-500">05.</span> Database Scaling Patterns
+                </h4>
+                <p class="text-xs text-slate-400 mb-2">
+                    <strong>SQLite:</strong> Ideal for prototyping. Local file-based, collapses immediately under multiple active read/write actions.
+                </p>
+                <p class="text-xs text-slate-400 mb-2">
+                    <strong>Master-Slave Replica Cluster:</strong> Separates read/write workloads. Writes hit the master node; reads distribute to slave copies, scaling query capacities.
+                </p>
+                <p class="text-xs text-slate-400">
+                    <strong>Sharded Database:</strong> Splits records across multiple distinct physical servers using a hash key, allowing massive enterprise scale operations.
+                </p>
+            </div>
+        </div>
+
+        <div class="p-4 bg-slate-950 border-t border-slate-800 text-center">
+            <button id="btn-close-wiki-bottom" class="w-full py-2 bg-slate-800 hover:bg-slate-700 rounded-xl font-bold transition text-xs text-white">Understand Architecture</button>
+        </div>
+    </div>
+
+    <!-- AUDIO TOGGLE / AUDIO GENERATOR SYSTEM (Web Audio API Synthesizer) -->
+    <script>
+        // WEB AUDIO CONTEXT SETUP
+        let audioCtx = null;
+        let soundEnabled = true;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function playSynth(freq, type, duration, volume) {
+            if (!soundEnabled) return;
+            try {
+                initAudio();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                osc.type = type || 'sine';
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                
+                gain.gain.setValueAtTime(volume || 0.1, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + duration);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log("Audio not supported or interaction deferred.");
+            }
+        }
+
+        // Action beep sound effects
+        function soundClick() { playSynth(600, 'sine', 0.08, 0.05); }
+        function soundUpgrade() { playSynth(880, 'triangle', 0.25, 0.08); playSynth(1320, 'triangle', 0.15, 0.05); }
+        function soundWarning() { playSynth(150, 'sawtooth', 0.3, 0.1); playSynth(180, 'sawtooth', 0.15, 0.1); }
+        function soundSuccess() { 
+            const notes = [261.63, 329.63, 392.00, 523.25];
+            notes.forEach((freq, idx) => {
+                setTimeout(() => playSynth(freq, 'sine', 0.4, 0.08), idx * 100);
+            });
+        }
+        function soundGameOver() {
+            const notes = [196.00, 164.81, 130.81];
+            notes.forEach((freq, idx) => {
+                setTimeout(() => playSynth(freq, 'sawtooth', 0.5, 0.08), idx * 180);
+            });
+        }
+    </script>
+
+    <!-- GAME ENGINE CODE -->
+    <script>
+        // STATE STORAGE
+        let currentLevelIndex = 0;
+        let isSimulating = false;
+        let tickInterval = null;
+        let simulationSecondsElapsed = 0;
+
+        // Player Stats
+        let currentBudget = 1000;
+        let totalUptimePercentage = 100.0;
+        let totalTicks = 0;
+        let successTicks = 0;
+        let currentCostPerSecond = 0;
+        let simulationTraffic = 0;
+        let currentLatency = 45;
+
+        // Upgradable Infrastructure Inventory
+        let cdnActive = false;
+        let lbActive = false;
+        let cacheActive = false;
+        
+        // App Web Servers Model
+        let appServers = [
+            { id: 1, type: 'standard', capacity: 100, activeLoad: 0, status: 'healthy', temperature: 30 }
+        ];
+        
+        // Database Model
+        let databaseTier = 'sqlite';
+        let databaseCapacity = 120;
+        let databaseLoad = 0;
+
+        // CAMPAIGN SCENARIO SPECIFICATIONS (Optimized and balanced levels)
+        const levels = [
+            {
+                title: "The Viral Tweet",
+                desc: "A major influencer tweeted about your site! Traffic is scaling to 200 req/s. Upgrade your capacity and add horizontal compute scaling before your server melts.",
+                goalText: "Survive 45 seconds with Uptime above 95%",
+                duration: 45,
+                startBudget: 1200,
+                baseTraffic: 200,
+                trafficPattern: 'spike', // simple spike profile
+                objectives: [
+                    { id: 'scale_horizontal', label: 'Deploy at least 2 Web Servers', check: () => appServers.length >= 2 },
+                    { id: 'lb_active', label: 'Deploy a Load Balancer to route traffic', check: () => lbActive },
+                    { id: 'uptime_ok', label: 'Keep Uptime above 95%', check: () => totalUptimePercentage >= 95.0 }
+                ]
+            },
+            {
+                title: "Database Read Overload",
+                desc: "You launched a community feed! Traffic is up to 350 req/s and the read-heavy nature is overwhelming the storage database. Scale compute and add memory caching.",
+                goalText: "Survive 45 seconds with average Latency under 70ms",
+                duration: 45,
+                startBudget: 1600,
+                baseTraffic: 380,
+                trafficPattern: 'heavy_read',
+                objectives: [
+                    { id: 'cache_active', label: 'Deploy a Redis Cache to handle read actions', check: () => cacheActive },
+                    { id: 'db_tier_ii', label: 'Upgrade Database to Replication or Sharded', check: () => databaseTier !== 'sqlite' },
+                    { id: 'latency_limit', label: 'Keep Latency under 70ms', check: () => currentLatency <= 70 }
+                ]
+            },
+            {
+                title: "Going Global",
+                desc: "Users globally are opening your app, but high routing latency to your main database centers is causing massive load times. Implement global CDNs and sharding.",
+                goalText: "Survive 60 seconds with total budget surplus > $200",
+                duration: 60,
+                startBudget: 2200,
+                baseTraffic: 650,
+                trafficPattern: 'sinusoidal',
+                objectives: [
+                    { id: 'cdn_active', label: 'Deploy Edge Content CDN to absorb latency', check: () => cdnActive },
+                    { id: 'sharded_db', label: 'Implement Sharded Database Cluster', check: () => databaseTier === 'sharded' },
+                    { id: 'server_count', label: 'Deploy 3 or more Web Servers', check: () => appServers.length >= 3 }
+                ]
+            },
+            {
+                title: "DDoS Under Siege",
+                desc: "A coordinated botnet is flooding your infrastructure with malicious traffic! Traffic surges erratically past 900 req/s. Deploy every defense layer — CDN, load balancer, Redis cache, and scale horizontally — or your system will be overwhelmed.",
+                goalText: "Survive 25 seconds with Uptime above 80%",
+                duration: 25,
+                startBudget: 3400,
+                baseTraffic: 700,
+                trafficPattern: 'ddos',
+                objectives: [
+                    { id: 'cdn_active', label: 'Deploy Edge CDN to absorb static abuse', check: () => cdnActive },
+                    { id: 'lb_active', label: 'Deploy Load Balancer to distribute attack load', check: () => lbActive },
+                    { id: 'cache_active', label: 'Activate Redis Cache to protect the database', check: () => cacheActive },
+                    { id: 'scale_horizontal', label: 'Deploy at least 4 Web Servers', check: () => appServers.length >= 4 },
+                    { id: 'uptime_ok', label: 'Keep Uptime above 80%', check: () => totalUptimePercentage >= 80.0 }
+                ]
+            },
+            {
+                title: "Black Friday Rush",
+                desc: "It's launch day! Traffic builds slowly at first, then ramps aggressively toward 1100 req/s as shoppers flood in. Your infrastructure must scale ahead of the curve — reactive scaling will cost you.",
+                goalText: "Survive 60 seconds with Latency under 80ms",
+                duration: 60,
+                startBudget: 3500,
+                baseTraffic: 1100,
+                trafficPattern: 'ramp',
+                objectives: [
+                    { id: 'sharded_db', label: 'Upgrade Database to Sharded Cluster', check: () => databaseTier === 'sharded' },
+                    { id: 'server_count', label: 'Deploy 5 or more Web Servers', check: () => appServers.length >= 5 },
+                    { id: 'latency_limit', label: 'Keep Latency under 80ms', check: () => currentLatency <= 80 },
+                    { id: 'uptime_ok', label: 'Keep Uptime above 92%', check: () => totalUptimePercentage >= 92.0 }
+                ]
+            },
+            {
+                title: "Budget Crisis",
+                desc: "The CFO just slashed your cloud budget! You're running hot at 800 req/s but operational costs are bleeding you dry. Optimize every layer — right-size your servers, lean on CDN and cache — and finish with a surplus.",
+                goalText: "Survive 55 seconds and end with Budget above $500",
+                duration: 55,
+                startBudget: 2500,
+                baseTraffic: 800,
+                trafficPattern: 'cost_crisis',
+                objectives: [
+                    { id: 'cdn_active', label: 'Deploy CDN to reduce compute load', check: () => cdnActive },
+                    { id: 'cache_active', label: 'Deploy Redis Cache to offload reads', check: () => cacheActive },
+                    { id: 'lb_active', label: 'Deploy Load Balancer for efficient routing', check: () => lbActive },
+                    { id: 'budget_surplus', label: 'End with Budget above $500', check: () => currentBudget > 500 },
+                    { id: 'uptime_ok', label: 'Keep Uptime above 90%', check: () => totalUptimePercentage >= 90.0 }
+                ]
+            },
+            {
+                title: "Global Stability",
+                desc: "Your platform is now global with steady 950 req/s baseline traffic and unpredictable regional spikes. Everything must be fully upgraded — CDN, sharded DB, Redis, and a massive server fleet — to maintain near-perfect stability.",
+                goalText: "Survive 65 seconds with Uptime above 98% and Latency under 50ms",
+                duration: 65,
+                startBudget: 4000,
+                baseTraffic: 950,
+                trafficPattern: 'stability',
+                objectives: [
+                    { id: 'cdn_active', label: 'Deploy Edge CDN', check: () => cdnActive },
+                    { id: 'sharded_db', label: 'Upgrade to Sharded Database Cluster', check: () => databaseTier === 'sharded' },
+                    { id: 'cache_active', label: 'Deploy Redis Cache', check: () => cacheActive },
+                    { id: 'server_count', label: 'Deploy 6 or more Web Servers', check: () => appServers.length >= 6 },
+                    { id: 'uptime_ok', label: 'Keep Uptime above 98%', check: () => totalUptimePercentage >= 98.0 },
+                    { id: 'latency_limit', label: 'Keep Latency under 50ms', check: () => currentLatency <= 50 }
+                ]
+            },
+            {
+                title: "Architect Sandbox",
+                desc: "Welcome to full sandbox environment. Tweak server configs, slide the traffic simulator to explore edge bounds, and design your perfect system architecture.",
+                goalText: "Endless Playground: Explore components and load capabilities",
+                duration: Infinity,
+                startBudget: 99999,
+                baseTraffic: 150,
+                trafficPattern: 'sandbox',
+                objectives: [
+                    { id: 'play_around', label: 'Unlock All System Nodes and test structures', check: () => true }
+                ]
+            }
+        ];
+
+        // RENDER NODES AND UPDATE CONNECTIONS
+        function updateUIVisuals() {
+            // Stats updates
+            document.getElementById('stat-uptime').innerText = `${totalUptimePercentage.toFixed(1)}%`;
+            // Randomize players online count
+            const playersOnline = Math.floor(Math.random() * 42) + 1;
+            document.getElementById('players-online-count').innerText = playersOnline;
+            document.getElementById('stat-uptime').className = `text-sm font-bold code-font ${totalUptimePercentage >= 95 ? 'text-emerald-400' : totalUptimePercentage >= 80 ? 'text-amber-400' : 'text-rose-400'}`;
+            
+            document.getElementById('stat-traffic').innerText = `${Math.round(simulationTraffic)} req/s`;
+            document.getElementById('stat-latency').innerText = `${Math.round(currentLatency)}ms`;
+            document.getElementById('stat-latency').className = `text-sm font-bold code-font ${currentLatency < 80 ? 'text-purple-400' : currentLatency < 150 ? 'text-amber-400' : 'text-rose-400'}`;
+
+            document.getElementById('stat-budget').innerText = `$${Math.round(currentBudget)}`;
+            document.getElementById('stat-budget').className = `text-sm font-bold code-font ${currentBudget >= 0 ? 'text-amber-400' : 'text-rose-500'}`;
+
+            document.getElementById('stat-cost').innerText = `-$${currentCostPerSecond}/s`;
+
+            // Canvas locks visual states
+            if (cdnActive) {
+                document.getElementById('node-cdn').classList.remove('opacity-50');
+                document.getElementById('cdn-lock-overlay').classList.add('hidden');
+            } else {
+                document.getElementById('node-cdn').classList.add('opacity-50');
+                document.getElementById('cdn-lock-overlay').classList.remove('hidden');
+            }
+
+            if (lbActive) {
+                document.getElementById('node-lb').classList.remove('opacity-50');
+                document.getElementById('lb-lock-overlay').classList.add('hidden');
+                document.getElementById('lb-routes-stat').innerText = `${appServers.length} Servers`;
+            } else {
+                document.getElementById('node-lb').classList.add('opacity-50');
+                document.getElementById('lb-lock-overlay').classList.remove('hidden');
+                document.getElementById('lb-routes-stat').innerText = '1 Server';
+            }
+
+            if (cacheActive) {
+                document.getElementById('node-cache').classList.remove('opacity-50');
+                document.getElementById('cache-lock-overlay').classList.add('hidden');
+            } else {
+                document.getElementById('node-cache').classList.add('opacity-50');
+                document.getElementById('cache-lock-overlay').classList.remove('hidden');
+            }
+
+            // DB details visual representation
+            document.getElementById('db-load-stat').innerText = `${Math.round(databaseLoad)}%`;
+            document.getElementById('db-load-bar').style.width = `${Math.min(databaseLoad, 100)}%`;
+            if (databaseLoad > 85) {
+                document.getElementById('db-load-bar').className = "bg-rose-500 h-full w-0 transition-all duration-300 animate-pulse";
+                document.getElementById('db-load-stat').className = "font-bold text-rose-400";
+            } else if (databaseLoad > 60) {
+                document.getElementById('db-load-bar').className = "bg-amber-500 h-full w-0 transition-all duration-300";
+                document.getElementById('db-load-stat').className = "font-bold text-amber-400";
+            } else {
+                document.getElementById('db-load-bar').className = "bg-emerald-500 h-full w-0 transition-all duration-300";
+                document.getElementById('db-load-stat').className = "font-bold text-emerald-400";
+            }
+
+            if (databaseTier === 'sqlite') {
+                document.getElementById('db-type-subtitle').innerText = "Single SQLite Node";
+                document.getElementById('db-cap-stat').innerText = "120 req/s";
+                document.getElementById('db-tier-stat').innerText = "Tier I";
+            } else if (databaseTier === 'replicas') {
+                document.getElementById('db-type-subtitle').innerText = "PostgreSQL Leader-Follower";
+                document.getElementById('db-cap-stat').innerText = "250 req/s";
+                document.getElementById('db-tier-stat').innerText = "Tier II";
+            } else if (databaseTier === 'sharded') {
+                document.getElementById('db-type-subtitle').innerText = "Sharded Cassandra Cluster";
+                document.getElementById('db-cap-stat').innerText = "750 req/s";
+                document.getElementById('db-tier-stat').innerText = "Tier III";
+            }
+
+            // Draw dynamic server cards in grid
+            const serversContainer = document.getElementById('servers-container');
+            serversContainer.innerHTML = '';
+            appServers.forEach((srv) => {
+                const isOverheated = srv.activeLoad > 95;
+                const loadColorClass = isOverheated ? 'text-rose-400' : srv.activeLoad > 60 ? 'text-amber-400' : 'text-emerald-400';
+                const loadBarColorClass = isOverheated ? 'bg-rose-500 animate-pulse' : srv.activeLoad > 60 ? 'bg-amber-500' : 'bg-emerald-500';
+                
+                const card = document.createElement('div');
+                card.className = `p-3 bg-slate-900 border ${isOverheated ? 'border-rose-500 shadow-lg shadow-rose-950/20' : 'border-slate-800'} rounded-xl text-xs space-y-1.5 transition-all duration-300 relative overflow-hidden`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-center font-bold">
+                        <span class="text-slate-300 flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full ${isOverheated ? 'bg-rose-500 animate-ping' : 'bg-emerald-500'}"></span>
+                            Server #${srv.id}
+                        </span>
+                        <span class="text-[9px] uppercase font-extrabold px-1.5 py-0.5 rounded bg-slate-950 border border-slate-800 ${srv.type === 'pro' ? 'text-indigo-400' : srv.type === 'cluster' ? 'text-pink-400' : 'text-slate-400'}">${srv.type}</span>
+                    </div>
+                    <div class="space-y-1">
+                        <div class="flex justify-between text-[10px] text-slate-400">
+                            <span>Active Load:</span>
+                            <span class="font-bold ${loadColorClass}">${Math.round(srv.activeLoad)}%</span>
+                        </div>
+                        <div class="w-full bg-slate-950 rounded-full h-1 overflow-hidden">
+                            <div class="${loadBarColorClass} h-full" style="width: ${Math.min(srv.activeLoad, 100)}%"></div>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center text-[9px] text-slate-500 code-font">
+                        <span>Cap: ${srv.capacity} r/s</span>
+                        <span class="${srv.temperature > 80 ? 'text-orange-400 font-bold' : ''}">Temp: ${Math.round(srv.temperature)}°C</span>
+                    </div>
+                    ${srv.id > 1 ? `
+                        <button onclick="terminateServer(${srv.id})" class="absolute top-1 right-1 text-slate-600 hover:text-rose-400 transition text-[10px]" title="Decommission Server">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                        </button>
+                    ` : ''}
+                `;
+                serversContainer.appendChild(card);
+            });
+
+            // Update objective checklist UI states
+            renderObjectivesChecklist();
+
+            // Recalculate connection pathways visual layout SVG line coordinates
+            drawConnectionPaths();
+        }
+
+        // DRAW SVG LINK LINES DYNAMICALLY BETWEEN RENDERED TARGET NODES
+        function drawConnectionPaths() {
+            const svg = document.getElementById('connections-svg');
+            const clients = document.getElementById('node-clients');
+            const cdn = document.getElementById('node-cdn');
+            const lb = document.getElementById('node-lb');
+            const servers = document.getElementById('node-servers');
+            const cache = document.getElementById('node-cache');
+            const db = document.getElementById('node-db');
+
+            const containerRect = document.getElementById('canvas-container').getBoundingClientRect();
+
+            function getCenterCoords(elem) {
+                const rect = elem.getBoundingClientRect();
+                return {
+                    x: (rect.left + rect.width / 2) - containerRect.left,
+                    y: (rect.top + rect.height / 2) - containerRect.top,
+                    topX: (rect.left + rect.width / 2) - containerRect.left,
+                    topY: rect.top - containerRect.top,
+                    botX: (rect.left + rect.width / 2) - containerRect.left,
+                    botY: rect.bottom - containerRect.top
+                };
+            }
+
+            const ptClients = getCenterCoords(clients);
+            const ptCdn = getCenterCoords(cdn);
+            const ptLb = getCenterCoords(lb);
+            const ptServers = getCenterCoords(servers);
+            const ptCache = getCenterCoords(cache);
+            const ptDb = getCenterCoords(db);
+
+            // Path 1: Client -> CDN if CDN unlocked, else directly to LB
+            const pathClientCdn = document.getElementById('path-client-cdn');
+            if (cdnActive) {
+                pathClientCdn.setAttribute('d', `M ${ptClients.botX} ${ptClients.botY} C ${ptClients.botX} ${(ptClients.botY + ptCdn.topY)/2}, ${ptCdn.topX} ${(ptClients.botY + ptCdn.topY)/2}, ${ptCdn.topX} ${ptCdn.topY}`);
+                pathClientCdn.setAttribute('stroke', '#6366f1');
+                pathClientCdn.setAttribute('class', isSimulating ? 'connection-line-fast' : 'connection-line');
+            } else {
+                pathClientCdn.setAttribute('d', `M ${ptClients.botX} ${ptClients.botY} C ${ptClients.botX} ${(ptClients.botY + ptLb.topY)/2}, ${ptLb.topX} ${(ptClients.botY + ptLb.topY)/2}, ${ptLb.topX} ${ptLb.topY}`);
+                pathClientCdn.setAttribute('stroke', '#475569');
+                pathClientCdn.setAttribute('class', 'connection-line-static');
+            }
+
+            // Path 2: CDN -> LB (if both active/connected)
+            const pathCdnLb = document.getElementById('path-cdn-lb');
+            if (cdnActive) {
+                pathCdnLb.setAttribute('d', `M ${ptCdn.botX} ${ptCdn.botY} C ${ptCdn.botX} ${ptCdn.botY + 15}, ${ptLb.topX} ${ptLb.topY - 15}, ${ptLb.topX} ${ptLb.topY}`);
+                pathCdnLb.setAttribute('stroke', '#6366f1');
+                pathCdnLb.setAttribute('class', isSimulating ? 'connection-line' : 'connection-line-static');
+            } else {
+                pathCdnLb.setAttribute('d', 'M 0,0');
+                pathCdnLb.setAttribute('class', 'connection-line-static');
+            }
+
+            // Path 3: LB -> Servers Farm
+            const pathLbServers = document.getElementById('path-lb-servers');
+            if (lbActive) {
+                pathLbServers.setAttribute('d', `M ${ptLb.botX} ${ptLb.botY} C ${ptLb.botX} ${(ptLb.botY + ptServers.topY)/2}, ${ptServers.topX} ${(ptLb.botY + ptServers.topY)/2}, ${ptServers.topX} ${ptServers.topY}`);
+                pathLbServers.setAttribute('stroke', '#ec4899');
+                pathLbServers.setAttribute('class', isSimulating ? 'connection-line-fast' : 'connection-line');
+            } else {
+                // If no load balancer, raw single cable
+                pathLbServers.setAttribute('d', `M ${ptClients.botX} ${ptClients.botY} C ${ptClients.botX} ${(ptClients.botY + ptServers.topY)/2}, ${ptServers.topX} ${(ptClients.botY + ptServers.topY)/2}, ${ptServers.topX} ${ptServers.topY}`);
+                pathLbServers.setAttribute('stroke', '#475569');
+                pathLbServers.setAttribute('class', isSimulating ? 'connection-line' : 'connection-line-static');
+            }
+
+            // Path 4: Servers -> Cache (if cached)
+            const pathServersCache = document.getElementById('path-servers-cache');
+            if (cacheActive) {
+                pathServersCache.setAttribute('d', `M ${ptServers.botX} ${ptServers.botY} C ${ptServers.botX} ${(ptServers.botY + ptCache.topY)/2}, ${ptCache.topX} ${(ptServers.botY + ptCache.topY)/2}, ${ptCache.topX} ${ptCache.topY}`);
+                pathServersCache.setAttribute('stroke', '#0ea5e9');
+                pathServersCache.setAttribute('class', isSimulating ? 'connection-line' : 'connection-line-static');
+            } else {
+                pathServersCache.setAttribute('d', 'M 0,0');
+                pathServersCache.setAttribute('class', 'connection-line-static');
+            }
+
+            // Path 5: Servers -> Database Node
+            const pathServersDb = document.getElementById('path-servers-db');
+            pathServersDb.setAttribute('d', `M ${ptServers.botX} ${ptServers.botY} C ${ptServers.botX} ${(ptServers.botY + ptDb.topY)/2}, ${ptDb.topX} ${(ptServers.botY + ptDb.topY)/2}, ${ptDb.topX} ${ptDb.topY}`);
+            pathServersDb.setAttribute('stroke', '#f59e0b');
+            pathServersDb.setAttribute('class', isSimulating ? 'connection-line-fast' : 'connection-line');
+        }
+
+        // ANIMATED VISUAL PACKETS (Render flowing sparks on connection pipes)
+        function spawnTrafficVisualPackets() {
+            if (!isSimulating || simulationTraffic < 10) return;
+
+            const container = document.getElementById('canvas-container');
+            const numPackets = Math.min(Math.ceil(simulationTraffic / 80), 8); // control density of visual elements
+            
+            const activeLines = [];
+            if (cdnActive) activeLines.push('path-client-cdn', 'path-cdn-lb');
+            else activeLines.push('path-client-cdn');
+
+            activeLines.push('path-lb-servers');
+            if (cacheActive) activeLines.push('path-servers-cache');
+            activeLines.push('path-servers-db');
+
+            activeLines.forEach((lineId) => {
+                const path = document.getElementById(lineId);
+                if (!path || path.getAttribute('d') === 'M 0,0') return;
+
+                for (let i = 0; i < numPackets; i++) {
+                    setTimeout(() => {
+                        if (!isSimulating) return;
+                        const particle = document.createElement('div');
+                        particle.className = 'particle';
+                        
+                        // Set colors depending on link path types
+                        if (lineId.includes('cache')) particle.style.backgroundColor = '#0ea5e9';
+                        else if (lineId.includes('db')) particle.style.backgroundColor = '#f59e0b';
+                        else if (lineId.includes('lb')) particle.style.backgroundColor = '#ec4899';
+                        else particle.style.backgroundColor = '#38bdf8';
+
+                        container.appendChild(particle);
+
+                        const length = path.getTotalLength();
+                        let start = null;
+                        const speed = 600 + Math.random() * 400; // millisecond lifespan
+
+                        function step(timestamp) {
+                            if (!start) start = timestamp;
+                            const progress = (timestamp - start) / speed;
+                            if (progress < 1) {
+                                const pt = path.getPointAtLength(progress * length);
+                                particle.style.left = `${pt.x}px`;
+                                particle.style.top = `${pt.y}px`;
+                                requestAnimationFrame(step);
+                            } else {
+                                particle.remove();
+                            }
+                        }
+                        requestAnimationFrame(step);
+                    }, Math.random() * 800);
+                }
+            });
+        }
+
+        // OBJECTIVES CHECKLIST RENDERING Engine
+        function renderObjectivesChecklist() {
+            const listObj = document.getElementById('objective-list');
+            listObj.innerHTML = '';
+            
+            const activeLvl = levels[currentLevelIndex];
+            activeLvl.objectives.forEach((obj) => {
+                const isPassed = obj.check();
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = `flex items-start gap-3 p-2 rounded-xl transition ${isPassed ? 'bg-emerald-950/20 border border-emerald-900/30' : 'bg-slate-950 border border-slate-800'}`;
+                wrapper.innerHTML = `
+                    <div class="mt-0.5">
+                        ${isPassed ? `
+                            <div class="p-0.5 bg-emerald-500 text-slate-950 rounded-full">
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/></svg>
+                            </div>
+                        ` : `
+                            <div class="w-4.5 h-4.5 border-2 border-slate-700 rounded-full flex items-center justify-center">
+                                <div class="w-1.5 h-1.5 bg-transparent rounded-full"></div>
+                            </div>
+                        `}
+                    </div>
+                    <div>
+                        <p class="text-xs font-semibold ${isPassed ? 'text-emerald-400' : 'text-slate-300'}">${obj.label}</p>
+                    </div>
+                `;
+                listObj.appendChild(wrapper);
+            });
+        }
+
+        // DIAGNOSTIC LOG INJECTOR
+        function addLog(text, type = 'info') {
+            const container = document.getElementById('diagnostics-logs');
+            const log = document.createElement('div');
+            
+            let colorClass = 'text-slate-300';
+            let prefix = '[INFO]';
+            
+            if (type === 'error') {
+                colorClass = 'text-rose-400 font-semibold';
+                prefix = '❌ [CRITICAL]';
+            } else if (type === 'warning') {
+                colorClass = 'text-amber-400 font-semibold';
+                prefix = '⚠️ [ALERT]';
+            } else if (type === 'success') {
+                colorClass = 'text-emerald-400 font-semibold';
+                prefix = '✅ [SOLVED]';
+            } else if (type === 'system') {
+                colorClass = 'text-cyan-400';
+                prefix = '[SYSTEM]';
+            }
+
+            log.className = `${colorClass} py-0.5 border-b border-slate-900/40`;
+            log.innerText = `${prefix} ${text}`;
+            container.appendChild(log);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // SIMULATOR RUNNING ITERATIVE TIME TICKS (Runs every 1s)
+        function runSimulationTick() {
+            simulationSecondsElapsed++;
+            totalTicks++;
+
+            const currentLvl = levels[currentLevelIndex];
+
+            // 1. CALCULATE TRAFFIC VALUE BY LEVEL PROFILE
+            let targetTraffic = 0;
+            if (currentLvl.trafficPattern === 'spike') {
+                if (simulationSecondsElapsed < 12) {
+                    targetTraffic = 40 + (simulationSecondsElapsed * 15);
+                } else {
+                    targetTraffic = currentLvl.baseTraffic + (Math.sin(simulationSecondsElapsed) * 20);
+                }
+            } else if (currentLvl.trafficPattern === 'heavy_read') {
+                targetTraffic = currentLvl.baseTraffic + (Math.sin(simulationSecondsElapsed / 4) * 60) + (Math.random() * 20);
+            } else if (currentLvl.trafficPattern === 'sinusoidal') {
+                targetTraffic = currentLvl.baseTraffic + (Math.sin(simulationSecondsElapsed / 5) * 200) + (Math.cos(simulationSecondsElapsed / 10) * 50);
+            } else if (currentLvl.trafficPattern === 'ddos') {
+                const chaos = (Math.sin(simulationSecondsElapsed / 2) * 300) + (Math.cos(simulationSecondsElapsed / 1.7) * 200) + (Math.random() * 150);
+                targetTraffic = currentLvl.baseTraffic + chaos;
+            } else if (currentLvl.trafficPattern === 'ramp') {
+                const rampFactor = Math.min(simulationSecondsElapsed / 60, 1.0);
+                targetTraffic = 200 + (rampFactor * currentLvl.baseTraffic) + (Math.sin(simulationSecondsElapsed / 6) * 80);
+            } else if (currentLvl.trafficPattern === 'cost_crisis') {
+                targetTraffic = currentLvl.baseTraffic + (Math.sin(simulationSecondsElapsed / 5) * 120) + (Math.random() * 40);
+            } else if (currentLvl.trafficPattern === 'stability') {
+                const regionSpike = (Math.sin(simulationSecondsElapsed / 3) * 180);
+                const microBurst = (Math.random() > 0.85) ? (Math.random() * 200) : 0;
+                targetTraffic = currentLvl.baseTraffic + regionSpike + microBurst;
+            } else if (currentLvl.trafficPattern === 'sandbox') {
+                targetTraffic = parseFloat(document.getElementById('slider-traffic').value);
+            }
+
+            simulationTraffic = Math.max(targetTraffic, 10);
+
+            // 2. PROCESS TRAFFIC INGRESS PIPELINE
+            let loadToCompute = simulationTraffic;
+            let cdnAbsorbedTraffic = 0;
+            if (cdnActive) {
+                cdnAbsorbedTraffic = simulationTraffic * 0.40; // CDN handles 40% immediately
+                loadToCompute = simulationTraffic - cdnAbsorbedTraffic;
+            }
+
+            let serverCapacityLimit = 0;
+            appServers.forEach(srv => {
+                serverCapacityLimit += srv.capacity;
+            });
+
+            let clientFailureCount = 0;
+            let averageLatencySum = 0;
+
+            if (lbActive) {
+                const sharePerServer = loadToCompute / appServers.length;
+                appServers.forEach(srv => {
+                    srv.activeLoad = (sharePerServer / srv.capacity) * 100;
+                    if (srv.activeLoad > 100) {
+                        const excess = sharePerServer - srv.capacity;
+                        clientFailureCount += excess;
+                        srv.activeLoad = 100;
+                        srv.temperature = Math.min(srv.temperature + 15, 105);
+                    } else {
+                        srv.temperature = Math.max(srv.temperature - 3, 35) + (srv.activeLoad * 0.4);
+                    }
+                });
+            } else {
+                appServers.forEach((srv, idx) => {
+                    if (idx === 0) {
+                        srv.activeLoad = (loadToCompute / srv.capacity) * 100;
+                        if (srv.activeLoad > 100) {
+                            const excess = loadToCompute - srv.capacity;
+                            clientFailureCount += excess;
+                            srv.activeLoad = 100;
+                            srv.temperature = Math.min(srv.temperature + 20, 105);
+                        } else {
+                            srv.temperature = Math.max(srv.temperature - 3, 35) + (srv.activeLoad * 0.45);
+                        }
+                    } else {
+                        srv.activeLoad = 0;
+                        srv.temperature = Math.max(srv.temperature - 5, 30);
+                    }
+                });
+                
+                if (appServers.length > 1 && totalTicks % 8 === 0) {
+                    addLog("Idle servers detected. Deploy a Load Balancer to distribute traffic!", "warning");
+                    showWarningCard("Unrouted Servers!", "Secondary servers are running idle. Deploy a Load Balancer to split user requests among them!", "lb");
+                }
+            }
+
+            // 3. STORAGE PERSISTENCE CAPABILITY CALCULATION
+            let successfulComputeReqs = loadToCompute - clientFailureCount;
+            let dbReadQueries = successfulComputeReqs * 0.85; 
+            let dbWriteQueries = successfulComputeReqs * 0.15; 
+
+            let dbIngressLoad = 0;
+            if (cacheActive) {
+                dbIngressLoad = (dbReadQueries * 0.20) + dbWriteQueries;
+            } else {
+                dbIngressLoad = dbReadQueries + dbWriteQueries;
+            }
+
+            databaseLoad = (dbIngressLoad / databaseCapacity) * 100;
+            if (databaseLoad > 100) {
+                const excessDB = dbIngressLoad - databaseCapacity;
+                clientFailureCount += excessDB;
+                databaseLoad = 100;
+                
+                if (totalTicks % 6 === 0) {
+                    addLog("Database is locked/thrashing! Queries are queuing and timing out.", "error");
+                    showWarningCard("Database Overload!", "The database has reached physical disk IOPS limits. Deploy a Redis Cache or upgrade database replications!", "cache");
+                }
+            }
+
+            // 4. METRIC AND REVENUE HARVEST
+            const currentUptimeRatio = (simulationTraffic - clientFailureCount) / simulationTraffic;
+            const stepUptime = Math.max(currentUptimeRatio * 100, 0);
+            
+            if (stepUptime >= 95.0) successTicks++;
+            totalUptimePercentage = (successTicks / totalTicks) * 100;
+
+            let calculatedLatency = 20; 
+            if (cdnActive) calculatedLatency -= 5; 
+            
+            appServers.forEach(srv => {
+                if (srv.activeLoad > 85) calculatedLatency += 25;
+            });
+            if (databaseLoad > 80) calculatedLatency += 120;
+            else if (databaseLoad > 50) calculatedLatency += 30;
+
+            currentLatency = Math.max(calculatedLatency, 10);
+
+            let costSec = 0;
+            if (cdnActive) costSec += 2;
+            if (lbActive) costSec += 1;
+            if (cacheActive) costSec += 2;
+            
+            appServers.forEach(srv => {
+                if (srv.type === 'pro') costSec += 2;
+                else if (srv.type === 'cluster') costSec += 4;
+                else costSec += 1;
+            });
+
+            if (databaseTier === 'replicas') costSec += 3;
+            else if (databaseTier === 'sharded') costSec += 6;
+            else costSec += 1;
+
+            currentCostPerSecond = costSec;
+
+            const activeUsersCount = Math.round(simulationTraffic - clientFailureCount);
+            const rawIncome = activeUsersCount * 0.08 * (stepUptime / 100);
+            currentBudget = currentBudget + rawIncome - currentCostPerSecond;
+
+            appServers.forEach(srv => {
+                if (srv.temperature > 95 && Math.random() > 0.75) {
+                    srv.status = 'crashed';
+                    srv.temperature = 100;
+                    addLog(`Web Server #${srv.id} experienced thermal shutdown from overload!`, "error");
+                    soundWarning();
+                }
+            });
+
+            updateUIVisuals();
+            spawnTrafficVisualPackets();
+
+            // 5. VALIDATE CAMPAIGN VICTORY OR DEFEAT GOALS
+            if (currentBudget <= 0) {
+                endSimulation(false, "Your cash balance dropped below $0. Bankruptcy occurred due to architectural inefficiency!");
+                return;
+            }
+
+            if (currentLvl.duration !== Infinity) {
+                const percentDone = (simulationSecondsElapsed / currentLvl.duration) * 100;
+                document.getElementById('level-progress-bar').style.width = `${percentDone}%`;
+                document.getElementById('level-time-left').innerText = `${simulationSecondsElapsed}s elapsed`;
+
+                if (simulationSecondsElapsed >= currentLvl.duration) {
+                    const failedObj = currentLvl.objectives.find(obj => !obj.check());
+                    if (!failedObj) {
+                        endSimulation(true, "Stage Objectives Cleared Successfully!");
+                    } else {
+                        endSimulation(false, `Time ran out, but you failed requirement: "${failedObj.label}"`);
+                    }
+                }
+            } else {
+                document.getElementById('level-progress-bar').style.width = `100%`;
+                document.getElementById('level-time-left').innerText = `Infinite Sandbox`;
+            }
+        }
+
+        // CONTROL TRIGGERS
+        function startSimulation() {
+            if (isSimulating) return;
+            initAudio();
+            isSimulating = true;
+
+            fetch('log.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'play',
+                    stage: levels[currentLevelIndex].title
+                })
+            }).catch(() => {});
+
+            soundClick();
+            
+            document.getElementById('btn-play').classList.add('bg-emerald-800', 'cursor-not-allowed');
+            document.getElementById('btn-play').disabled = true;
+
+            addLog("Simulation thread initialized. Traffic flowing...", "system");
+
+            tickInterval = setInterval(runSimulationTick, 1000);
+            updateUIVisuals();
+        }
+
+        function pauseSimulation() {
+            if (!isSimulating) return;
+            isSimulating = false;
+            soundClick();
+            clearInterval(tickInterval);
+            document.getElementById('btn-play').classList.remove('bg-emerald-800', 'cursor-not-allowed');
+            document.getElementById('btn-play').disabled = false;
+            addLog("Simulation thread paused manually.", "system");
+        }
+
+        function restartCurrentLevel() {
+            soundClick();
+            clearInterval(tickInterval);
+            isSimulating = false;
+            
+            document.getElementById('btn-play').classList.remove('bg-emerald-800', 'cursor-not-allowed');
+            document.getElementById('btn-play').disabled = false;
+
+            // Reset Level States
+            const lSpec = levels[currentLevelIndex];
+            currentBudget = lSpec.startBudget;
+            totalUptimePercentage = 100.0;
+            totalTicks = 0;
+            successTicks = 0;
+            simulationSecondsElapsed = 0;
+            simulationTraffic = 0;
+            currentLatency = 45;
+
+            cdnActive = false;
+            lbActive = false;
+            cacheActive = false;
+
+            appServers = [
+                { id: 1, type: 'standard', capacity: 100, activeLoad: 0, status: 'healthy', temperature: 30 }
+            ];
+
+            databaseTier = 'sqlite';
+            databaseCapacity = 120; 
+            databaseLoad = 0;
+
+            document.getElementById('level-progress-bar').style.width = '0%';
+            document.getElementById('level-time-left').innerText = '0s elapsed';
+
+            document.getElementById('diagnostics-logs').innerHTML = `
+                <div class="text-cyan-400">[SYSTEM] Initialization completed. Setup inventory loaded.</div>
+            `;
+
+            addLog(`Reloaded Stage: "${lSpec.title}". Ready to play.`, 'system');
+            updateUIVisuals();
+        }
+
+        // END CAMPAIGN SIMULATIONS (Victory / Defeat display)
+        function endSimulation(isWin, message) {
+            clearInterval(tickInterval);
+            isSimulating = false;
+
+            const modal = document.getElementById('status-modal');
+            const hDecor = document.getElementById('modal-decor-icon');
+            const heading = document.getElementById('modal-heading');
+            const body = document.getElementById('modal-body-text');
+
+            modal.classList.remove('hidden');
+
+            document.getElementById('modal-stat-peak').innerText = `${Math.round(simulationTraffic)} req/s`;
+            document.getElementById('modal-stat-budget').innerText = `$${Math.round(currentBudget)}`;
+            document.getElementById('modal-stat-runtime').innerText = `${simulationSecondsElapsed}s`;
+
+            const btnNext = document.getElementById('modal-btn-next');
+
+            if (isWin) {
+                soundSuccess();
+                hDecor.className = "w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-4 bg-emerald-950 text-emerald-400 border border-emerald-800";
+                hDecor.innerHTML = `
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                `;
+                heading.innerText = "Deployment Successful!";
+                heading.className = "text-2xl font-extrabold text-emerald-400 mb-2";
+                body.innerText = `${message} You have proven your master architecture skills.`;
+
+                let grade = 'System Architect';
+                if (totalUptimePercentage > 99.0) grade = 'Staff Infrastructure Fellow';
+                else if (totalUptimePercentage > 97.0) grade = 'Senior DevOps Architect';
+                document.getElementById('modal-stat-grade').innerText = grade;
+                document.getElementById('modal-stat-grade').className = "font-bold text-emerald-400";
+
+                if (currentLevelIndex < levels.length - 1) {
+                    btnNext.classList.remove('hidden');
+                    btnNext.innerText = "Next Stage";
+                } else {
+                    btnNext.classList.add('hidden');
+                }
+            } else {
+                soundGameOver();
+                hDecor.className = "w-16 h-16 rounded-2xl mx-auto flex items-center justify-center mb-4 bg-rose-950 text-rose-400 border border-rose-800";
+                hDecor.innerHTML = `
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                `;
+                heading.innerText = "System Failure!";
+                heading.className = "text-2xl font-extrabold text-rose-400 mb-2";
+                body.innerText = `${message} Optimize bottlenecks to scale systems correctly.`;
+
+                document.getElementById('modal-stat-grade').innerText = "Junior SysAdmin";
+                document.getElementById('modal-stat-grade').className = "font-bold text-rose-400";
+                btnNext.classList.add('hidden'); 
+            }
+        }
+
+        // SHOP PURCHASES & DEPLOYMENT MANAGEMENT
+        function buyComponent(component) {
+            soundClick();
+            if (component === 'cdn') {
+                if (currentBudget >= 500) {
+                    currentBudget -= 500;
+                    cdnActive = true;
+                    addLog("Content Delivery Network (CDN) deployed across 32 Edge points.", "success");
+                    soundUpgrade();
+                } else {
+                    addLog("Insufficient funds to deploy Edge CDN.", "error");
+                }
+            } else if (component === 'lb') {
+                if (currentBudget >= 300) {
+                    currentBudget -= 300;
+                    lbActive = true;
+                    addLog("NGINX Load Balancer configured using Round-Robin algorithm routing.", "success");
+                    soundUpgrade();
+                } else {
+                    addLog("Insufficient funds to deploy Load Balancer.", "error");
+                }
+            } else if (component === 'cache') {
+                if (currentBudget >= 400) {
+                    currentBudget -= 400;
+                    cacheActive = true;
+                    addLog("In-memory Redis Cache deployed. 80% read query bypass active.", "success");
+                    soundUpgrade();
+                } else {
+                    addLog("Insufficient funds to deploy Redis Cache.", "error");
+                }
+            }
+            dismissWarningCard();
+            updateUIVisuals();
+        }
+
+        function addHorizontalServer() {
+            soundClick();
+            if (currentBudget >= 200) {
+                if (appServers.length >= 6) {
+                    addLog("Maximum cluster horizontal scaling reached (6 Server limit).", "warning");
+                    return;
+                }
+                currentBudget -= 200;
+                const nextId = appServers.reduce((max, s) => s.id > max ? s.id : max, 0) + 1;
+                appServers.push({
+                    id: nextId,
+                    type: 'standard',
+                    capacity: 100,
+                    activeLoad: 0,
+                    status: 'healthy',
+                    temperature: 30
+                });
+                addLog(`Scaled Horizontally! Added backend node Web Server #${nextId}.`, "success");
+                soundUpgrade();
+                updateUIVisuals();
+            } else {
+                addLog("Insufficient funds to spawn new server node.", "error");
+            }
+        }
+
+        function terminateServer(id) {
+            soundClick();
+            appServers = appServers.filter(s => s.id !== id);
+            addLog(`Decommissioned Web Server #${id} dynamically from topology.`, "warning");
+            updateUIVisuals();
+        }
+
+        function upgradeVerticalServer() {
+            soundClick();
+            if (currentBudget >= 250) {
+                let upgraded = false;
+                for (let i = 0; i < appServers.length; i++) {
+                    if (appServers[i].type === 'standard') {
+                        appServers[i].type = 'pro';
+                        appServers[i].capacity = 250;
+                        upgraded = true;
+                        addLog(`Server #${appServers[i].id} vertically scaled to compute optimized Pro Tier.`, "success");
+                        break;
+                    } else if (appServers[i].type === 'pro') {
+                        appServers[i].type = 'cluster';
+                        appServers[i].capacity = 600;
+                        upgraded = true;
+                        addLog(`Server #${appServers[i].id} vertically scaled to high availability Cluster Tier.`, "success");
+                        break;
+                    }
+                }
+                if (upgraded) {
+                    currentBudget -= 250;
+                    soundUpgrade();
+                    updateUIVisuals();
+                } else {
+                    addLog("All servers already upgraded to maximum cluster size capability.", "warning");
+                }
+            } else {
+                addLog("Insufficient funds for vertical server upgrade.", "error");
+            }
+        }
+
+        function upgradeDatabase() {
+            soundClick();
+            if (databaseTier === 'sqlite') {
+                if (currentBudget >= 350) {
+                    currentBudget -= 350;
+                    databaseTier = 'replicas';
+                    databaseCapacity = 250;
+                    addLog("Database upgraded to Replication Tier. PostgreSQL Master-Slave splitting handles 250 req/s.", "success");
+                    soundUpgrade();
+                } else {
+                    addLog("Insufficient funds for database replication.", "error");
+                }
+            } else if (databaseTier === 'replicas') {
+                if (currentBudget >= 350) {
+                    currentBudget -= 350;
+                    databaseTier = 'sharded';
+                    databaseCapacity = 750;
+                    addLog("Database upgraded to Sharded Cluster. Partitioned nodes handle 750 req/s.", "success");
+                    soundUpgrade();
+                } else {
+                    addLog("Insufficient funds for database sharding.", "error");
+                }
+            } else {
+                addLog("Database is already configured at the highest tier (Cassandra Sharded Cluster).", "warning");
+            }
+            dismissWarningCard();
+            updateUIVisuals();
+        }
+
+        // FLOATING BOTTLENECK RECOMMENDATIONS ENGINE
+        function showWarningCard(title, text, componentTarget) {
+            const card = document.getElementById('warning-card');
+            document.getElementById('warning-title').innerText = title;
+            document.getElementById('warning-desc').innerText = text;
+            
+            const btn = document.getElementById('warning-action-btn');
+            if (componentTarget === 'cache') {
+                btn.innerText = "Deploy Redis Cache ($400)";
+                btn.onclick = () => buyComponent('cache');
+            } else if (componentTarget === 'lb') {
+                btn.innerText = "Deploy Load Balancer ($300)";
+                btn.onclick = () => buyComponent('lb');
+            } else if (componentTarget === 'db') {
+                btn.innerText = "Upgrade Database ($350)";
+                btn.onclick = () => upgradeDatabase();
+            }
+
+            card.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+            card.classList.add('translate-y-0', 'opacity-100');
+            soundWarning();
+        }
+
+        function dismissWarningCard() {
+            const card = document.getElementById('warning-card');
+            card.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+            card.classList.remove('translate-y-0', 'opacity-100');
+        }
+
+        // LOAD CAMPAIGN LEVEL STAGES
+        function loadLevel(index) {
+            currentLevelIndex = index;
+            const lSpec = levels[index];
+            
+            document.getElementById('level-badge').innerText = `STAGE ${index + 1}`;
+            document.getElementById('level-title').innerText = lSpec.title;
+            document.getElementById('level-desc').innerText = lSpec.desc;
+            document.getElementById('level-goal').innerText = lSpec.goalText;
+            document.getElementById('level-target-time').innerText = lSpec.duration !== Infinity ? `Goal: ${lSpec.duration}s` : 'Goal: Endless';
+
+            if (lSpec.trafficPattern === 'sandbox') {
+                document.getElementById('sandbox-controls').classList.remove('hidden');
+                document.getElementById('sandbox-badge').classList.remove('hidden');
+            } else {
+                document.getElementById('sandbox-controls').classList.add('hidden');
+                document.getElementById('sandbox-badge').classList.add('hidden');
+            }
+
+            restartCurrentLevel();
+            document.getElementById('status-modal').classList.add('hidden');
+        }
+
+        // SANDBOX MANUAL BURSTS INJECTS
+        function injectSandboxBurst(amount) {
+            soundClick();
+            const slider = document.getElementById('slider-traffic');
+            slider.value = parseInt(slider.value) + amount;
+            document.getElementById('sandbox-slider-val').innerText = `${slider.value} req/s`;
+            addLog(`Burst injection: Add ${amount} concurrent user connection requests.`, "warning");
+            updateUIVisuals();
+        }
+
+        // SETUP APPLICATION BINDINGS ON WINDOW ONLOAD
+        window.onload = function() {
+            document.getElementById('btn-play').addEventListener('click', startSimulation);
+            document.getElementById('btn-pause').addEventListener('click', pauseSimulation);
+            document.getElementById('btn-restart').addEventListener('click', restartCurrentLevel);
+            
+            document.getElementById('btn-sound').addEventListener('click', () => {
+                soundEnabled = !soundEnabled;
+                document.getElementById('icon-sound-on').classList.toggle('hidden');
+                document.getElementById('icon-sound-off').classList.toggle('hidden');
+                soundClick();
+            });
+
+            document.getElementById('btn-wiki').addEventListener('click', () => {
+                soundClick();
+                document.getElementById('wiki-panel').classList.remove('translate-x-full');
+            });
+            document.getElementById('btn-close-wiki').addEventListener('click', () => {
+                soundClick();
+                document.getElementById('wiki-panel').classList.add('translate-x-full');
+            });
+            document.getElementById('btn-close-wiki-bottom').addEventListener('click', () => {
+                soundClick();
+                document.getElementById('wiki-panel').classList.add('translate-x-full');
+            });
+
+            document.getElementById('modal-btn-retry').addEventListener('click', () => {
+                restartCurrentLevel();
+                document.getElementById('status-modal').classList.add('hidden');
+            });
+
+            document.getElementById('modal-btn-next').addEventListener('click', () => {
+                if (currentLevelIndex < levels.length - 1) {
+                    loadLevel(currentLevelIndex + 1);
+                }
+            });
+
+            document.getElementById('slider-traffic').addEventListener('input', (e) => {
+                document.getElementById('sandbox-slider-val').innerText = `${e.target.value} req/s`;
+            });
+
+            window.addEventListener('resize', drawConnectionPaths);
+
+            loadLevel(0);
+        };
+
+        // Secret player counter via localStorage
+        (function() {
+            const key = '_dvc_plays';
+            let count = parseInt(localStorage.getItem(key)) || 0;
+            count++;
+            localStorage.setItem(key, count);
+            console.log(`[DEV] Total unique plays: ${count}`);
+        })();
+    </script>
+</body>
+</html>

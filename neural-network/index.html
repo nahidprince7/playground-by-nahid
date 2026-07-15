@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fish Brain — a neural network you can grow</title>
+<style>
+  :root {
+    --bg:        #070d15;
+    --panel:     #0b1522;
+    --panel-2:   #0e1b2b;
+    --line:      #1c2f45;
+    --ink:       #e8f1fa;
+    --ink-dim:   #8ba3bd;
+    --ink-faint: #5b7189;
+    --pos:       #ffb35c;
+    --neg:       #5ad1ff;
+    --danger:    #ff5f6d;
+    --good:      #3ddc97;
+    --radius:    14px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    background: radial-gradient(1200px 700px at 50% -10%, #12263c 0%, var(--bg) 62%);
+    color: var(--ink);
+    font: 14px/1.5 ui-sans-serif, system-ui, "Segoe UI", Roboto,
+          "Noto Sans Bengali", "Hind Siliguri", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+
+  .app {
+    height: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 336px;
+    grid-template-rows: auto minmax(0, 1fr);
+    gap: 14px;
+    padding: 14px;
+  }
+
+  /* ------------------------------- header ------------------------------ */
+
+  header {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+  }
+
+  h1 span { color: var(--ink-faint); font-weight: 400; }
+
+  .tagline {
+    color: var(--ink-dim);
+    font-size: 12.5px;
+    min-width: 0;
+  }
+
+  .stats {
+    margin-left: auto;
+    display: flex;
+    gap: 8px;
+  }
+
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 6px 12px;
+    min-width: 82px;
+    text-align: right;
+  }
+
+  .stat b {
+    display: block;
+    font-size: 17px;
+    font-weight: 620;
+    font-variant-numeric: tabular-nums;
+    line-height: 1.25;
+  }
+
+  .stat i {
+    font-style: normal;
+    font-size: 10px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .stat.rate b { color: var(--rate, var(--ink)); }
+
+  /* ------------------------------- stage ------------------------------- */
+
+  .stage {
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .panel {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .panel > canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .panel.brain { flex: 0 0 43%; }
+  .panel.tank  { flex: 1 1 auto; }
+  .panel.tank  { cursor: crosshair; }
+
+  .badge {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    font-size: 10px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .hint {
+    position: absolute;
+    bottom: 9px;
+    left: 12px;
+    font-size: 11px;
+    color: var(--ink-faint);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .hint b { color: var(--ink-dim); font-weight: 500; }
+
+  /* the brain canvas writes its own captions along the bottom, so its hint
+     goes up in the free corner instead */
+  .hint.corner {
+    top: 10px;
+    right: 12px;
+    bottom: auto;
+    left: auto;
+    text-align: right;
+  }
+
+  /* -------------------------------- rail ------------------------------- */
+
+  .rail {
+    min-height: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-right: 4px;
+  }
+
+  .rail::-webkit-scrollbar { width: 8px; }
+  .rail::-webkit-scrollbar-thumb {
+    background: var(--line);
+    border-radius: 8px;
+  }
+
+  .group-title {
+    font-size: 10px;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 4px 0 -2px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .sensor {
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    gap: 10px;
+    align-items: start;
+    width: 100%;
+    text-align: left;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    padding: 9px 11px;
+    color: var(--ink-dim);
+    font: inherit;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, transform .08s;
+  }
+
+  .sensor:hover { border-color: #2b4763; background: var(--panel-2); }
+  .sensor:active { transform: translateY(1px); }
+
+  .sensor .plus {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    font-size: 15px;
+    font-weight: 500;
+    background: #14263a;
+    color: var(--ink-faint);
+    border: 1px solid var(--line);
+    transition: all .15s;
+  }
+
+  .sensor .name {
+    color: var(--ink);
+    font-weight: 550;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .sensor .bn {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    line-height: 1.45;
+  }
+
+  .sensor .val {
+    font-variant-numeric: tabular-nums;
+    font-size: 11px;
+    color: var(--ink-faint);
+    font-weight: 400;
+  }
+
+  .sensor.on {
+    border-color: #2f5f7d;
+    background: linear-gradient(180deg, #10283a, #0c1b29);
+  }
+
+  .sensor.on .plus {
+    background: var(--neg);
+    border-color: var(--neg);
+    color: #04121c;
+  }
+
+  .sensor.on .bn { color: var(--ink-dim); }
+
+  /* the two priors that actively hurt when the node is missing */
+  .sensor.costly:not(.on) .plus { color: var(--danger); border-color: #4a2634; }
+  .sensor.costly:not(.on) .val  { color: var(--danger); opacity: .8; }
+
+  .row {
+    display: flex;
+    gap: 8px;
+  }
+
+  button.act {
+    flex: 1;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    color: var(--ink-dim);
+    border-radius: 9px;
+    padding: 8px 6px;
+    font: 500 12px/1 inherit;
+    cursor: pointer;
+    transition: all .15s;
+  }
+
+  button.act:hover { border-color: #2b4763; color: var(--ink); }
+
+  .slider {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    padding: 8px 11px 10px;
+  }
+
+  .slider label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11.5px;
+    color: var(--ink-dim);
+    margin-bottom: 5px;
+  }
+
+  .slider label b {
+    color: var(--ink);
+    font-weight: 550;
+    font-variant-numeric: tabular-nums;
+  }
+
+  input[type=range] {
+    width: 100%;
+    height: 4px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: #1d3349;
+    border-radius: 4px;
+    outline: none;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--ink);
+    cursor: pointer;
+    border: 3px solid #0b1522;
+    box-shadow: 0 0 0 1px #2b4763;
+  }
+
+  input[type=range]::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--ink);
+    cursor: pointer;
+    border: 3px solid #0b1522;
+    box-shadow: 0 0 0 1px #2b4763;
+  }
+
+  .note {
+    font-size: 11.5px;
+    line-height: 1.6;
+    color: var(--ink-faint);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-left: 2px solid #2f5f7d;
+    border-radius: 9px;
+    padding: 9px 11px;
+  }
+
+  .note b { color: var(--ink-dim); font-weight: 550; }
+
+  @media (max-width: 1080px) {
+    .app { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 62vh auto; }
+    .rail { overflow: visible; }
+    body { overflow: auto; }
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <header>
+    <h1>Fish Brain <span>— a neural network you can grow</span></h1>
+    <div class="tagline">
+      Every input node you add is a new sense. Watch what it costs the fish to be missing one.
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="s-nodes">0</b><i>nodes</i></div>
+      <div class="stat"><b id="s-alive">0</b><i>alive</i></div>
+      <div class="stat"><b id="s-eaten">0</b><i>eaten</i></div>
+      <div class="stat rate"><b id="s-rate">—</b><i>deaths / min</i></div>
+    </div>
+  </header>
+
+  <section class="stage">
+    <div class="panel brain">
+      <div class="badge">the brain — live activations of the ringed fish</div>
+      <canvas id="nn"></canvas>
+      <div class="hint corner">
+        <b>Click a ghost node</b> to give the fish that sense<br>
+        amber = positive weight · blue = negative
+      </div>
+    </div>
+
+    <div class="panel tank">
+      <div class="badge">the tank</div>
+      <canvas id="aq"></canvas>
+      <div class="hint" id="tank-hint"><b>Click any fish</b> to watch its brain above</div>
+    </div>
+  </section>
+
+  <aside class="rail">
+    <div class="group-title"><span>Sensing the predator</span><span id="live-tag"></span></div>
+    <div id="grp-threat"></div>
+
+    <div class="group-title"><span>Sensing the tank</span></div>
+    <div id="grp-world"></div>
+
+    <div class="group-title"><span>Learned evasion</span></div>
+    <div id="grp-skill"></div>
+
+    <div class="row">
+      <button class="act" id="b-none">Blind fish</button>
+      <button class="act" id="b-all">Full brain</button>
+      <button class="act" id="b-reset">Reset count</button>
+    </div>
+
+    <div class="note" id="verdict">
+      A fish with no input nodes just drifts. The predator eats freely.
+    </div>
+
+    <div class="group-title"><span>The world</span></div>
+    <div id="sliders"></div>
+
+    <div class="note">
+      <b>Why a missing node hurts.</b> The network still needs a number in
+      every slot, so an absent sensor is filled with a worst-case guess.
+      With no <b>Proximity</b> node a fish assumes the predator is always
+      touching it — so it panics non-stop and pins itself to the glass.
+    </div>
+  </aside>
+
+</div>
+
+<script src="sim.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  const { SENSORS, HIDDEN, OUTPUTS, DEFAULTS } = Sim;
+  const clamp = Sim.clamp;
+
+  const POS = [255, 179, 92];
+  const NEG = [90, 209, 255];
+
+  const nn = document.getElementById('nn');
+  const aq = document.getElementById('aq');
+  const nnx = nn.getContext('2d');
+  const aqx = aq.getContext('2d');
+
+  let world = Sim.createWorld({});
+  let paused = false;
+
+  const born = {};        // sensorId -> time it was switched on/off, for the grow-in
+  let focus = null;       // the fish whose brain is on show
+  let locked = false;     // did the user pick it?
+  let nextAutoFocus = 0;
+
+  let bursts = [];
+  let bubbles = [];
+  let eatTimes = [];
+  let statsFrom = 0;
+  let clock = 0;
+
+  /* ------------------------------ canvas ------------------------------ */
+
+  function fit(canvas, ctx) {
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const r = canvas.getBoundingClientRect();
+    const w = Math.max(1, Math.round(r.width));
+    const h = Math.max(1, Math.round(r.height));
+    if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { w, h };
+  }
+
+  new ResizeObserver(() => {
+    const r = aq.getBoundingClientRect();
+    if (r.width > 20 && r.height > 20) Sim.resize(world, r.width, r.height);
+  }).observe(aq);
+
+  /* ------------------------------- rail ------------------------------- */
+
+  const cards = {};
+
+  for (const s of SENSORS) {
+    const el = document.createElement('button');
+    el.className = 'sensor' + (s.prior !== 0 ? ' costly' : '');
+    el.innerHTML =
+      '<span class="plus">+</span>' +
+      '<span><span class="name">' + s.label +
+      '<span class="val" data-val></span></span>' +
+      '<span class="bn">' + s.bn + '</span></span>';
+    el.addEventListener('click', () => toggle(s.id));
+    document.getElementById('grp-' + s.group).appendChild(el);
+    cards[s.id] = el;
+  }
+
+  const SLIDERS = [
+    ['predSpeed', 'Predator speed',  70,  240, 1,   (v) => v + ' px/s'],
+    ['predTurn',  'Predator turning', 0.5, 4,  0.05,(v) => v.toFixed(1) + ' rad/s'],
+    ['count',     'Small fish',      6,   80,  1,   (v) => v],
+    ['vision',    'Fish eyesight',   90,  420, 5,   (v) => v + ' px'],
+    ['thrust',    'Fish reflexes',   200, 900, 10,  (v) => v],
+  ];
+
+  for (const [key, label, min, max, step, fmt] of SLIDERS) {
+    const el = document.createElement('div');
+    el.className = 'slider';
+    el.innerHTML =
+      '<label>' + label + '<b data-out>' + fmt(world[key]) + '</b></label>' +
+      '<input type="range" min="' + min + '" max="' + max + '" step="' + step +
+      '" value="' + world[key] + '">';
+    const input = el.querySelector('input');
+    const out = el.querySelector('[data-out]');
+    input.addEventListener('input', () => {
+      const v = parseFloat(input.value);
+      out.textContent = fmt(v);
+      if (key === 'count') Sim.setCount(world, v);
+      else world[key] = v;
+    });
+    document.getElementById('sliders').appendChild(el);
+  }
+
+  function toggle(id) {
+    world.active[id] = !world.active[id];
+    born[id] = clock;
+    refreshRail();
+  }
+
+  function setAll(on) {
+    for (const s of SENSORS) {
+      if (world.active[s.id] !== on) born[s.id] = clock;
+      world.active[s.id] = on;
+    }
+    refreshRail();
+  }
+
+  document.getElementById('b-none').addEventListener('click', () => setAll(false));
+  document.getElementById('b-all').addEventListener('click', () => setAll(true));
+  document.getElementById('b-reset').addEventListener('click', () => {
+    world.eaten = 0;
+    eatTimes = [];
+    statsFrom = clock;
+  });
+
+  function verdict() {
+    const a = world.active;
+    const sees = a.pdx || a.pdy;
+    const wall = a.wlx || a.wly;
+    const dodge = a.ddx || a.ddy;
+
+    if (!sees && !a.prox && !wall && !dodge) {
+      return 'A fish with no input nodes just drifts. The predator eats freely.';
+    }
+    if (sees && !a.prox) {
+      return 'It knows <b>where</b> the predator is and nothing else — and with no ' +
+             'Proximity node it must assume the thing is always upon it. So it flees ' +
+             'flat out, forever, and pins itself to the glass. These nodes have made it ' +
+             '<b>worse than blind</b>. Add Proximity.';
+    }
+    if (a.prox && !a.appr) {
+      return '<b>Proximity</b> switched the panic off — it only bolts when the predator ' +
+             'is genuinely close now. Note that this merely undoes the damage: it is ' +
+             'back where a blind fish was. The node pays off in what it lets you add next.';
+    }
+    if (a.appr && !wall) {
+      return 'It can tell a charge from a predator that is merely passing, so it stops ' +
+             'fleeing threats that are already leaving. <b>The biggest single win on the ' +
+             'board</b> — deaths fall by about two thirds.';
+    }
+    if (wall && !dodge) {
+      return 'It feels the glass coming and slides along it instead of trapping itself ' +
+             'in a corner.';
+    }
+    if (dodge) {
+      return 'The full brain. It steps out of the charge line instead of being run down ' +
+             'from behind — the predator is faster, but it cannot turn as tightly.';
+    }
+    return 'A partial brain. The fish acts on what it has, and guesses the rest.';
+  }
+
+  function refreshRail() {
+    let n = 0;
+    for (const s of SENSORS) {
+      const on = world.active[s.id];
+      cards[s.id].classList.toggle('on', on);
+      cards[s.id].querySelector('.plus').textContent = on ? '−' : '+';
+      if (on) n++;
+    }
+    document.getElementById('s-nodes').textContent = n;
+    document.getElementById('verdict').innerHTML = verdict();
+  }
+
+  /* ------------------------------- picking ---------------------------- */
+
+  aq.addEventListener('click', (e) => {
+    const r = aq.getBoundingClientRect();
+    const mx = e.clientX - r.left;
+    const my = e.clientY - r.top;
+    let best = null;
+    let bd = 34 * 34;
+    for (const f of world.fish) {
+      if (!f.alive) continue;
+      const d = (f.x - mx) ** 2 + (f.y - my) ** 2;
+      if (d < bd) { bd = d; best = f; }
+    }
+    if (best) { focus = best; locked = true; }
+    else { locked = false; }
+    document.getElementById('tank-hint').innerHTML = locked
+      ? '<b>Locked</b> on one fish · click empty water to follow the hunted one'
+      : '<b>Click any fish</b> to watch its brain above';
+  });
+
+  function pickFocus(dt) {
+    if (locked && focus && focus.alive) return;
+    if (locked && focus && !focus.alive) locked = false;
+    nextAutoFocus -= dt;
+    if (focus && focus.alive && nextAutoFocus > 0) return;
+    nextAutoFocus = 0.5;
+    // whoever the predator is closest to — that is where the drama is
+    const p = world.predator;
+    let best = null;
+    let bd = Infinity;
+    for (const f of world.fish) {
+      if (!f.alive) continue;
+      const d = (f.x - p.x) ** 2 + (f.y - p.y) ** 2;
+      if (d < bd) { bd = d; best = f; }
+    }
+    focus = best;
+  }
+
+  /* ---------------------------- brain drawing ------------------------- */
+
+  const easeBack = (t) => {
+    const c = 1.9;
+    return 1 + (c + 1) * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2);
+  };
+
+  function grow(id) {
+    const t0 = born[id];
+    if (t0 === undefined) return 1;
+    return clamp((clock - t0) / 0.55, 0, 1);
+  }
+
+  function actColor(v, alpha) {
+    const c = v >= 0 ? POS : NEG;
+    return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + alpha + ')';
+  }
+
+  function layout(w, h) {
+    const top = 46;
+    const bot = h - 34;
+    const span = bot - top;
+
+    const ins = SENSORS.map((s, i) => ({
+      s,
+      x: 132,
+      y: top + (span * (i + 0.5)) / SENSORS.length,
+    }));
+
+    const hids = HIDDEN.map((hd, i) => ({
+      h: hd,
+      x: w * 0.53 + (i % 2 ? 15 : -15),
+      y: top + (span * (i + 0.5)) / HIDDEN.length,
+    }));
+
+    const outs = OUTPUTS.map((o, i) => ({
+      o,
+      x: w - 118,
+      y: top + (span * (i + 0.5)) / OUTPUTS.length,
+    }));
+
+    return { ins, hids, outs };
+  }
+
+  function drawBrain(dt) {
+    const { w, h } = fit(nn, nnx);
+    const g = nnx;
+
+    g.clearRect(0, 0, w, h);
+
+    const net = focus && focus.net ? focus.net : null;
+    const { ins, hids, outs } = layout(w, h);
+
+    const byId = {};
+    for (const n of ins) byId[n.s.id] = n;
+
+    /* ---- edges: input -> hidden ---- */
+    for (const hn of hids) {
+      for (const k in hn.h.w) {
+        const src = byId[k];
+        if (!src || !world.active[k]) continue; // no node, no wire
+
+        const wt = hn.h.w[k];
+        const t = grow(k);
+        const ex = src.x + (hn.x - src.x) * t;
+        const ey = src.y + (hn.y - src.y) * t;
+
+        const act = net ? net.inputs[k] : 0;
+        const signal = clamp(Math.abs(act * wt) / 6, 0, 1);
+
+        g.beginPath();
+        g.moveTo(src.x, src.y);
+        g.lineTo(ex, ey);
+        g.lineWidth = 0.6 + Math.min(Math.abs(wt), 6) * 0.34;
+        g.strokeStyle = actColor(wt, (0.1 + signal * 0.62) * t);
+        g.stroke();
+
+        // a pulse crawling toward the neuron it is feeding
+        if (signal > 0.12 && t > 0.95) {
+          const ph = (clock * (0.35 + signal * 0.8)) % 1;
+          const px = src.x + (hn.x - src.x) * ph;
+          const py = src.y + (hn.y - src.y) * ph;
+          g.beginPath();
+          g.arc(px, py, 1.6 + signal * 1.5, 0, 7);
+          g.fillStyle = actColor(wt, 0.35 + signal * 0.5);
+          g.fill();
+        }
+      }
+    }
+
+    /* ---- edges: hidden -> output ---- */
+    for (const on of outs) {
+      for (const k in on.o.w) {
+        const src = hids.find((n) => n.h.id === k);
+        if (!src) continue;
+        const wt = on.o.w[k];
+        const act = net ? net.hidden[k] : 0;
+        const signal = clamp(Math.abs(act * wt) / 5, 0, 1);
+
+        g.beginPath();
+        g.moveTo(src.x, src.y);
+        g.lineTo(on.x, on.y);
+        g.lineWidth = 0.6 + Math.min(Math.abs(wt), 6) * 0.34;
+        g.strokeStyle = actColor(wt, 0.08 + signal * 0.6);
+        g.stroke();
+      }
+    }
+
+    /* ---- input nodes ---- */
+    g.textAlign = 'right';
+    for (const n of ins) {
+      const on = world.active[n.s.id];
+      const t = grow(n.s.id);
+      const act = net ? net.inputs[n.s.id] : (on ? 0 : n.s.prior);
+
+      if (!on) {
+        const gt = 1 - t; // fading out if just removed
+        g.save();
+        g.globalAlpha = 0.55;
+        g.beginPath();
+        g.setLineDash([3, 3]);
+        g.arc(n.x, n.y, 9, 0, 7);
+        g.strokeStyle = 'rgba(139,163,189,0.4)';
+        g.lineWidth = 1;
+        g.stroke();
+        g.setLineDash([]);
+
+        g.fillStyle = 'rgba(139,163,189,0.55)';
+        g.font = '600 13px ui-sans-serif, system-ui, sans-serif';
+        g.fillText('+', n.x + 3.5, n.y + 4.5);
+
+        g.font = '11.5px ui-sans-serif, system-ui, sans-serif';
+        g.fillStyle = 'rgba(139,163,189,0.5)';
+        g.fillText(n.s.label, n.x - 18, n.y - 1);
+
+        g.font = '10px ui-sans-serif, system-ui, sans-serif';
+        g.fillStyle = n.s.prior !== 0
+          ? 'rgba(255,95,109,0.75)'
+          : 'rgba(91,113,137,0.7)';
+        g.fillText('assumes ' + n.s.prior.toFixed(1), n.x - 18, n.y + 10);
+        g.restore();
+        continue;
+      }
+
+      const s = easeBack(t);
+      const r = 9 * s;
+      const mag = Math.abs(act);
+
+      g.save();
+      if (mag > 0.15) {
+        g.shadowColor = actColor(act, 0.55);
+        g.shadowBlur = 10 + mag * 16;
+      }
+      g.beginPath();
+      g.arc(n.x, n.y, r, 0, 7);
+      g.fillStyle = actColor(act, 0.2 + mag * 0.72);
+      g.fill();
+      g.restore();
+
+      g.beginPath();
+      g.arc(n.x, n.y, r, 0, 7);
+      g.strokeStyle = actColor(act, 0.85);
+      g.lineWidth = 1.3;
+      g.stroke();
+
+      // the spark ring when a node is first born
+      if (t < 1) {
+        g.beginPath();
+        g.arc(n.x, n.y, 9 + (1 - t) * 26, 0, 7);
+        g.strokeStyle = 'rgba(90,209,255,' + (1 - t) * 0.6 + ')';
+        g.lineWidth = 1.5;
+        g.stroke();
+      }
+
+      g.font = '600 11.5px ui-sans-serif, system-ui, sans-serif';
+      g.fillStyle = 'rgba(232,241,250,0.9)';
+      g.fillText(n.s.label, n.x - 18, n.y - 1);
+
+      g.font = '10px ui-sans-serif, system-ui, sans-serif';
+      g.fillStyle = actColor(act, 0.85);
+      g.fillText(act.toFixed(2), n.x - 18, n.y + 10);
+    }
+
+    /* ---- hidden nodes ---- */
+    g.textAlign = 'center';
+    for (const n of hids) {
+      const act = net ? net.hidden[n.h.id] : 0;
+      const mag = Math.abs(act);
+      const r = 7 + mag * 3.5;
+
+      g.save();
+      if (mag > 0.2) {
+        g.shadowColor = actColor(act, 0.5);
+        g.shadowBlur = 8 + mag * 14;
+      }
+      g.beginPath();
+      g.arc(n.x, n.y, r, 0, 7);
+      g.fillStyle = actColor(act, 0.15 + mag * 0.7);
+      g.fill();
+      g.restore();
+
+      g.beginPath();
+      g.arc(n.x, n.y, r, 0, 7);
+      g.strokeStyle = 'rgba(139,163,189,' + (0.3 + mag * 0.5) + ')';
+      g.lineWidth = 1;
+      g.stroke();
+
+      // label to the side, not above — above lands on top of the next neuron
+      if (mag > 0.45) {
+        g.textAlign = 'left';
+        g.font = '600 9.5px ui-sans-serif, system-ui, sans-serif';
+        g.lineWidth = 2.5;
+        g.strokeStyle = 'rgba(11,21,34,0.85)';
+        g.strokeText(n.h.label, n.x + r + 6, n.y + 3);
+        g.fillStyle = 'rgba(232,241,250,' + (mag - 0.25) + ')';
+        g.fillText(n.h.label, n.x + r + 6, n.y + 3);
+        g.textAlign = 'center';
+      }
+    }
+
+    /* ---- output nodes ---- */
+    for (let i = 0; i < outs.length; i++) {
+      const n = outs[i];
+      const act = net ? net.outputs[n.o.id] : 0;
+      const mag = Math.abs(act);
+      const r = 11 + mag * 4;
+
+      g.save();
+      if (mag > 0.1) {
+        g.shadowColor = actColor(act, 0.6);
+        g.shadowBlur = 12 + mag * 20;
+      }
+      g.beginPath();
+      g.arc(n.x, n.y, r, 0, 7);
+      g.fillStyle = actColor(act, 0.2 + mag * 0.75);
+      g.fill();
+      g.restore();
+
+      g.beginPath();
+      g.arc(n.x, n.y, r, 0, 7);
+      g.strokeStyle = actColor(act, 0.9);
+      g.lineWidth = 1.4;
+      g.stroke();
+
+      g.textAlign = 'left';
+      g.font = '600 11.5px ui-sans-serif, system-ui, sans-serif';
+      g.fillStyle = 'rgba(232,241,250,0.9)';
+      g.fillText(n.o.label, n.x + r + 9, n.y - 1);
+      g.font = '10px ui-sans-serif, system-ui, sans-serif';
+      g.fillStyle = actColor(act, 0.85);
+      g.fillText(act.toFixed(2), n.x + r + 9, n.y + 10);
+    }
+
+    /* ---- the steer vector these two numbers add up to ---- */
+    if (net) {
+      const cx = w - 46;
+      const cy = h - 46;
+      g.beginPath();
+      g.arc(cx, cy, 20, 0, 7);
+      g.strokeStyle = 'rgba(139,163,189,0.18)';
+      g.lineWidth = 1;
+      g.stroke();
+
+      const sx = net.outputs.sx;
+      const sy = net.outputs.sy;
+      g.beginPath();
+      g.moveTo(cx, cy);
+      g.lineTo(cx + sx * 20, cy + sy * 20);
+      g.strokeStyle = 'rgba(61,220,151,0.95)';
+      g.lineWidth = 2.5;
+      g.lineCap = 'round';
+      g.stroke();
+
+      g.textAlign = 'center';
+      g.font = '9px ui-sans-serif, system-ui, sans-serif';
+      g.fillStyle = 'rgba(91,113,137,0.9)';
+      g.fillText('swim', cx, cy + 34);
+    }
+
+    /* ---- column captions ---- */
+    g.textAlign = 'center';
+    g.font = '10px ui-sans-serif, system-ui, sans-serif';
+    g.fillStyle = 'rgba(91,113,137,0.75)';
+    g.fillText('SENSES', 132, h - 14);
+    g.fillText('HIDDEN LAYER', w * 0.53, h - 14);
+    g.fillText('MUSCLE', w - 118, h - 14);
+  }
+
+  /* click a ghost node in the diagram */
+  nn.addEventListener('click', (e) => {
+    const r = nn.getBoundingClientRect();
+    const mx = e.clientX - r.left;
+    const my = e.clientY - r.top;
+    const { ins } = layout(r.width, r.height);
+    for (const n of ins) {
+      if ((n.x - mx) ** 2 + (n.y - my) ** 2 < 16 * 16) {
+        toggle(n.s.id);
+        return;
+      }
+    }
+  });
+
+  /* ----------------------------- tank drawing ------------------------- */
+
+  function drawFish(g, f) {
+    const r = world.fishR;
+    g.save();
+    g.translate(f.x, f.y);
+    g.rotate(f.angle);
+
+    const wag = Math.sin(f.wig) * 0.5;
+    const hot = f.panic;
+    const light = 62 + hot * 16;
+
+    // tail — a fan whose tip sweeps as it beats
+    const tip = wag * r * 2.1;
+    g.beginPath();
+    g.moveTo(-r * 1.25, 0);
+    g.lineTo(-r * 2.8, tip - r * 0.95);
+    g.quadraticCurveTo(-r * 2.05, tip * 0.45, -r * 2.8, tip + r * 0.95);
+    g.closePath();
+    g.fillStyle = 'hsla(' + f.hue + ',70%,' + (light - 14) + '%,0.75)';
+    g.fill();
+
+    // body
+    g.beginPath();
+    g.ellipse(0, 0, r * 1.85, r * 0.92, 0, 0, 7);
+    const grd = g.createLinearGradient(0, -r, 0, r);
+    grd.addColorStop(0, 'hsl(' + (f.hue + 12) + ',85%,' + (light + 14) + '%)');
+    grd.addColorStop(1, 'hsl(' + (f.hue - 8) + ',70%,' + (light - 18) + '%)');
+    g.fillStyle = grd;
+    g.fill();
+
+    if (hot > 0.35) {
+      g.strokeStyle = 'rgba(255,95,109,' + (hot - 0.35) * 0.9 + ')';
+      g.lineWidth = 1.2;
+      g.stroke();
+    }
+
+    // eye
+    g.beginPath();
+    g.arc(r * 1.05, -r * 0.22, r * 0.2, 0, 7);
+    g.fillStyle = '#03131e';
+    g.fill();
+
+    g.restore();
+  }
+
+  function drawPredator(g, p, dt) {
+    const R = world.predR;
+
+    // the danger radius — this is literally what the Proximity node measures
+    if (world.active.prox) {
+      g.beginPath();
+      g.arc(p.x, p.y, world.vision, 0, 7);
+      g.strokeStyle = 'rgba(255,95,109,0.13)';
+      g.setLineDash([5, 7]);
+      g.lineWidth = 1;
+      g.stroke();
+      g.setLineDash([]);
+    }
+
+    // the charge line — what Approaching and Dodge are reading
+    if (world.active.appr || world.active.ddx) {
+      const L = 118;
+      const grd = g.createLinearGradient(p.x, p.y, p.x + p.vx / world.predSpeed * L,
+                                                   p.y + p.vy / world.predSpeed * L);
+      grd.addColorStop(0, 'rgba(255,95,109,0.22)');
+      grd.addColorStop(1, 'rgba(255,95,109,0)');
+      g.beginPath();
+      g.moveTo(p.x, p.y);
+      g.lineTo(p.x + (p.vx / world.predSpeed) * L, p.y + (p.vy / world.predSpeed) * L);
+      g.strokeStyle = grd;
+      g.lineWidth = 2;
+      g.stroke();
+    }
+
+    g.save();
+    g.translate(p.x, p.y);
+    g.rotate(p.angle);
+
+    const wag = Math.sin(p.wig) * 0.42;
+
+    // tail
+    g.beginPath();
+    g.moveTo(-R * 0.9, 0);
+    g.quadraticCurveTo(-R * 1.7, wag * R * 0.9, -R * 2.15, wag * R * 1.5);
+    g.lineTo(-R * 2.15, wag * R * 1.5 - R * 1.15);
+    g.quadraticCurveTo(-R * 1.6, wag * R * 0.5 - R * 0.4, -R * 0.9, 0);
+    g.closePath();
+    g.fillStyle = '#1d3446';
+    g.fill();
+
+    // dorsal fin
+    g.beginPath();
+    g.moveTo(-R * 0.1, -R * 0.55);
+    g.quadraticCurveTo(R * 0.1, -R * 1.25, R * 0.55, -R * 0.45);
+    g.closePath();
+    g.fillStyle = '#22405a';
+    g.fill();
+
+    // body
+    g.beginPath();
+    g.ellipse(0, 0, R * 1.55, R * 0.78, 0, 0, 7);
+    const grd = g.createLinearGradient(0, -R, 0, R);
+    grd.addColorStop(0, '#3d6180');
+    grd.addColorStop(0.55, '#284660');
+    grd.addColorStop(1, '#16283a');
+    g.fillStyle = grd;
+    g.fill();
+
+    // jaw
+    g.beginPath();
+    g.moveTo(R * 1.5, R * 0.02);
+    g.lineTo(R * 0.72, R * 0.5);
+    g.lineTo(R * 0.78, R * 0.12);
+    g.closePath();
+    g.fillStyle = '#0d1c2a';
+    g.fill();
+
+    // eye
+    g.beginPath();
+    g.arc(R * 0.92, -R * 0.24, R * 0.15, 0, 7);
+    g.fillStyle = '#ff5f6d';
+    g.shadowColor = '#ff5f6d';
+    g.shadowBlur = 8;
+    g.fill();
+
+    g.restore();
+  }
+
+  function drawTank(dt) {
+    const { w, h } = fit(aq, aqx);
+    const g = aqx;
+
+    // water
+    const grd = g.createLinearGradient(0, 0, 0, h);
+    grd.addColorStop(0, '#0d2740');
+    grd.addColorStop(0.55, '#08192b');
+    grd.addColorStop(1, '#050f1c');
+    g.fillStyle = grd;
+    g.fillRect(0, 0, w, h);
+
+    // light shafts
+    g.save();
+    g.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 4; i++) {
+      const x = ((i + 1) / 5) * w + Math.sin(clock * 0.18 + i * 2.1) * 42;
+      const lg = g.createLinearGradient(x, 0, x + 60, h);
+      lg.addColorStop(0, 'rgba(120,200,255,0.055)');
+      lg.addColorStop(1, 'rgba(120,200,255,0)');
+      g.fillStyle = lg;
+      g.beginPath();
+      g.moveTo(x - 34, 0);
+      g.lineTo(x + 34, 0);
+      g.lineTo(x + 96, h);
+      g.lineTo(x + 16, h);
+      g.closePath();
+      g.fill();
+    }
+    g.restore();
+
+    // bubbles
+    if (bubbles.length < 34 && Math.random() < 0.4) {
+      bubbles.push({ x: Math.random() * w, y: h + 6, r: 0.8 + Math.random() * 2.2,
+                     v: 12 + Math.random() * 26, p: Math.random() * 7 });
+    }
+    g.fillStyle = 'rgba(150,210,255,0.14)';
+    for (const b of bubbles) {
+      b.y -= b.v * dt;
+      b.p += dt * 2;
+      g.beginPath();
+      g.arc(b.x + Math.sin(b.p) * 5, b.y, b.r, 0, 7);
+      g.fill();
+    }
+    bubbles = bubbles.filter((b) => b.y > -8);
+
+    // wall band — the thing the Wall nodes feel
+    if (world.active.wlx || world.active.wly) {
+      const m = world.wallBand;
+      g.strokeStyle = 'rgba(90,209,255,0.09)';
+      g.lineWidth = 1;
+      g.strokeRect(m, m, w - m * 2, h - m * 2);
+    }
+
+    for (const f of world.fish) if (f.alive) drawFish(g, f);
+
+    // the fish whose brain is upstairs
+    if (focus && focus.alive) {
+      g.beginPath();
+      g.arc(focus.x, focus.y, 15 + Math.sin(clock * 3) * 1.2, 0, 7);
+      g.strokeStyle = locked ? 'rgba(61,220,151,0.9)' : 'rgba(232,241,250,0.55)';
+      g.lineWidth = 1.4;
+      g.stroke();
+
+      g.beginPath();
+      g.moveTo(focus.x, focus.y - 15);
+      g.lineTo(focus.x, focus.y - 26);
+      g.strokeStyle = 'rgba(232,241,250,0.25)';
+      g.stroke();
+    }
+
+    drawPredator(g, world.predator, dt);
+
+    // eat bursts
+    for (const b of bursts) {
+      b.t += dt;
+      const k = b.t / 0.55;
+      if (k >= 1) continue;
+      g.beginPath();
+      g.arc(b.x, b.y, 6 + k * 34, 0, 7);
+      g.strokeStyle = 'hsla(' + b.hue + ',80%,70%,' + (1 - k) * 0.5 + ')';
+      g.lineWidth = 2 * (1 - k);
+      g.stroke();
+      for (const p of b.bits) {
+        g.beginPath();
+        g.arc(b.x + p.dx * k * 42, b.y + p.dy * k * 42, 2.2 * (1 - k), 0, 7);
+        g.fillStyle = 'hsla(' + b.hue + ',80%,72%,' + (1 - k) * 0.85 + ')';
+        g.fill();
+      }
+    }
+    bursts = bursts.filter((b) => b.t < 0.55);
+  }
+
+  /* ------------------------------- stats ------------------------------ */
+
+  function drawStats() {
+    let alive = 0;
+    for (const f of world.fish) if (f.alive) alive++;
+
+    document.getElementById('s-alive').textContent = alive;
+    document.getElementById('s-eaten').textContent = world.eaten;
+
+    const span = Math.min(20, clock - statsFrom);
+    const rateEl = document.getElementById('s-rate');
+    if (span < 4) {
+      rateEl.textContent = '—';
+      rateEl.parentElement.style.setProperty('--rate', 'var(--ink-faint)');
+      return;
+    }
+    const since = clock - span;
+    const n = eatTimes.filter((t) => t >= since).length;
+    const rate = (n / span) * 60;
+    rateEl.textContent = rate.toFixed(0);
+    rateEl.parentElement.style.setProperty(
+      '--rate',
+      rate > 55 ? 'var(--danger)' : rate > 30 ? 'var(--pos)' : 'var(--good)'
+    );
+  }
+
+  /* -------------------------------- loop ------------------------------ */
+
+  let last = performance.now();
+
+  function frame(now) {
+    const dt = Math.min((now - last) / 1000, 1 / 24);
+    last = now;
+    clock += dt;
+
+    if (!paused) {
+      Sim.step(world, dt);
+      for (const e of world.events) {
+        eatTimes.push(clock);
+        const bits = [];
+        for (let i = 0; i < 9; i++) {
+          const a = (i / 9) * Math.PI * 2 + Math.random();
+          bits.push({ dx: Math.cos(a) * (0.5 + Math.random() * 0.5),
+                      dy: Math.sin(a) * (0.5 + Math.random() * 0.5) });
+        }
+        bursts.push({ x: e.x, y: e.y, hue: e.hue, t: 0, bits });
+      }
+      world.events.length = 0;
+      if (eatTimes.length > 400) eatTimes = eatTimes.slice(-200);
+    }
+
+    pickFocus(dt);
+    drawTank(dt);
+    drawBrain(dt);
+    drawStats();
+
+    // live sensor readouts on the rail
+    if (focus && focus.raw) {
+      for (const s of SENSORS) {
+        const el = cards[s.id].querySelector('[data-val]');
+        el.textContent = world.active[s.id]
+          ? focus.raw[s.id].toFixed(2)
+          : 'assumes ' + s.prior.toFixed(1);
+      }
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (e.code === 'Space') { e.preventDefault(); paused = !paused; }
+  });
+
+  // ?nodes=pdx,pdy,prox — start with a given brain already wired up
+  const preset = new URLSearchParams(location.search).get('nodes');
+  if (preset) {
+    const want = new Set(preset === 'all' ? SENSORS.map((s) => s.id) : preset.split(','));
+    for (const s of SENSORS) world.active[s.id] = want.has(s.id);
+  }
+
+  refreshRail();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
