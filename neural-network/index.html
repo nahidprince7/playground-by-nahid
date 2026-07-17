@@ -4,6 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fish Brain — a neural network you can grow</title>
+<meta name="description" content="Grow a real neural network one node at a time and watch fish dodge a predator. Add a sense, see the net rewire — and learn what it costs to be missing one.">
+
+<!-- Open Graph / social -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Playground by Nahid">
+<meta property="og:title" content="Fish Brain — a neural network you can grow">
+<meta property="og:description" content="Grow a real neural network one node at a time and watch the fish survive — or not. Play it free in your browser.">
+<meta property="og:url" content="https://playground.devadda.site/neural-network/">
+<meta property="og:image" content="https://playground.devadda.site/assets/og-fish.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://playground.devadda.site/assets/og-fish.png">
+<meta name="theme-color" content="#070d15">
+
 <style>
   :root {
     --bg:        #070d15;
@@ -356,9 +371,10 @@
   .note b { color: var(--ink-dim); font-weight: 550; }
 
   @media (max-width: 1080px) {
-    .app { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; }
+    /* stack into a normal scrolling page: bar → app (natural height) → footer */
+    html, body { height: auto; min-height: 100%; overflow: visible; }
+    .app { flex: 0 0 auto; height: auto; grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; }
     .rail { overflow: visible; }
-    body { overflow: auto; }
     .stage { min-height: 0; }
     .panel.brain { flex: 0 0 auto; height: 320px; }
     .panel.tank  { flex: 0 0 auto; height: 360px; }
@@ -378,6 +394,7 @@
     .stat { min-width: 0; padding: 6px 10px; }
     .pg-foot-top { flex-wrap: wrap; justify-content: center; }
     .pg-foot-top span { text-align: center; }
+    .hint.corner { display: none; }   /* avoid overlapping the panel badge on narrow screens */
   }
 </style>
 </head>
