@@ -12,10 +12,10 @@ One landing page, two browser games — no install, no build, no sign-up.
 
 | Project | What it is | Play |
 |---|---|---|
-| **Are You DevOps?** | A system-design simulation game. Deploy CDNs, load balancers, caches and databases to keep your infrastructure alive as traffic surges from a viral tweet to a full DDoS — without blowing the budget. | [`DevOps Challange/`](./DevOps%20Challange/) |
 | **Fish Brain** | *Build a fish brain by neural networking.* Grow a real neural network one node at a time and watch the consequences swim around underneath it. Add a sense, see the net rewire, learn whether it was worth anything against the predator. | [`neural-network/`](./neural-network/) |
+| **Are You DevOps?** | A system-design simulation game. Deploy CDNs, load balancers, caches and databases to keep your infrastructure alive as traffic surges from a viral tweet to a full DDoS — without blowing the budget. | [`DevOps Challange/`](./DevOps%20Challange/) |
 
-Each project is fully self-contained and unchanged — the hub page just links into its folder.
+Each project is fully self-contained — the hub page just links into its folder, and both games share a slim "Playground by Nahid" top bar + footer that link back to the hub.
 
 ---
 
