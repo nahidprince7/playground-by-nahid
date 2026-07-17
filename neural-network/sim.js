@@ -270,6 +270,9 @@
     const ky = height / w.height;
     w.width = width;
     w.height = height;
+    // Keep the predator sized to the tank. It used to be a fixed 24px, which
+    // looked huge and swam past the walls on small / mobile canvases.
+    w.predR = clamp(Math.min(width, height) * 0.05, 13, 24);
     for (const f of w.fish) { f.x *= kx; f.y *= ky; }
     w.predator.x *= kx;
     w.predator.y *= ky;
@@ -322,8 +325,11 @@
     p.angle += clamp(angDiff(desired, p.angle), -w.predTurn * dt, w.predTurn * dt);
     p.vx = Math.cos(p.angle) * w.predSpeed;
     p.vy = Math.sin(p.angle) * w.predSpeed;
-    p.x = clamp(p.x + p.vx * dt, 6, w.width - 6);
-    p.y = clamp(p.y + p.vy * dt, 6, w.height - 6);
+    // Clamp by the predator's own radius so its body stays inside the glass
+    // (a fixed 6px margin let most of the fish poke through on small tanks).
+    const pm = w.predR * 1.6;
+    p.x = clamp(p.x + p.vx * dt, pm, w.width - pm);
+    p.y = clamp(p.y + p.vy * dt, pm, w.height - pm);
     p.wig += dt * (6 + w.predSpeed * 0.03);
 
     /* ---------------------------- fish ---------------------------- */
