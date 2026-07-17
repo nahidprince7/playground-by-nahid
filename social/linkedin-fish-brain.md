@@ -1,68 +1,80 @@
 # LinkedIn Post — Fish Brain 🧠🐟
 
-**Live:** https://playground.devadda.site/
-**Project:** Fish Brain — a neural network you can grow, one node at a time.
+**Live (real URL):** https://playground.devadda.site/
+**Project:** Fish Brain — a neural network you build, one sense at a time.
+
+> Note: on LinkedIn you can paste the real URL directly, or let LinkedIn shorten
+> it to an `lnkd.in/...` link. Either way it points to the same place.
 
 ---
 
-## 🇬🇧 English (short & punchy)
+## 🇧🇩 Bangla (final)
 
-> Most people *read* about neural networks.
-> I built one you can **play with**. 🧠🐟
->
-> 30 tiny fish. 1 hungry predator.
-> The fish are steered by a **real neural network** — and it starts with *zero* senses.
->
-> Click to give them one sense at a time:
-> 👁️ "Where's the predator?"
-> ⚡ "Is it charging at me?"
->
-> Watch the brain rewire itself live — and see the **deaths/min** counter decide if that new neuron was actually worth it.
->
-> The twist? A sense you *don't* add still feeds the brain a worst-case guess… so a half-built brain can be *worse* than a blind fish. 🤯
->
-> No install. No sign-up. Just play and feel how a neural network thinks.
->
-> 👉 Try it: https://playground.devadda.site/
->
-> Would your fish survive? Drop a 🐟 if it clicked for you.
->
-> #NeuralNetworks #MachineLearning #AI #WebDev #JavaScript #LearnByDoing #DeepLearning #Coding
+অনেক Neural Network-এর নাম শুনেছেন, রাইট? এইবার নিজের চোখে দেখুন এবং নিজেই বানান! 🧠🐟
+
+এটা দেখতে কেমন? কীভাবে কাজ করে? এগুলো কি কখনো নিজে চোখে দেখেছেন?
+
+বইয়ের পাতা বা আর্টিকেল পড়ে থিওরি জানা অনেক হয়েছে। এবার আমি এমন একটা ইন্টারঅ্যাক্টিভ প্লে-গ্রাউন্ড বানিয়েছি, যেখানে একটা AI কীভাবে "ভাবে" তা আপনি সরাসরি স্ক্রিনে দেখতে পারবেন।
+
+🎮 সেটআপটা একদম সিম্পল:
+🐠 ৩০টা ছোট মাছ।
+🦈 ১টা ক্ষুধার্ত শিকারি।
+🧠 মাছগুলো চলে একটা আসল Neural Network দিয়ে — তবে টুইস্ট হলো, শুরুতে ওদের কোনো সেন্স (Sense) বা অনুভূতি থাকে না।
+
+আপনি ক্রিয়েট করবেন মাছের এই Neural Network! জাস্ট ক্লিক করে একটা একটা করে সেন্স আনলক করুন:
+👁️ "শিকারি কোন দিকে?"
+⚡ "সে কি আমার দিকেই তেড়ে আসছে?"
+
+যেমন যেমন সেন্স দেবেন, আপনার চোখের সামনে ব্রেইনটা নিজে নিজে Rewire হতে থাকবে। আর স্ক্রিনের Deaths/Min কাউন্টারই বলে দেবে আপনার দেওয়া নতুন নিউরনটা আসলেই কোনো কাজের, নাকি মাছগুলোর অকাল মৃত্যুর কারণ!
+
+⚠️ সবচেয়ে মজার পার্ট: যে সেন্স আপনি দেবেন না, ব্রেইন সেটাকে সবচেয়ে মারাত্মক বিপদ ধরে নিয়ে রিঅ্যাক্ট করবে। ফলে, একটা আধা-বানানো ব্রেইন একটা পুরোপুরি অন্ধ মাছের চেয়েও খারাপ পারফর্ম করতে পারে! 🤯
+
+কোনো ইনস্টলেশন বা সাইন-আপের প্যারা নেই। জাস্ট লিংকে যান আর খেলুন!
+
+👉 খেলে দেখুন এখানে: https://playground.devadda.site/
+
+আপনার তৈরি ব্রেইন কি মাছগুলোকে বাঁচাতে পারবে? ট্রাই করে কমেন্টে একটা 🐟 ড্রপ করুন!
+
+#NeuralNetworks #MachineLearning #AI #WebDev #JavaScript #বাংলা #Coding #LearnByDoing
 
 ---
 
-## 🇧🇩 Bangla (short & punchy)
+## 🇬🇧 English (companion)
 
-> Neural network নিয়ে সবাই *পড়ে*।
-> আমি বানিয়েছি একটা, যেটা তুমি **খেলতে** পারবে। 🧠🐟
->
-> ৩০টা ছোট মাছ। ১টা ক্ষুধার্ত শিকারি।
-> মাছগুলো চলে একটা **আসল neural network** দিয়ে — আর শুরুতে ওদের কোনো sense-ই নেই।
->
-> ক্লিক করে একটা একটা করে sense দাও:
-> 👁️ "শিকারি কোন দিকে?"
-> ⚡ "সে কি আমার দিকেই ছুটে আসছে?"
->
-> চোখের সামনে brain-টা নিজে নিজে rewire হবে — আর **deaths/min** কাউন্টার বলে দেবে নতুন neuron-টা আসলে কাজে লাগল কিনা।
->
-> মজার ব্যাপার? যে sense তুমি *দাও না*, সেটাও brain-কে একটা worst-case অনুমান খাওয়ায়… তাই আধা-বানানো brain একটা অন্ধ মাছের চেয়েও *খারাপ* করতে পারে! 🤯
->
-> Install নেই, sign-up নেই। শুধু খেলো, আর feel করো একটা neural network কীভাবে "ভাবে"।
->
-> 👉 খেলে দেখো: https://playground.devadda.site/
->
-> তোমার মাছ কি বাঁচবে? কাজে লাগলে একটা 🐟 কমেন্ট করো।
->
-> #NeuralNetworks #MachineLearning #AI #WebDev #JavaScript #বাংলা #Coding #LearnByDoing
+You've heard the term "Neural Network" a thousand times, right? Now see one with your own eyes — and build it yourself. 🧠🐟
+
+What does it actually look like? How does it really work? Have you ever *watched* one think?
+
+We've read enough theory from books and articles. So I built an interactive playground where you can watch, live on screen, how an AI actually "thinks."
+
+🎮 The setup is dead simple:
+🐠 30 tiny fish.
+🦈 1 hungry predator.
+🧠 The fish are steered by a *real* neural network — but here's the twist: they start with **zero senses**.
+
+You build the fish's brain. Click to unlock one sense at a time:
+👁️ "Which way is the predator?"
+⚡ "Is it charging straight at me?"
+
+Every sense you add rewires the brain in front of you — and the **Deaths/Min** counter tells you whether that new neuron actually helped, or just got your fish killed faster.
+
+⚠️ The best part: any sense you *don't* add, the brain assumes the worst-case danger and overreacts to it. So a half-built brain can perform *worse* than a completely blind fish! 🤯
+
+No installation, no sign-up. Just open the link and play.
+
+👉 Play it here: https://playground.devadda.site/
+
+Can the brain you build keep the fish alive? Give it a try and drop a 🐟 in the comments!
+
+#NeuralNetworks #MachineLearning #AI #WebDev #JavaScript #Coding #LearnByDoing
 
 ---
 
 ## 🎯 Posting tips (for max reach)
 
 - **Best time:** Tue–Thu, 9–11 AM (your audience's timezone).
-- **First line is everything** — LinkedIn shows ~2 lines before "…see more". The hook must earn the click.
-- **Attach media:** a 5–10s screen recording of the fish dodging the predator, or a GIF. Video/GIF > static image > text-only for reach.
-- **Ask a question at the end** ("Would your fish survive?") — comments boost the algorithm more than likes.
-- **Post the link in the first comment** instead of the body if you notice reach is throttled (LinkedIn sometimes down-ranks posts with external links).
-- **Reply to every comment** in the first hour — it signals engagement and widens distribution.
-- Pick **English OR Bangla** per post (don't stack both in one) — or run them as two separate posts a few days apart to A/B which lands better.
+- **First 2 lines are everything** — LinkedIn truncates after ~2 lines with "…see more". The hook must earn the click. (Your opening line does this well.)
+- **Attach media:** a 5–10s screen recording of the fish dodging the predator, or a GIF. Video/GIF > image > text-only for reach.
+- **Post one language per update** (or run Bangla and English as two separate posts a few days apart to see which lands better).
+- **Reply to every comment** in the first hour — comments boost distribution more than likes.
+- If reach looks throttled, try putting the link in the **first comment** instead of the body.
