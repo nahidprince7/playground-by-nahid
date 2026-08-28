@@ -1,0 +1,110 @@
+{
+  "slug": "senior-software-engineer-java",
+  "title": "Sr. Software Engineer (Java + React, 5+ years)",
+  "level": "senior",
+  "difficulty": 4,
+  "platform": "web",
+  "stack": [
+    "Java",
+    "Spring",
+    "React",
+    "MySQL"
+  ],
+  "briefing": {
+    "summary": "An enterprise marketing automation platform sending billions of personalised messages a month — email, SMS, push, WhatsApp. Java and Spring on the back, React and TypeScript on the front, MySQL underneath, and the interesting problems are all about scale: deduplicating, counting and aggregating enormous volumes without falling over. The posting also asks for a subject matter expert who mentors, reviews code properly and owns their services in production. Half the questions here are about that half of the job.",
+    "requirements": [
+      "5+ years building web applications: JavaScript/TypeScript with React, Java with Spring",
+      "Relational persistence — MySQL — and the query performance that comes with it",
+      "Distributed systems: ingest, deduplicate, count, aggregate, archive at scale",
+      "Operational ownership — monitoring, troubleshooting, performance and security",
+      "High-quality code review and mentoring junior engineers",
+      "Agile delivery, TDD and pair programming",
+      "Communicating trade-offs to stakeholders across time zones"
+    ]
+  },
+  "topics": [
+    {
+      "id": "java",
+      "label": "Java & the JVM",
+      "skills": [
+        "java"
+      ]
+    },
+    {
+      "id": "spring",
+      "label": "Spring & persistence",
+      "skills": [
+        "spring"
+      ]
+    },
+    {
+      "id": "frontend",
+      "label": "React & TypeScript",
+      "skills": [
+        "react"
+      ]
+    },
+    {
+      "id": "data",
+      "label": "MySQL & data at scale",
+      "skills": [
+        "mysql"
+      ]
+    },
+    {
+      "id": "scale",
+      "label": "Distributed systems & scale",
+      "skills": [
+        "microservices",
+        "incident-response"
+      ]
+    },
+    {
+      "id": "craft",
+      "label": "Code review, mentoring & TDD",
+      "skills": [
+        "tech-leadership",
+        "testing"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "id": "hr",
+      "name": "HR Screen",
+      "interviewer": {
+        "name": "Sabrina",
+        "role": "Recruiter"
+      },
+      "count": 5
+    },
+    {
+      "id": "technical",
+      "name": "Technical Screen",
+      "interviewer": {
+        "name": "Lukas",
+        "role": "Senior Engineer"
+      },
+      "count": 7
+    },
+    {
+      "id": "deepdive",
+      "name": "Deep Dive",
+      "interviewer": {
+        "name": "Anika",
+        "role": "Staff Engineer"
+      },
+      "count": 6
+    },
+    {
+      "id": "ask",
+      "name": "The Ask",
+      "interviewer": {
+        "name": "Mehedi",
+        "role": "Engineering Manager"
+      },
+      "count": 5
+    }
+  ],
+  "extra": []
+}
