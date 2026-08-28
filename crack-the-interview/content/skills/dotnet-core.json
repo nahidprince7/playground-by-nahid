@@ -1,0 +1,88 @@
+{
+  "skill": "dotnet-core",
+  "label": ".NET Core, Web API & C#",
+  "questions": [
+    {
+      "id": "dotnet-core-01",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "You're registering a service in ASP.NET Core that takes a DbContext in its constructor. Which lifetime?",
+      "options": [
+        "Singleton",
+        "Scoped",
+        "Transient, with a static cache inside",
+        "It doesn't matter — the container sorts it out"
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "DbContext isn't thread-safe and it tracks changes for one unit of work, which in a web app means one request. Scoped gives you exactly that. Register it as a singleton and you get entity tracking bleeding between users' requests — a bug that only shows up under real traffic."
+    },
+    {
+      "id": "dotnet-core-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Someone calls an async method with .Result to keep a method signature synchronous. What's the actual risk?",
+      "options": [
+        "Nothing — it's the same thing with extra steps.",
+        "Thread-pool starvation and deadlocks once the endpoint is under load.",
+        "It adds a fixed ~200ms to every call.",
+        "Exceptions get swallowed silently."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "Blocking on .Result holds a thread hostage while it waits. One or two are invisible; a few hundred concurrent requests and the pool has nothing left to schedule with. The exception answer is half true — they get wrapped in an AggregateException, not swallowed — which is exactly why it's a tempting wrong answer."
+    },
+    {
+      "id": "dotnet-core-03",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Your Web API returns 200 with an empty body when the posted model is invalid, instead of a 400 with the validation errors. What's most likely missing?",
+      "options": [
+        "The [ApiController] attribute on the controller",
+        "app.UseRouting() in the pipeline",
+        "A try/catch around the action body",
+        "[Required] doesn't work outside Razor Pages"
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "[ApiController] is what wires up automatic model-state validation and the ProblemDetails 400 response. Without it, ModelState is populated but nobody checks it, so the action runs on garbage input and returns whatever it returns."
+    },
+    {
+      "id": "dotnet-core-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This ASP.NET Core action works locally but degrades badly under load. What is the central problem?",
+      "subject": {
+        "kind": "code",
+        "language": "csharp",
+        "content": "public IActionResult GetReport()\n{\n    var data = _client.GetStringAsync(_url).Result;\n    return Ok(data);\n}"
+      },
+      "options": [
+        "Ok cannot return a string.",
+        "Blocking on asynchronous I/O ties up request threads and can cause thread-pool starvation; make the action async and await the call.",
+        "HttpClient cannot be used in a controller.",
+        "The method needs the static keyword."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Sync-over-async blocks a worker while the network is idle. Under concurrency those blocked workers accumulate, latency rises, and the pool struggles to serve new requests. Async all the way preserves request capacity."
+    }
+  ]
+}

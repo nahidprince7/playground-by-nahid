@@ -1,0 +1,93 @@
+{
+  "skill": "ef-core",
+  "label": "Entity Framework Core",
+  "questions": [
+    {
+      "id": "ef-core-01",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "You load 500 orders with EF Core, then read order.Customer.Name inside a foreach. What happens?",
+      "options": [
+        "One query with a join — EF is smart about this.",
+        "501 queries: the list, then one lazy-loaded round trip per order.",
+        "A compile error — you'd need an explicit Include.",
+        "One query, because EF caches the customers."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "The classic N+1. It compiles, it works, and it's fine on your machine with 10 rows. Fix it with .Include(o => o.Customer) or a projection to a DTO that selects only the columns you need. On an ERP order list this is the difference between 80ms and 8 seconds."
+    },
+    {
+      "id": "ef-core-02",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This came up in a pull request. What's the problem?",
+      "subject": {
+        "kind": "code",
+        "language": "csharp",
+        "content": "public async Task<IActionResult> GetOrders(int customerId)\n{\n    var sql = $\"SELECT * FROM Orders WHERE CustomerId = {customerId}\";\n    var orders = await _db.Orders.FromSqlRaw(sql).ToListAsync();\n    return Ok(orders);\n}"
+      },
+      "options": [
+        "FromSqlRaw is deprecated in current EF Core.",
+        "String-interpolated SQL — it's an injection hole, and it defeats query plan reuse.",
+        "There's no null check on orders before returning.",
+        "It returns the entity instead of a DTO."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "Building SQL by interpolation is the bug, even though customerId is an int and looks safe today — the pattern is what gets copied to a string parameter tomorrow. Use FromSqlInterpolated, or parameters. Returning the entity instead of a DTO is a genuine second-order issue and a fair thing to mention after the injection."
+    },
+    {
+      "id": "ef-core-03",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "Checkout is slow and inventory occasionally goes wrong. Here's the loop.",
+      "subject": {
+        "kind": "code",
+        "language": "csharp",
+        "content": "foreach (var item in cart.Items)\n{\n    var product = _db.Products.First(p => p.Id == item.ProductId);\n    product.Stock -= item.Quantity;\n    _db.SaveChanges();\n}"
+      },
+      "options": [
+        "First should be FirstOrDefault.",
+        "SaveChanges inside the loop — a round trip per item, and no single transaction across the cart.",
+        "Stock should be a decimal, not an int.",
+        "The loop should run in parallel."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Saving per iteration is both the performance bug and the correctness bug: fail on item four and items one to three are already committed, so stock is wrong and there's no order. Move SaveChanges out of the loop so the whole cart commits or none of it does. First vs FirstOrDefault is a real second finding — it throws instead of handling a missing product."
+    },
+    {
+      "id": "ef-core-04",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A read-only EF Core dashboard query tracks thousands of entities and memory climbs. What is the simplest appropriate change?",
+      "options": [
+        "Call SaveChanges after the query.",
+        "Use AsNoTracking for the read-only query and project only the fields the dashboard needs.",
+        "Create a new database for dashboards.",
+        "Disable garbage collection during the request."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Change tracking costs memory and CPU so EF can persist later mutations. A read-only projection does not need that machinery; no-tracking plus a narrow select reduces both retained state and transferred data."
+    }
+  ]
+}

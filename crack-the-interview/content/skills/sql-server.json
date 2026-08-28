@@ -1,0 +1,61 @@
+{
+  "skill": "sql-server",
+  "label": "SQL Server & query performance",
+  "questions": [
+    {
+      "id": "sql-server-01",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A query that filters on OrderDate and sorts by CustomerId has gotten slower every month as the table grew. First thing you look at?",
+      "options": [
+        "Add more RAM to the SQL Server box.",
+        "The execution plan — is it scanning where it should be seeking?",
+        "Rewrite it as a stored procedure.",
+        "Move the table to a document database."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "'It got slower as it grew' is the signature of a scan. The plan tells you in seconds whether an index is missing or an existing one isn't being used — maybe because a function wrapped the column in the WHERE clause. Everything else on this list is guessing with money."
+    },
+    {
+      "id": "sql-server-02",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "order",
+      "prompt": "A previously fast SQL Server query becomes slow in production.",
+      "instruction": "Order a disciplined investigation.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Capture the actual execution plan and runtime statistics for the slow case"
+        },
+        {
+          "id": "b",
+          "text": "Confirm the exact query, parameters, wait symptoms, and regression window"
+        },
+        {
+          "id": "c",
+          "text": "Compare estimates with actual rows and inspect scans, lookups, spills, and blocking"
+        },
+        {
+          "id": "d",
+          "text": "Apply and measure the smallest targeted fix, then monitor for regressions"
+        }
+      ],
+      "correctOrder": [
+        "b",
+        "a",
+        "c",
+        "d"
+      ],
+      "explanation": "Start with the real symptom and inputs, then gather the plan and runtime evidence. Estimate errors, blocking, spills, and access paths point toward the cause; only then should you change indexes, statistics, queries, or parameter behavior and measure the result."
+    }
+  ]
+}
