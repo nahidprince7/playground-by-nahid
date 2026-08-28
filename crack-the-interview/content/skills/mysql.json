@@ -1,0 +1,110 @@
+{
+  "skill": "mysql",
+  "label": "MySQL & data at scale",
+  "questions": [
+    {
+      "id": "mysql-01",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "There's an index on (campaign_id, sent_at). A query that filters only on sent_at is slow. Why?",
+      "options": [
+        "The index needs rebuilding.",
+        "Composite indexes are usable left to right — a query that skips the leading column can't seek into it.",
+        "sent_at is the wrong column type for an index.",
+        "MySQL only uses one index per table."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Think of it as a phone book sorted by surname then first name: searching for everyone called 'Rafi' means reading the whole book. Either add an index leading with sent_at, or reorder the existing one if no query needs campaign_id first. This is the single most common reason an index someone added 'didn't help'."
+    },
+    {
+      "id": "mysql-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Reads go to a replica. Users occasionally don't see a record they created a second ago. What's happening?",
+      "options": [
+        "The write silently failed and the error was swallowed.",
+        "Replication lag — the read reached the replica before the write did. Reads that must see your own writes have to go to the primary.",
+        "A stale cache in front of the database.",
+        "MySQL replication is synchronous, so this isn't possible."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Read replicas trade consistency for capacity, and the bill comes due exactly here — 'I saved it and it vanished'. The usual fix is routing: after a write, pin that user's reads to the primary for a short window. Chasing it as a cache bug is a day you don't get back."
+    },
+    {
+      "id": "mysql-03",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "Paging through a campaign's messages is fast at first and unusable by page 40,000.",
+      "subject": {
+        "kind": "code",
+        "language": "sql",
+        "content": "SELECT * FROM messages\nWHERE campaign_id = ?\nORDER BY sent_at DESC\nLIMIT 50 OFFSET 2000000;"
+      },
+      "options": [
+        "Deep OFFSET makes the server walk and throw away two million rows to return fifty — the cost grows with the page number.",
+        "ORDER BY ... DESC can't use an index.",
+        "LIMIT and OFFSET can't be combined on an indexed column.",
+        "SELECT * is the only issue here."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "Keyset pagination fixes it: remember the last row's sent_at and ask for rows older than that, so every page costs the same. It's also more correct — offset paging skips or repeats rows when new messages arrive mid-scroll. SELECT * is a real secondary point on a wide table."
+    },
+    {
+      "id": "mysql-04",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This archive job has never once finished.",
+      "subject": {
+        "kind": "code",
+        "language": "java",
+        "content": "@Transactional\npublic void archiveCampaign(long campaignId) {\n    var messages = repo.findByCampaignId(campaignId);   // ~40 million rows\n    for (var m : messages) {\n        archive.save(m);\n        repo.delete(m);\n    }\n}"
+      },
+      "options": [
+        "One transaction across forty million rows: it holds locks for hours, grows the undo log without bound, and any failure near the end rolls back the entire night's work.",
+        "@Transactional belongs on the class, not the method.",
+        "findByCampaignId should return a Set to avoid duplicates.",
+        "archive.save should be called asynchronously."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "Batch it: chunks of a few thousand, each in its own transaction, with a marker so a restart resumes rather than starts over. Long transactions are the thing that turns a maintenance job into an outage — other writers block behind the locks, and the rollback can take longer than the work did."
+    },
+    {
+      "id": "mysql-05",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A composite index is defined on (tenant_id, created_at). Which query benefits most directly from its leftmost order?",
+      "options": [
+        "WHERE created_at > ? with no tenant filter",
+        "WHERE tenant_id = ? AND created_at BETWEEN ? AND ?",
+        "WHERE status = ?",
+        "ORDER BY created_at across every tenant"
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "The index is ordered first by tenant and then by time within each tenant. Equality on the leading column followed by a range on the second lets MySQL scan a narrow contiguous portion of the index."
+    }
+  ]
+}
