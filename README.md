@@ -74,7 +74,7 @@ React question written once is reused by every role that touches React.
    its four rounds, then regenerates `content.js`.
 4. Commit, including `content.js`.
 
-`content/content-schema.md` in `docs/` is the full contract. Never hand-edit
+`docs/content-schema.md` is the full contract. Never hand-edit
 `content.js` — it is overwritten on every run.
 
 ---
