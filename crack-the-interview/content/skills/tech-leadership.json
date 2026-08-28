@@ -1,0 +1,118 @@
+{
+  "skill": "tech-leadership",
+  "label": "Code review, mentoring & technical communication",
+  "questions": [
+    {
+      "id": "tech-leadership-01",
+      "stage": "hr",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Part of this role is mentoring junior engineers. What does that look like for you day to day?",
+      "options": [
+        "I make myself available and answer their questions when they ask.",
+        "I pair on the genuinely hard parts, review their PRs with reasons instead of verdicts, and give them something small to own end to end — including the release.",
+        "I write thorough documentation so they don't need to interrupt anyone.",
+        "I unblock them fast by fixing the problem, so the sprint doesn't slip."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Fixing it for them is the answer that feels helpful and produces someone who still can't do it next quarter. Ownership is the word that separates mentoring from helpfulness — and 'including the release' is the detail that shows you've actually done it, because that's the part people are usually not trusted with."
+    },
+    {
+      "id": "tech-leadership-02",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A senior engineer describing how they handled a junior's pull request.",
+      "subject": {
+        "kind": "quote",
+        "content": "I rejected it. The approach was wrong, so I told them to just do it the way I would have done it."
+      },
+      "options": [
+        "Rejecting a junior's pull request at all",
+        "A verdict with no reasoning — and 'the way I would have done it' isn't a standard anyone can apply, so the next PR is another guess",
+        "Not pairing on it instead of reviewing",
+        "Reviewing a junior's work personally rather than delegating"
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "Rejecting is fine; rejecting without a transferable reason is what makes review feel arbitrary. The reason has to point at something outside your own preference — a constraint, a failure mode, a convention that's written down. Otherwise you've taught them to predict you, which doesn't scale and doesn't survive you leaving."
+    },
+    {
+      "id": "tech-leadership-03",
+      "stage": "technical",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "You have forty minutes and a 900-line pull request in front of you.",
+      "options": [
+        "Skim it and approve — the author is experienced and the sprint is ending.",
+        "Ask for it to be split, and meanwhile review the part that changes behaviour rather than the part that moves code around.",
+        "Review every line properly and take however long it takes.",
+        "Approve with comments, and trust the follow-ups get done."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "A 900-line review is not a review; past a few hundred lines, defect detection collapses and everyone knows it. Asking for a split is the unpopular answer and the correct one. Approving with follow-up comments is how 'we'll fix it later' becomes the codebase — the leverage is at the gate, not after it."
+    },
+    {
+      "id": "tech-leadership-04",
+      "stage": "ask",
+      "levels": [
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "Half your team sits six time zones away and a design decision is blocking you. What do you do?",
+      "modelAnswer": "Write it down before asking anything. The problem, the two or three options, what each costs, my recommendation, and — this is the part people skip — the default I'll proceed with if nobody replies by a stated time. That turns a question that costs a day into a decision that costs an hour of their morning, and it means the overlap window gets spent on disagreement rather than on context. If the choice is reversible I take the default and note it; if it's expensive to undo, that's what the overlap hours are for, and I'll wait. Either way the reasoning lands in the ticket or the repo rather than in a chat thread, so the next person to ask gets the answer without asking.",
+      "keyPoints": [
+        "Write the decision up before asking — options, costs, a recommendation",
+        "State a default you'll proceed with, with a deadline",
+        "Reversible decisions don't wait for the overlap; expensive ones do",
+        "Spend synchronous time on disagreement, not on context transfer",
+        "Leave the reasoning somewhere findable, not in chat"
+      ],
+      "explanation": "The weak version of this answer is 'I'd schedule a call' — which works once and doesn't survive a real time difference. Naming a default with a deadline is the move that actually unblocks distributed teams, and very few candidates say it."
+    },
+    {
+      "id": "tech-leadership-05",
+      "stage": "ask",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "You've decided to put a cache in front of an expensive query. How does the team find out?",
+      "options": [
+        "They see it in the diff — it's an implementation detail.",
+        "A short written record: the problem, the options considered, what you chose, what it costs, and what would make you revisit it.",
+        "You explain it at the next standup.",
+        "A comment above the cache explaining why it's there."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "A cache is a correctness decision wearing a performance costume — you've just accepted stale reads somewhere, and six months from now nobody will remember that was deliberate. 'What would make me revisit this' is the line that separates a decision record from documentation: it tells the next person when the trade-off has expired."
+    },
+    {
+      "id": "tech-leadership-06",
+      "stage": "ask",
+      "levels": [
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "A strong engineer repeatedly dominates design discussions and quieter teammates stop contributing. How do you respond?",
+      "modelAnswer": "I would address the behavior privately and specifically, recognizing the engineer's expertise while explaining its effect on decision quality and team growth. I would change the meeting mechanism as well: circulate context early, ask for written proposals, invite input in rounds, and let the domain owner speak first. I would follow up with both the engineer and quieter teammates, then judge improvement by whether ideas and ownership are becoming distributed rather than whether meetings merely feel calmer.",
+      "keyPoints": [
+        "Give direct private feedback about observable impact",
+        "Preserve the person's dignity and value",
+        "Change the system, not only the individual",
+        "Create structured space for quieter contributors",
+        "Measure distributed ownership and decision quality"
+      ],
+      "explanation": "Leadership protects both contribution and participation. Coaching the individual matters, but meeting design must also stop rewarding interruption and ensure the team can use expertise without becoming dependent on one voice."
+    }
+  ]
+}
