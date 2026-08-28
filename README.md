@@ -1,7 +1,7 @@
 # Playground by Nahid
 
 A small collection of interactive things I build to make hard ideas **playable**.
-One landing page, two browser games — no install, no build, no sign-up.
+One landing page, three browser games — no install, no build, no sign-up.
 
 > **Live:** open `index.html` (the hub) → pick a project → play full-screen.
 > Suggested subdomain: **`playground.yourdomain`**
@@ -14,8 +14,9 @@ One landing page, two browser games — no install, no build, no sign-up.
 |---|---|---|
 | **Fish Brain** | *Build a fish brain by neural networking.* Grow a real neural network one node at a time and watch the consequences swim around underneath it. Add a sense, see the net rewire, learn whether it was worth anything against the predator. | [`neural-network/`](./neural-network/) |
 | **Are You DevOps?** | A system-design simulation game. Deploy CDNs, load balancers, caches and databases to keep your infrastructure alive as traffic surges from a viral tweet to a full DDoS — without blowing the budget. | [`DevOps Challange/`](./DevOps%20Challange/) |
+| **Crack the Interview** | A replayable software interview simulation. Pick a role, revise three topics, answer four rounds of questions, and manage interviewer confidence with honest real-world candidate moves. | [`crack-the-interview/`](./crack-the-interview/) |
 
-Each project is fully self-contained — the hub page just links into its folder, and both games share a slim "Playground by Nahid" top bar + footer that link back to the hub.
+Each project is fully self-contained — the hub page just links into its folder, and the games share a slim "Playground by Nahid" top bar + footer that link back to the hub.
 
 ---
 
@@ -52,6 +53,7 @@ Then map your custom subdomain (e.g. `arcade.yourdomain`) to it.
 ├── index.html            # the hub / landing page (personal branding + cards)
 ├── DevOps Challange/     # "Are You DevOps?" — untouched
 ├── neural-network/       # "Fish Brain" — untouched
+├── crack-the-interview/  # role-based interview simulation
 └── README.md
 ```
 
