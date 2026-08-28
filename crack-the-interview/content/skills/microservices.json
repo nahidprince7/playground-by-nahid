@@ -1,0 +1,135 @@
+{
+  "skill": "microservices",
+  "label": "Distributed systems, queues & scale",
+  "questions": [
+    {
+      "id": "microservices-01",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Order placement writes to SQL Server, then publishes to RabbitMQ so inventory can update. The publish fails after the DB commit. What's the failure mode?",
+      "options": [
+        "Nothing — RabbitMQ retries the publish.",
+        "The order exists but inventory never hears about it. You need an outbox, or something that covers both.",
+        "The database write should have been async.",
+        "You should be using Kafka for this."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Two systems, one logical operation, no shared transaction — this is the dual-write problem. The standard fix is the transactional outbox: write the order and the message to the same database in one transaction, and let a separate process publish from the outbox table. Swapping brokers doesn't touch the problem at all."
+    },
+    {
+      "id": "microservices-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Customers occasionally receive the same message twice. The queue guarantees at-least-once delivery.",
+      "options": [
+        "Move to a broker that offers exactly-once delivery.",
+        "Make the consumer idempotent: a dedup key checked and recorded before the send, so a redelivery is a no-op.",
+        "Reduce the retry count so redeliveries are rarer.",
+        "Acknowledge the message before processing it rather than after."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "At-least-once is the guarantee you get; idempotent consumers are how you live with it. Acking first converts duplicates into lost messages, which is worse and harder to notice. 'Exactly-once' at the broker level is mostly a marketing claim — end to end, someone still has to deduplicate, and it may as well be the code that knows what a duplicate means."
+    },
+    {
+      "id": "microservices-03",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A downstream provider gets slow. Your queue depth climbs, memory grows, and the service dies. What was missing?",
+      "options": [
+        "A larger queue, so there's room to absorb the spike.",
+        "Backpressure — a bounded queue and a concurrency limit, so a slow downstream makes you slow instead of dead.",
+        "More consumer instances to work through the backlog.",
+        "A shorter timeout with more retries."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "An unbounded queue is a memory leak with good manners. Bounding it forces the decision — shed load, or slow the producer — at a point where you still can. Adding consumers or retrying harder both aim more traffic at something already struggling, which is how one slow dependency becomes a full outage."
+    },
+    {
+      "id": "microservices-04",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "You need an approximate count of unique recipients across billions of events a month, queryable in real time.",
+      "options": [
+        "COUNT(DISTINCT recipient_id) over the events table.",
+        "A HyperLogLog sketch — approximate, mergeable across shards and time buckets, constant memory.",
+        "A HashSet of recipient ids held in application memory.",
+        "One row per unique recipient with a unique index to enforce it."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "The word doing the work in the question is 'approximate'. HyperLogLog gives you a few percent error for kilobytes of memory, and sketches merge — so daily ones combine into a month without rereading anything. Exact distinct counts at this scale mean either a full scan or storing every id you've ever seen."
+    },
+    {
+      "id": "microservices-05",
+      "stage": "ask",
+      "levels": [
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "Design the delivery pipeline for a platform sending billions of personalised messages a month.",
+      "modelAnswer": "Split segmentation from delivery with a queue, so a slow provider never blocks campaign building. Partition the work by tenant and campaign so one enormous sender can't starve everyone else — noisy-neighbour isolation is the thing that actually gets you paged. Consumers are idempotent with a dedup key per recipient per campaign, because at-least-once delivery means you will see the same message twice. Per-provider rate limits and circuit breakers, with retries on exponential backoff and a dead-letter queue for what never succeeds. Delivery state gets persisted per message so a restart resumes rather than re-sends, and so support can answer 'did this customer get it'. Measure in percentiles, never averages — the average is fine while the p99 is on fire, and the p99 is what the customer with a million recipients experiences.",
+      "keyPoints": [
+        "Queue between segmentation and delivery",
+        "Partition by tenant/campaign — isolate noisy neighbours",
+        "Idempotent consumers with a dedup key",
+        "Per-provider rate limits, circuit breakers, backoff, dead-letter queue",
+        "Persist per-message delivery state so it's resumable and answerable",
+        "Percentiles not averages"
+      ],
+      "explanation": "At this scale the interesting problems aren't throughput, they're isolation and idempotency. An answer that only talks about scaling horizontally has described the easy half. Mentioning the noisy neighbour and 'did this customer get it' shows you've operated one of these, not just drawn one."
+    },
+    {
+      "id": "microservices-06",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "order",
+      "prompt": "A service must publish an event only if its database change commits.",
+      "instruction": "Order the transactional outbox flow.",
+      "items": [
+        {
+          "id": "a",
+          "text": "A relay reads unpublished outbox rows"
+        },
+        {
+          "id": "b",
+          "text": "The service commits the business change and outbox row in one database transaction"
+        },
+        {
+          "id": "c",
+          "text": "The relay publishes the event to the broker"
+        },
+        {
+          "id": "d",
+          "text": "The relay marks the outbox row published; consumers handle duplicates idempotently"
+        }
+      ],
+      "correctOrder": [
+        "b",
+        "a",
+        "c",
+        "d"
+      ],
+      "explanation": "The atomic database transaction closes the gap between state and intent to publish. The relay may publish more than once around failures, so marking and consumer idempotency complete an at-least-once design."
+    }
+  ]
+}

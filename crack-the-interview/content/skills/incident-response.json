@@ -1,0 +1,61 @@
+{
+  "skill": "incident-response",
+  "label": "Production incidents & debugging under pressure",
+  "questions": [
+    {
+      "id": "incident-response-01",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "order",
+      "prompt": "Ten minutes after a deploy, error rates are climbing.",
+      "instruction": "Put these in the order you'd actually do them.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Roll back to the previous release"
+        },
+        {
+          "id": "b",
+          "text": "Open the dashboard — confirm the spike is real and started at the deploy"
+        },
+        {
+          "id": "c",
+          "text": "Post in the incident channel that you're on it"
+        },
+        {
+          "id": "d",
+          "text": "File the bug and write up what happened"
+        }
+      ],
+      "correctOrder": [
+        "b",
+        "c",
+        "a",
+        "d"
+      ],
+      "explanation": "Confirm before you act — rolling back a spike that started an hour before your deploy wastes the one move you have. Then tell people, because the second-worst thing in an incident is nobody knowing it's being handled. Roll back to stop the bleeding, and only then investigate properly. Fixing forward under pressure is how ten minutes becomes two hours."
+    },
+    {
+      "id": "incident-response-02",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "Tell us how you would run the first ten minutes of an incident when the cause is still unknown.",
+      "modelAnswer": "I would establish an incident lead and a shared channel, state the observable impact, and assign parallel tracks for mitigation, diagnosis, and communication. I would freeze unrelated changes, inspect recent deployments and the few signals closest to the user symptom, and prefer a reversible mitigation such as rollback, traffic shift, or feature disablement. I would time-stamp decisions and update stakeholders at a predictable cadence without speculating about a root cause.",
+      "keyPoints": [
+        "Name ownership and one communication channel",
+        "Describe impact before guessing at cause",
+        "Separate mitigation, diagnosis, and communication",
+        "Prefer fast reversible actions",
+        "Keep a time-stamped log and regular updates"
+      ],
+      "explanation": "Early incident response is coordination under uncertainty. A clear lead, parallel work, reversible mitigation, and factual communication reduce both technical damage and organizational confusion."
+    }
+  ]
+}
