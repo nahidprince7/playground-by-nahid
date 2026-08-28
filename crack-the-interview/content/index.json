@@ -1,0 +1,56 @@
+{
+  "jobs": [
+    {
+      "slug": "senior-android-engineer",
+      "title": "Sr. Software Engineer (Android, 3-6 years)",
+      "stack": [
+        "Kotlin",
+        "Jetpack Compose",
+        "Coroutines",
+        "Room"
+      ],
+      "level": "senior",
+      "difficulty": 4,
+      "questionCount": 22
+    },
+    {
+      "slug": "senior-ios-engineer",
+      "title": "Sr. Software Engineer (iOS, 7+ years)",
+      "stack": [
+        "Swift",
+        "Objective-C",
+        "UIKit",
+        "MVVM"
+      ],
+      "level": "senior",
+      "difficulty": 4,
+      "questionCount": 21
+    },
+    {
+      "slug": "senior-software-engineer-java",
+      "title": "Sr. Software Engineer (Java + React, 5+ years)",
+      "stack": [
+        "Java",
+        "Spring",
+        "React",
+        "MySQL"
+      ],
+      "level": "senior",
+      "difficulty": 4,
+      "questionCount": 23
+    },
+    {
+      "slug": "software-engineer-dotnet",
+      "title": "Software Engineer (.NET, 2-4 years)",
+      "stack": [
+        ".NET Core",
+        "Angular",
+        "React",
+        "SQL Server"
+      ],
+      "level": "mid",
+      "difficulty": 3,
+      "questionCount": 24
+    }
+  ]
+}
