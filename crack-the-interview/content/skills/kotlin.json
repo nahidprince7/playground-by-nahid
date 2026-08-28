@@ -1,0 +1,133 @@
+{
+  "skill": "kotlin",
+  "label": "Kotlin, Coroutines & Flow",
+  "questions": [
+    {
+      "id": "kotlin-01",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "android",
+      "type": "mcq",
+      "prompt": "A repository launches a coroutine with GlobalScope to load data for a screen. What breaks?",
+      "options": [
+        "Nothing — GlobalScope is fine for network calls.",
+        "It outlives the screen. Nothing cancels it when the user navigates away, so the result lands on a dead view and the whole graph leaks.",
+        "GlobalScope can't perform network I/O.",
+        "It runs on the main thread and blocks the UI."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "Structured concurrency is the entire point of scopes: viewModelScope dies with the ViewModel, so in-flight work is cancelled for free. GlobalScope opts out of that, which is why it's effectively banned in app code. On a screen users open repeatedly, every visit leaks another request."
+    },
+    {
+      "id": "kotlin-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "android",
+      "type": "mcq",
+      "prompt": "Compose needs to observe your UI state, and there must always be a current value to render. Which type?",
+      "options": [
+        "Flow",
+        "StateFlow",
+        "SharedFlow with replay = 0",
+        "LiveData — Compose can't collect Flow"
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "StateFlow is a Flow that always holds a value and only emits on change — exactly what a UI needs. A cold Flow has nothing to render before its first emission, and a SharedFlow with no replay drops everything for a late collector, so a rotation leaves you with a blank screen."
+    },
+    {
+      "id": "kotlin-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "You're parsing a 5MB JSON response. Dispatchers.IO or Dispatchers.Default?",
+      "options": [
+        "IO — it's coming from the network, so it's I/O.",
+        "Default — parsing is CPU-bound, and IO's much larger thread pool exists for calls that block.",
+        "Main.immediate, so the result is ready to render.",
+        "It makes no measurable difference."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "The dispatcher matches the work, not where the bytes came from. IO runs a big pool because blocked threads are cheap; Default sizes itself to your cores because busy threads are not. Parsing on IO with 64 threads competing for 8 cores is how you make a background task fight the UI."
+    },
+    {
+      "id": "kotlin-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "android",
+      "type": "red-flag",
+      "prompt": "The profile screen takes twice as long to load as it should.",
+      "subject": {
+        "kind": "code",
+        "language": "kotlin",
+        "content": "viewModelScope.launch {\n    val user = api.getUser()        // suspend\n    val orders = api.getOrders()    // suspend\n    _state.value = Profile(user, orders)\n}"
+      },
+      "options": [
+        "The two calls run one after the other — they're independent, so async/await would overlap them.",
+        "viewModelScope should be lifecycleScope.",
+        "_state.value should be _state.emit().",
+        "The calls need to be wrapped in withContext(Dispatchers.IO)."
+      ],
+      "correct": 0,
+      "eliminate": 1,
+      "explanation": "Suspending doesn't mean concurrent. Two independent calls in sequence cost the sum of both round trips; async { } on each and awaiting both costs the slower one. The IO answer is the common wrong instinct — Retrofit's suspend functions already move off the main thread, so wrapping them changes nothing but the noise."
+    },
+    {
+      "id": "kotlin-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "Sync failures are never showing in the UI, and the team can't work out why.",
+      "subject": {
+        "kind": "code",
+        "language": "kotlin",
+        "content": "try {\n    viewModelScope.launch { repo.sync() }\n} catch (e: Exception) {\n    _error.value = e.message\n}"
+      },
+      "options": [
+        "launch returns the moment it's called — the exception is thrown later, inside the coroutine, long after this try block has exited.",
+        "sync() needs to be marked suspend.",
+        "This should use runBlocking so the exception propagates.",
+        "_error should be a StateFlow, not a MutableLiveData."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "try/catch wraps the launching, not the coroutine. The catch is dead code. Put the try inside the launch block, or install a CoroutineExceptionHandler on the scope. It's a bug that reads as correct to anyone used to synchronous code, which is why it survives review."
+    },
+    {
+      "id": "kotlin-06",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "How do structured concurrency rules change the way you design background work in Kotlin?",
+      "modelAnswer": "I make every coroutine belong to a scope whose lifetime matches the work. Child jobs inherit cancellation and failure rules from that scope, and the parent does not finish until its children do. UI work belongs to a lifecycle-aware scope, request work to the request, and durable work to a scheduler such as WorkManager rather than a global coroutine. I use supervisorScope only when sibling failures are intentionally independent and still handle their results explicitly.",
+      "keyPoints": [
+        "Every coroutine has an owner and bounded lifetime",
+        "Cancellation propagates with ownership",
+        "Parents wait for children",
+        "Durable work needs a durable scheduler",
+        "Supervision is an explicit failure-policy choice"
+      ],
+      "explanation": "Structured concurrency turns background work from detached activity into a tree of ownership. That makes cancellation, failure, cleanup, and testing predictable instead of relying on global jobs that outlive their purpose."
+    }
+  ]
+}

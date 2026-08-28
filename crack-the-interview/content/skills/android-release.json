@@ -1,0 +1,106 @@
+{
+  "skill": "android-release",
+  "label": "App health, testing & Play Store",
+  "questions": [
+    {
+      "id": "android-release-01",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "android",
+      "type": "order",
+      "prompt": "A feature is code-complete and the team wants it in front of learners this week.",
+      "instruction": "Order these.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Start a staged rollout to 10%"
+        },
+        {
+          "id": "b",
+          "text": "Run the unit and instrumented suites against the release variant"
+        },
+        {
+          "id": "c",
+          "text": "Push the build to the internal testing track"
+        },
+        {
+          "id": "d",
+          "text": "Watch crash-free rate and ANR before widening the rollout"
+        }
+      ],
+      "correctOrder": [
+        "b",
+        "c",
+        "a",
+        "d"
+      ],
+      "explanation": "Test the artifact you're actually shipping — release builds differ from debug by minification alone, and R8 breaks reflection-based code that debug builds never notice. Internal track first, then a staged rollout, because a 10% rollout you can halt is the only real safety net Play gives you. Watching the metrics is what makes the stage meaningful; skipping it makes it theatre."
+    },
+    {
+      "id": "android-release-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "android",
+      "type": "mcq",
+      "prompt": "Crash-free users sits at 99.6%, but Play Console is warning about a 1.2% ANR rate. What is it telling you?",
+      "options": [
+        "ANRs are just crashes on older devices — same root causes.",
+        "The main thread was blocked long enough for the system to offer to kill the app. Look for I/O or heavy work on the main thread, very often during startup.",
+        "The app is being killed for using too much memory.",
+        "ANRs only come from background services and can be ignored for a UI app."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "ANRs and crashes are different failures with different fixes: a crash is code that threw, an ANR is code that wouldn't yield. They also hurt differently — ANR rate feeds Play's quality thresholds and can suppress your store ranking while your crash numbers look excellent."
+    },
+    {
+      "id": "android-release-03",
+      "stage": "ask",
+      "levels": [
+        "senior"
+      ],
+      "platform": "android",
+      "type": "mcq",
+      "prompt": "Cold start went from 1.2s to 2.4s in one release. On a modularised app, where do you look?",
+      "options": [
+        "Too many modules — module count slows startup.",
+        "Something moved into Application.onCreate or a startup content provider — usually a library initialising eagerly.",
+        "Compose is slow to start up.",
+        "The APK simply got bigger."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "Cold start regressions are nearly always eager initialisation: an analytics or crash SDK added to onCreate, or a library that installs its own ContentProvider and runs before your code does. App Startup lets you make those lazy. Module count affects build time, not runtime."
+    },
+    {
+      "id": "android-release-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "android",
+      "type": "red-flag",
+      "prompt": "Crash-free users look healthy after a release, but support reports that many users cannot complete checkout. What metric assumption is dangerous?",
+      "subject": {
+        "kind": "quote",
+        "content": "Crash-free is above 99.9%, so the release is healthy."
+      },
+      "options": [
+        "Crash-free users should be measured hourly only.",
+        "A non-crashing functional failure can destroy a critical journey while crash metrics stay green; release health also needs journey success, ANR, latency, and business signals.",
+        "Support tickets should never influence release decisions.",
+        "The staged rollout should immediately move to 100%."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "Crash-free rate measures one failure mode. A release can remain perfectly stable while a server response, feature flag, or UI state prevents payment. Health criteria must include the user journeys the release can break."
+    }
+  ]
+}
