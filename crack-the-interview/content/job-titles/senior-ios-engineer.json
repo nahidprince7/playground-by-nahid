@@ -1,0 +1,107 @@
+{
+  "slug": "senior-ios-engineer",
+  "title": "Sr. Software Engineer (iOS, 7+ years)",
+  "level": "senior",
+  "difficulty": 4,
+  "platform": "ios",
+  "stack": [
+    "Swift",
+    "Objective-C",
+    "UIKit",
+    "MVVM"
+  ],
+  "briefing": {
+    "summary": "Client project work — custom apps built for other people, on deadlines you didn't set, in codebases you inherited. The posting asks for deep Swift and Objective-C, real architecture (MVC, MVVM, Clean), and apps you've personally shipped to the App Store. That last one is the filter: they want someone who has been through review rejections, not someone who has only written features.",
+    "requirements": [
+      "Deep Swift and Objective-C, 7+ years hands-on",
+      "API integration and the data layer",
+      "MVC, MVVM and Clean Architecture",
+      "Apps you have personally shipped to the App Store",
+      "At least 2-3 projects you can talk through end to end",
+      "Git, debugging, and App Store review guidelines"
+    ]
+  },
+  "topics": [
+    {
+      "id": "swift",
+      "label": "Swift, concurrency & memory",
+      "skills": [
+        "swift"
+      ]
+    },
+    {
+      "id": "objc",
+      "label": "Objective-C & legacy interop",
+      "skills": [
+        "objective-c"
+      ]
+    },
+    {
+      "id": "architecture",
+      "label": "MVC, MVVM & Clean Architecture",
+      "skills": [
+        "architecture"
+      ]
+    },
+    {
+      "id": "data",
+      "label": "API integration & the data layer",
+      "skills": [
+        "api-integration"
+      ]
+    },
+    {
+      "id": "release",
+      "label": "App Store, guidelines & release",
+      "skills": [
+        "ios-release"
+      ]
+    },
+    {
+      "id": "debugging",
+      "label": "Debugging under pressure",
+      "skills": [
+        "incident-response"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "id": "hr",
+      "name": "HR Screen",
+      "interviewer": {
+        "name": "Nusrat",
+        "role": "Recruiter"
+      },
+      "count": 6
+    },
+    {
+      "id": "technical",
+      "name": "Technical Screen",
+      "interviewer": {
+        "name": "Arif",
+        "role": "Senior iOS Engineer"
+      },
+      "count": 5
+    },
+    {
+      "id": "deepdive",
+      "name": "Deep Dive",
+      "interviewer": {
+        "name": "Shuvo",
+        "role": "Tech Lead"
+      },
+      "count": 5
+    },
+    {
+      "id": "ask",
+      "name": "The Ask",
+      "interviewer": {
+        "name": "Farhana",
+        "role": "Hiring Manager"
+      },
+      "count": 5
+    }
+  ],
+  "extra": []
+}
