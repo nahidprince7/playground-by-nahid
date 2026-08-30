@@ -1,0 +1,91 @@
+{
+  "skill": "testing",
+  "label": "Testing, TDD & quality",
+  "questions": [
+    {
+      "id": "testing-01",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "The team practices TDD, but the suite takes 25 minutes and people have quietly stopped running it locally. What's the real problem?",
+      "options": [
+        "TDD doesn't scale past a certain codebase size.",
+        "Most of those 'unit' tests touch a database or the network. Split them: a genuinely fast suite that runs on every save, and the slow ones in CI.",
+        "The CI machines need to be faster.",
+        "There are simply too many tests — some should be deleted."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "A test suite you don't run has no value, so speed is a correctness property, not a nicety. Almost always the cause is I/O smuggled into unit tests through a shared Spring context or a test container. The fix isn't fewer tests, it's tests that know which layer they're in."
+    },
+    {
+      "id": "testing-02",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This test is green. What's wrong with it?",
+      "subject": {
+        "kind": "code",
+        "language": "java",
+        "content": "@Test\nvoid sendsCampaign() {\n    service.send(campaign);\n\n    verify(repo).findById(1L);\n    verify(mapper).toDto(any());\n    verify(client).post(anyString(), any());\n}"
+      },
+      "options": [
+        "It asserts which methods were called, not what happened. Any refactor breaks it, and it would still pass if the message were addressed to the wrong person.",
+        "verify should be replaced with assertThat.",
+        "It's missing a @BeforeEach to reset the mocks.",
+        "Mockito can't verify three mocks in one test."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "Tests that assert on interactions pin the implementation in place while proving nothing about the outcome — the worst trade available, because they punish exactly the refactoring they were supposed to make safe. Assert on the request that was built or the state that changed. Verifying a call is right when the call itself is the observable effect."
+    },
+    {
+      "id": "testing-03",
+      "stage": "ask",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Limited time to add tests to a service sending billions of messages. Where do they go?",
+      "options": [
+        "Chase line coverage until it's high enough to be a meaningful number.",
+        "On the logic that decides who gets which message, and on the idempotency and retry paths — where a bug is both expensive and silent.",
+        "End-to-end tests only, since those are the closest thing to reality.",
+        "On the controllers, since every request goes through them."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "Test where failure is expensive and invisible. A crash gets noticed in minutes; sending the wrong segment the wrong offer, or delivering a message twice because a retry wasn't idempotent, gets noticed by the customer. Coverage as a target optimises for the easy half of the codebase."
+    },
+    {
+      "id": "testing-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This test passes but provides weak protection. What is the main red flag?",
+      "subject": {
+        "kind": "code",
+        "language": "javascript",
+        "content": "it('creates an order', async () => {\n  const result = await createOrder(validInput);\n  expect(result).toBeTruthy();\n});"
+      },
+      "options": [
+        "The test name contains spaces.",
+        "It only proves that some truthy value returned; it does not verify the business outcome, persisted state, emitted event, or important fields.",
+        "Async tests cannot use expect.",
+        "The function should be mocked even if it is the subject under test."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "A vague truthiness assertion can stay green through serious regressions. A valuable test states the observable contract: which order was created, with what values, and which externally meaningful side effects occurred."
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "skill": "swift",
+  "label": "Swift, concurrency & memory",
+  "questions": [
+    {
+      "id": "swift-01",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "ios",
+      "type": "mcq",
+      "prompt": "A view controller holds a network client, and passes a closure to it that updates self.tableView. The screen is dismissed but never deallocates. Why?",
+      "options": [
+        "The table view is holding a reference to its data source.",
+        "The closure captures self strongly, the client holds the closure, and self holds the client — a cycle.",
+        "dismiss(animated:) doesn't release view controllers.",
+        "The network request is still in flight."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "Escaping closures capture strongly by default. [weak self] in the capture list breaks it, and then guard let self else { return } inside. The in-flight request answer is the good distractor — it delays deallocation, it doesn't prevent it, and the difference between 'late' and 'never' is what Instruments is for."
+    },
+    {
+      "id": "swift-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "ios",
+      "type": "mcq",
+      "prompt": "You're modelling an API response that gets passed between several screens and background tasks. Struct or class, and why?",
+      "options": [
+        "Class — passing structs around copies them and wastes memory.",
+        "Struct — value semantics mean no shared mutable state across threads, which is most of the concurrency bugs gone.",
+        "Class, so you can use inheritance for the different response types.",
+        "Doesn't matter — Swift optimises both the same way."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Value semantics are the point: a copy can't be mutated out from under you by another queue. Swift's copy-on-write means the copying cost is mostly theoretical for the arrays and strings inside. Reach for a class when you need identity or a shared lifecycle — not by default."
+    },
+    {
+      "id": "swift-03",
+      "stage": "technical",
+      "levels": [
+        "senior"
+      ],
+      "platform": "ios",
+      "type": "mcq",
+      "prompt": "You're migrating a completion-handler networking layer to async/await. What does marking the view model @MainActor actually buy you?",
+      "options": [
+        "It makes the network calls run on the main thread.",
+        "The compiler enforces that its state and UI updates happen on the main actor, so you stop hand-writing DispatchQueue.main.async.",
+        "It makes the class thread-safe for any access from any thread.",
+        "It's only needed for SwiftUI."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "@MainActor is a compile-time guarantee about where code runs, not a lock and not a threading change for the awaited work. Your awaits still suspend and the network still happens off-main; you just come back to the main actor automatically. It's the whole reason the migration is worth doing — the class of bug in the previous question stops compiling."
+    },
+    {
+      "id": "swift-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "ios",
+      "type": "red-flag",
+      "prompt": "This shipped in a client app. Where's the leak?",
+      "subject": {
+        "kind": "code",
+        "language": "swift",
+        "content": "class FeedViewController: UIViewController {\n    private let loader = FeedLoader()\n\n    func load() {\n        loader.onUpdate = { items in\n            self.items = items\n            self.tableView.reloadData()\n        }\n        loader.start()\n    }\n}"
+      },
+      "options": [
+        "reloadData should be called on the main thread.",
+        "self is captured strongly by a closure the loader owns, and the controller owns the loader.",
+        "loader should be lazy var, not let.",
+        "onUpdate should be a delegate, not a closure."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "Controller → loader → closure → controller. The controller never deallocates, and on a screen users push repeatedly that's a leak per visit. [weak self] fixes it. Thread safety is worth raising as a second point — you can't tell from this snippet which queue onUpdate fires on, and 'which queue does this call back on' is a good senior question to ask out loud."
+    },
+    {
+      "id": "swift-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "ios",
+      "type": "red-flag",
+      "prompt": "This works on the simulator and crashes intermittently on device.",
+      "subject": {
+        "kind": "code",
+        "language": "swift",
+        "content": "URLSession.shared.dataTask(with: url) { data, _, _ in\n    guard let data else { return }\n    self.items = try! JSONDecoder().decode([Item].self, from: data)\n    self.activityIndicator.stopAnimating()\n    self.tableView.reloadData()\n}.resume()"
+      },
+      "options": [
+        "Two problems: UIKit is being touched off the main thread, and try! crashes the app on any malformed response.",
+        "dataTask should be uploadTask.",
+        "The errors are being ignored with underscores.",
+        "resume() should be called before the closure is set."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "URLSession calls back on a background queue, so every UIKit line here is undefined behaviour that happens to work sometimes — the worst kind of bug. And try! turns a bad server response into a crash your users see rather than an error you handle. Ignoring the error parameters is the third finding, and worth mentioning."
+    },
+    {
+      "id": "swift-06",
+      "stage": "ask",
+      "levels": [
+        "senior"
+      ],
+      "platform": "ios",
+      "type": "open",
+      "prompt": "How would you introduce Swift concurrency into a large callback-based iOS codebase without attempting a rewrite?",
+      "modelAnswer": "I would establish boundaries and migrate one vertical path at a time. I would wrap stable callback APIs with checked continuations, define actor or MainActor isolation at ownership boundaries, and keep Objective-C-facing interfaces compatible. Each migrated path would gain cancellation and error tests, Thread Sanitizer coverage where useful, and measurements for regressions. I would avoid Task.detached as an escape hatch and document where legacy queues still own synchronization.",
+      "keyPoints": [
+        "Migrate vertical slices behind stable boundaries",
+        "Bridge callbacks carefully with checked continuations",
+        "Make actor and MainActor ownership explicit",
+        "Preserve Objective-C interoperability",
+        "Test cancellation, errors, and race behavior"
+      ],
+      "explanation": "A safe concurrency migration is an interoperability plan. Explicit isolation and small boundaries let old and new models coexist while the team learns, verifies behavior, and avoids a high-risk rewrite."
+    }
+  ]
+}

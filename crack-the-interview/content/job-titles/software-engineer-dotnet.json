@@ -1,0 +1,111 @@
+{
+  "slug": "software-engineer-dotnet",
+  "title": "Software Engineer (.NET, 2-4 years)",
+  "level": "mid",
+  "difficulty": 3,
+  "platform": "web",
+  "stack": [
+    ".NET Core",
+    "Angular",
+    "React",
+    "SQL Server"
+  ],
+  "briefing": {
+    "summary": "A long-lived enterprise ERP being rebuilt: .NET Core on the back, Angular and React on the front, SQL Server underneath. The posting leans hard on architecture words — SOLID, Clean Architecture, microservices, message queues — and mentions putting AI features into the product. So this is not a syntax interview. They want to know whether you can be trusted near a system that other people's work depends on.",
+    "requirements": [
+      ".NET Core Web API, MVC and microservices",
+      "TypeScript with Angular and React",
+      "SQL Server, Entity Framework Core, data modeling",
+      "SOLID, Clean Architecture and design patterns",
+      "Message queues, Docker, CI/CD and a cloud platform",
+      "Integrating AI/LLM features into a real application"
+    ]
+  },
+  "topics": [
+    {
+      "id": "backend",
+      "label": ".NET Core, Web API & C#",
+      "skills": [
+        "dotnet-core"
+      ]
+    },
+    {
+      "id": "data",
+      "label": "SQL Server & EF Core",
+      "skills": [
+        "sql-server",
+        "ef-core"
+      ]
+    },
+    {
+      "id": "frontend",
+      "label": "Angular & React",
+      "skills": [
+        "react",
+        "angular"
+      ]
+    },
+    {
+      "id": "architecture",
+      "label": "SOLID, Clean Architecture & patterns",
+      "skills": [
+        "architecture"
+      ]
+    },
+    {
+      "id": "distributed",
+      "label": "Microservices, queues & incidents",
+      "skills": [
+        "microservices",
+        "incident-response"
+      ]
+    },
+    {
+      "id": "delivery",
+      "label": "CI/CD & putting AI in the product",
+      "skills": [
+        "cicd",
+        "ai-integration"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "id": "hr",
+      "name": "HR Screen",
+      "interviewer": {
+        "name": "Tanha",
+        "role": "Recruiter"
+      },
+      "count": 5
+    },
+    {
+      "id": "technical",
+      "name": "Technical Screen",
+      "interviewer": {
+        "name": "Rafi",
+        "role": "Senior Engineer"
+      },
+      "count": 7
+    },
+    {
+      "id": "deepdive",
+      "name": "Deep Dive",
+      "interviewer": {
+        "name": "Imran",
+        "role": "Tech Lead"
+      },
+      "count": 7
+    },
+    {
+      "id": "ask",
+      "name": "The Ask",
+      "interviewer": {
+        "name": "Sadia",
+        "role": "Hiring Manager"
+      },
+      "count": 5
+    }
+  ],
+  "extra": []
+}

@@ -1,0 +1,49 @@
+{
+  "skill": "ai-integration",
+  "label": "Putting AI/LLM features into a product",
+  "questions": [
+    {
+      "id": "ai-integration-01",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "We want AI in this product. Where would you actually use an LLM in an ERP — and where would you refuse to?",
+      "modelAnswer": "Use it where the input is unstructured and a human still checks the output: parsing supplier invoices and delivery notes into structured rows, natural-language search across policy and product documentation, drafting product descriptions, summarising a long approval thread. Refuse where a wrong answer moves money or stock without a human in the loop — posting journal entries, approving payments, adjusting inventory. In an ERP the audit trail is the product, and 'the model decided' is not an audit trail. Anything that ships gets a deterministic fallback path, logged inputs and outputs, and a confidence threshold that routes low-confidence cases to a person.",
+      "keyPoints": [
+        "Good fit: unstructured input becoming structured data, search, drafting, summarising",
+        "Assistive, not authoritative — a human approves anything that moves money or stock",
+        "Log what the model saw and produced; the audit trail matters more than the feature",
+        "Always keep a deterministic fallback",
+        "Route low confidence to a human instead of guessing"
+      ],
+      "explanation": "The posting is enthusiastic about AI, which makes this a trap as much as an invitation. The strongest answer is enthusiastic and specific about the boundary — that combination is rarer than either half."
+    },
+    {
+      "id": "ai-integration-02",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A team is about to ship an LLM feature that extracts invoice totals. What is the biggest red flag in this implementation?",
+      "subject": {
+        "kind": "code",
+        "language": "javascript",
+        "content": "const total = await model.complete(invoiceText);\nawait ledger.post({ amount: Number(total) });"
+      },
+      "options": [
+        "The model call is not streamed.",
+        "The prompt is not stored in a separate file.",
+        "Unvalidated model output is being converted and posted directly to the ledger with no schema check, confidence gate, or human review.",
+        "The function should use Promise.all."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "An LLM response is untrusted input, even when it looks numeric. Money-moving workflows need schema validation, deterministic business rules, an audit trail, and a human review path for uncertain results. Streaming and prompt location are irrelevant to the core risk."
+    }
+  ]
+}

@@ -4,13 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Playground by Nahid</title>
-  <meta name="description" content="A small collection of interactive things I build to make hard ideas playable — a DevOps scaling sim and a neural network you can grow." />
+  <meta name="description" content="Interactive browser games that make hard ideas playable — neural networks, DevOps scaling, and software interviews." />
 
   <!-- Open Graph / social -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Playground by Nahid" />
   <meta property="og:title" content="Playground by Nahid" />
-  <meta property="og:description" content="Play my interactive builds: a neural network you can grow one node at a time, and a DevOps system-design simulation." />
+  <meta property="og:description" content="Play interactive builds about neural networks, DevOps system design, and software interviews." />
   <meta property="og:url" content="https://playground.devadda.site/" />
   <meta property="og:image" content="https://playground.devadda.site/assets/og-hub.png" />
   <meta property="og:image:width" content="1200" />
@@ -18,7 +18,7 @@
   <meta name="theme-color" content="#070d15" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Playground by Nahid" />
-  <meta name="twitter:description" content="Play my interactive builds: a neural network you can grow, and a DevOps scaling sim." />
+  <meta name="twitter:description" content="Play interactive builds about neural networks, DevOps scaling, and software interviews." />
   <meta name="twitter:image" content="https://playground.devadda.site/assets/og-hub.png" />
 
   <!-- Favicon: inline monogram, zero requests -->
@@ -319,6 +319,13 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
+    /* Interview preview: candidate card + confidence signal */
+    .interview-preview{background:radial-gradient(circle at 50% 5%,#202653 0%,#0d172b 55%,#08111e 100%)}
+    .iv-room{position:absolute;inset:42px 28px 20px;display:grid;grid-template-columns:72px 1fr;gap:16px;align-items:center}
+    .iv-person{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;background:linear-gradient(145deg,#4f46e5,#0284c7);box-shadow:0 0 0 8px #818cf815,0 12px 30px -12px #6366f1}
+    .iv-sheet{padding:13px;border:1px solid #2c3e5b;border-radius:12px;background:#0a1322cc}
+    .iv-line{height:7px;margin:7px 0;border-radius:9px;background:#273752}.iv-line.short{width:64%}.iv-line.answer{background:linear-gradient(90deg,#818cf8,#38bdf8)}
+    .iv-meter{position:absolute;left:28px;right:28px;bottom:16px;height:6px;border-radius:9px;background:#1c2a40;overflow:hidden}.iv-meter:after{content:"";display:block;width:72%;height:100%;background:linear-gradient(90deg,#38bdf8,#34d399);animation:ivPulse 2.5s ease-in-out infinite}@keyframes ivPulse{50%{width:88%}}
   </style>
 </head>
 <body>
@@ -460,6 +467,22 @@
             <a class="btn btn-play" href="./neural-network/index.html">Play now <span class="arrow">→</span></a>
             <a class="btn btn-ghost" href="https://github.com/nahidprince7" target="_blank" rel="noopener">Source</a>
           </div>
+        </div>
+      </article>
+
+      <!-- ===== Crack the Interview (shown first) ===== -->
+      <article class="card" style="--accent:#818cf8;--accent-2:#38bdf8; order:-2;">
+        <div class="preview interview-preview">
+          <span class="tag">Interview Simulation</span>
+          <div class="iv-room" aria-hidden="true"><div class="iv-person">NH</div><div class="iv-sheet"><div class="iv-line short"></div><div class="iv-line"></div><div class="iv-line answer"></div><div class="iv-line"></div></div></div>
+          <div class="iv-meter" aria-hidden="true"></div>
+        </div>
+        <div class="card-body">
+          <h2>Crack the Interview</h2>
+          <p class="tagline">Keep the room confident under pressure.</p>
+          <p class="sub">Pick a software role, revise three topics against the clock, and survive four interview rounds. Use real candidate moves when you are unsure—because admitting what you do not know beats bluffing.</p>
+          <div class="badges"><span class="badge">Interview Skills</span><span class="badge">4 Roles</span><span class="badge">Vanilla JS</span><span class="badge">Replayable</span></div>
+          <div class="card-actions"><a class="btn btn-play" href="./crack-the-interview/index.html">Play now <span class="arrow">→</span></a><a class="btn btn-ghost" href="https://github.com/nahidprince7" target="_blank" rel="noopener">Source</a></div>
         </div>
       </article>
 

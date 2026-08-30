@@ -1,0 +1,133 @@
+{
+  "skill": "react",
+  "label": "React",
+  "questions": [
+    {
+      "id": "react-01",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A React screen re-renders the entire order table on every keystroke in an unrelated search box. Most likely cause?",
+      "options": [
+        "React is just slow with big tables.",
+        "State that only one component needs was lifted too high, so the whole subtree re-renders.",
+        "A missing key prop on the table rows.",
+        "The component isn't wrapped in a context provider."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "State lives at the lowest common ancestor that needs it — no higher. Hoisting the input's value into a parent makes every sibling re-render on every character. Missing keys are a real bug, but they cause wrong reconciliation, not extra renders."
+    },
+    {
+      "id": "react-02",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This hook was shipped last week. The API team noticed. Why?",
+      "subject": {
+        "kind": "code",
+        "language": "typescript",
+        "content": "useEffect(() => {\n  fetch(`/api/orders?q=${query}`)\n    .then(r => r.json())\n    .then(setOrders);\n});"
+      },
+      "options": [
+        "No dependency array — it refetches after every render, and setOrders causes a render.",
+        "It should use axios instead of fetch.",
+        "The .then chain needs a .catch.",
+        "The URL should be absolute."
+      ],
+      "correct": 0,
+      "eliminate": 1,
+      "explanation": "Missing deps means the effect runs after every render; setting state re-renders; that runs the effect again. It's an infinite request loop that looks fine locally and turns into a denial of service on your own API in production. It needs [query]. The missing .catch is real but secondary."
+    },
+    {
+      "id": "react-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A table of 5,000 rows scrolls badly. Everything is already wrapped in useMemo. Now what?",
+      "options": [
+        "Memoise more aggressively — the row component and every callback.",
+        "Stop rendering 5,000 rows. Virtualise the list so only the visible window is in the DOM.",
+        "Move the table's state into Redux.",
+        "Rewrite the table as class components."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Memoisation stops unnecessary re-renders; it does nothing about 5,000 nodes the browser has to lay out and paint. Once the DOM itself is the bottleneck, the only real answer is to have less of it. Reaching for more useMemo here is the trap — it's the tool that worked last time."
+    },
+    {
+      "id": "react-04",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "The app crashes because an API field typed as string came back null. TypeScript compiled it without complaint. Why?",
+      "options": [
+        "A TypeScript bug — strictNullChecks should have caught it.",
+        "Types are erased at compile time. Nothing checked the actual response, so the declared type was a promise the server never agreed to.",
+        "The field should have been typed as any.",
+        "React should have caught it at the boundary."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "An interface describing an API response is documentation the compiler trusts absolutely and never verifies. Parse at the boundary — a schema validator that turns a bad response into a handled error rather than a crash three components deep. This is the single most common way TypeScript apps still fail at runtime."
+    },
+    {
+      "id": "react-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This counter increments to 1 and then stops.",
+      "subject": {
+        "kind": "code",
+        "language": "typescript",
+        "content": "useEffect(() => {\n  const onTick = () => setCount(count + 1);\n  const id = setInterval(onTick, 1000);\n  return () => clearInterval(id);\n}, []);"
+      },
+      "options": [
+        "count is captured once when the effect runs, so every tick computes 0 + 1. It needs the updater form: setCount(c => c + 1).",
+        "setInterval should be a recursive setTimeout.",
+        "The cleanup function is missing.",
+        "count should be held in a ref instead of state."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "The stale closure — the bug that makes people distrust hooks. The empty dependency array is right for the interval; it's the value read inside that's frozen. The updater form asks React for the current value instead of remembering one, which sidesteps the whole class of bug."
+    },
+    {
+      "id": "react-06",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "A React team wraps nearly every value and callback in useMemo or useCallback. What is the best review response?",
+      "options": [
+        "Keep it; memoization is always faster.",
+        "Remove React and use direct DOM APIs.",
+        "Memoize only where referential stability prevents measured work or satisfies a dependency contract; memoization itself has complexity and runtime cost.",
+        "Replace every hook with global variables."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "Memoization is a trade-off, not a default style. It pays when it avoids meaningful recalculation or downstream rendering, but indiscriminate use adds dependencies, allocations, and harder-to-read code without evidence of benefit."
+    }
+  ]
+}

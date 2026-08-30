@@ -1,0 +1,108 @@
+{
+  "slug": "senior-android-engineer",
+  "title": "Sr. Software Engineer (Android, 3-6 years)",
+  "level": "senior",
+  "difficulty": 4,
+  "platform": "android",
+  "stack": [
+    "Kotlin",
+    "Jetpack Compose",
+    "Coroutines",
+    "Room"
+  ],
+  "briefing": {
+    "summary": "A consumer app at real scale — hundreds of thousands of users, where a slow cold start or a rising ANR rate is a business problem, not a ticket. The posting is unusually specific about two things: owning app health metrics, and working in an AI-native workflow with agentic IDEs and committed context files. Neither is decoration. Together they're most of what separates candidates for this one.",
+    "requirements": [
+      "Kotlin, Jetpack Compose, Coroutines/Flow, Hilt, Retrofit, Room",
+      "App architecture, modularization and the build pipeline",
+      "Unit and instrumented test coverage you actually wrote",
+      "Owning startup time, rendering performance, crash-free users and ANR rate",
+      "Play Store delivery end to end",
+      "Agentic IDEs, context engineering and cost-effective AI use"
+    ]
+  },
+  "topics": [
+    {
+      "id": "kotlin",
+      "label": "Kotlin, Coroutines & Flow",
+      "skills": [
+        "kotlin"
+      ]
+    },
+    {
+      "id": "ui",
+      "label": "Jetpack Compose & UI",
+      "skills": [
+        "jetpack-compose"
+      ]
+    },
+    {
+      "id": "architecture",
+      "label": "Architecture, modularization & DI",
+      "skills": [
+        "architecture"
+      ]
+    },
+    {
+      "id": "data",
+      "label": "Retrofit, Room & the data layer",
+      "skills": [
+        "api-integration"
+      ]
+    },
+    {
+      "id": "health",
+      "label": "App health, testing & Play Store",
+      "skills": [
+        "android-release",
+        "incident-response"
+      ]
+    },
+    {
+      "id": "ai",
+      "label": "AI-native workflow & code review",
+      "skills": [
+        "ai-workflow"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "id": "hr",
+      "name": "HR Screen",
+      "interviewer": {
+        "name": "Maliha",
+        "role": "Recruiter"
+      },
+      "count": 5
+    },
+    {
+      "id": "technical",
+      "name": "Technical Screen",
+      "interviewer": {
+        "name": "Zayed",
+        "role": "Senior Android Engineer"
+      },
+      "count": 6
+    },
+    {
+      "id": "deepdive",
+      "name": "Deep Dive",
+      "interviewer": {
+        "name": "Tanvir",
+        "role": "Sr. Software Architect"
+      },
+      "count": 6
+    },
+    {
+      "id": "ask",
+      "name": "The Ask",
+      "interviewer": {
+        "name": "Ruma",
+        "role": "Engineering Manager"
+      },
+      "count": 5
+    }
+  ],
+  "extra": []
+}

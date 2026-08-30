@@ -1,0 +1,218 @@
+{
+  "skill": "architecture",
+  "label": "SOLID, Clean Architecture & design patterns",
+  "questions": [
+    {
+      "id": "architecture-01",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "What stops this from being merged?",
+      "subject": {
+        "kind": "code",
+        "language": "csharp",
+        "content": "public class OrderService\n{\n    public void PlaceOrder(Order o)\n    {\n        using var conn = new SqlConnection(\n            \"Server=prod-db;Database=Erp;User Id=sa;Password=P@ssw0rd!;\");\n        conn.Open();\n        // ... write the order ...\n        new SmtpClient(\"smtp.office365.com\").Send(BuildEmail(o));\n    }\n}"
+      },
+      "options": [
+        "SmtpClient.Send should be SendMailAsync.",
+        "A production connection string with sa credentials, hard-coded in source control.",
+        "The class should be sealed.",
+        "using var is the wrong disposal pattern here."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "Credentials in source are the finding you escalate; everything else is a code review comment. It's also three violations in one method — it builds its own connection, knows the production server, and sends mail. Configuration comes from IConfiguration, the connection from DI, and the email from something this class merely asks for."
+    },
+    {
+      "id": "architecture-02",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "order",
+      "prompt": "You're adding invoice approval to a module that's live across every outlet.",
+      "instruction": "Order these.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Write the migration and update the data model"
+        },
+        {
+          "id": "b",
+          "text": "Sit with finance and pin down what 'approved' actually means"
+        },
+        {
+          "id": "c",
+          "text": "Put it behind a feature flag and turn it on for one outlet"
+        },
+        {
+          "id": "d",
+          "text": "Build the API endpoints and the Angular screen"
+        }
+      ],
+      "correctOrder": [
+        "b",
+        "a",
+        "d",
+        "c"
+      ],
+      "explanation": "Approval rules are a business question, and getting them wrong means a migration you have to undo on live data. Schema before code, because the code shapes itself around it. And a staged rollout at the end, so the first person to find your bug is one outlet instead of thirty-three."
+    },
+    {
+      "id": "architecture-03",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Adding a fifth payment method means opening PaymentProcessor and adding another else-if branch. Which principle is that breaking?",
+      "options": [
+        "Single Responsibility",
+        "Open/Closed",
+        "Liskov Substitution",
+        "Interface Segregation"
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "Open for extension, closed for modification: adding behaviour shouldn't mean editing tested code. An IPaymentMethod interface with one implementation per provider means the fifth one is a new file and a registration, not a change to a class that already works. You could argue Single Responsibility too — that's a good thing to say out loud rather than picking silently."
+    },
+    {
+      "id": "architecture-04",
+      "stage": "ask",
+      "levels": [
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "We're rebuilding an ERP that's been running for 18 years. How would you replace one module without stopping the business?",
+      "modelAnswer": "Strangler fig. Put a facade in front of the old module so callers don't know or care which implementation answers. Pick a low-risk module first — reporting, not payroll — to prove the pattern. Migrate data incrementally with a backfill plus dual writes, and reconcile the two systems on a schedule so you find drift before finance does. Run old and new side by side, compare outputs, and only then cut traffic over, behind a flag, one outlet at a time. Nothing gets deleted until the new path has been correct for a full business cycle — a month-end close, not a week.",
+      "keyPoints": [
+        "Strangler fig behind a facade — never a big-bang rewrite",
+        "Start with a low-risk module to prove the approach",
+        "Dual writes plus reconciliation, not a one-shot migration",
+        "Run both in parallel and compare before cutting over",
+        "Staged rollout, and keep the old path until a full business cycle passes"
+      ],
+      "explanation": "The word they're listening for is incremental. Anyone who answers this with 'rewrite it properly this time' has just told an 18-year-old system's owners that they don't understand what those 18 years contain."
+    },
+    {
+      "id": "architecture-05",
+      "stage": "ask",
+      "levels": [
+        "senior"
+      ],
+      "platform": "ios",
+      "type": "mcq",
+      "prompt": "You inherit a 3,000-line view controller. The client wants a new feature in it next week. What do you do?",
+      "options": [
+        "Rewrite it in MVVM before adding anything — you can't build on that.",
+        "Add the feature in a new object with its own tests, and pull only the code you had to touch out with it.",
+        "Add the feature the way the file already does it, and note the tech debt.",
+        "Refactor it fully but ship the feature first from a branch."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "A full rewrite on a client deadline is the answer that loses the offer — untested rewrite, no feature, deadline gone. Matching the existing style ships but makes it 3,200 lines. The senior answer carves out just the surface you're touching, so the file gets smaller every time someone works in it. That's the difference between debt you service and debt you compound."
+    },
+    {
+      "id": "architecture-06",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "In a Clean Architecture setup, which direction do dependencies point?",
+      "options": [
+        "Outward — the domain layer imports the networking layer it needs.",
+        "Inward — outer layers depend on the domain, and the domain depends on nothing, so networking is injected behind a protocol the domain defines.",
+        "Both, as long as the protocols are in a shared module.",
+        "Downward, from UI to view model to repository to network client."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "The domain owns the protocol; the networking layer implements it. That's the dependency inversion the architecture is named for, and the practical payoff is a domain you can unit test without a server. The last option is what most apps actually do, and describes layers rather than dependency direction — which is why it's tempting."
+    },
+    {
+      "id": "architecture-07",
+      "stage": "ask",
+      "levels": [
+        "senior"
+      ],
+      "platform": "ios",
+      "type": "open",
+      "prompt": "We'd hand you a five-year-old Objective-C app with no tests and an unhappy client. Walk me through your first month.",
+      "modelAnswer": "First week is reading and instrumenting, not changing: get it building on a clean machine, get the release process working end to end so I can ship a trivial change, and turn on crash reporting so I know what's actually broken versus what the client believes is broken. Then fix the top crash — it buys trust and it's usually small. Characterisation tests go around anything I'm about to touch, not the whole app. New work goes in Swift behind the interop boundary, so the Objective-C surface shrinks by attrition rather than by a rewrite nobody will fund. I'd agree with the client which two metrics we're judging this on — crash-free rate and time-to-ship a change — so month two is a conversation about numbers rather than feelings.",
+      "keyPoints": [
+        "Prove you can ship before you change anything — build and release path first",
+        "Crash reporting before opinions: fix what's actually breaking",
+        "Tests around the code you're touching, not a coverage project",
+        "New code in Swift behind interop; shrink Objective-C by attrition, not rewrite",
+        "Agree measurable goals with the client up front"
+      ],
+      "explanation": "The unhappy client is the real question. Anyone can say 'add tests and refactor'. What separates seven years from two is knowing that the first deliverable is a working release pipeline and a number the client can watch move."
+    },
+    {
+      "id": "architecture-08",
+      "stage": "technical",
+      "levels": [
+        "senior"
+      ],
+      "platform": "android",
+      "type": "mcq",
+      "prompt": "The app is one big module and a build takes six minutes. What do you do first?",
+      "options": [
+        "Start splitting it into feature modules.",
+        "Turn on the Gradle build and configuration caches, and take a build scan to see where the time actually goes.",
+        "Upgrade to the newest AGP and Gradle and hope.",
+        "Get the team faster laptops."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Modularisation is the right structural answer and it's weeks of work — you don't start there, and you certainly don't start there without knowing which six minutes you're cutting. Caches and a build scan cost an afternoon and often halve it. Then modularise, with numbers to show it worked. Reaching for the big refactor before measuring is the most common senior mistake in this whole area."
+    },
+    {
+      "id": "architecture-09",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "android",
+      "type": "mcq",
+      "prompt": "Why inject the repository into a ViewModel instead of constructing it in there?",
+      "options": [
+        "Constructing it is slower.",
+        "The ViewModel stops knowing how the repository is built — so it can be tested with a fake, and the wiring lives in one place instead of scattered across every consumer.",
+        "Hilt won't compile otherwise.",
+        "It reduces APK size."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Testability is the answer people give; the single wiring point is the one that matters at scale. When a repository gains a dependency, constructor injection means one module changes. Constructing it inline means every ViewModel that ever built one changes with it."
+    },
+    {
+      "id": "architecture-10",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A use-case class imports the ORM entity and returns it directly to the UI. Which boundary has been weakened?",
+      "options": [
+        "The domain/application layer now depends on persistence details, making storage changes and focused tests harder.",
+        "The UI has too few dependencies.",
+        "The ORM entity should instead import the use case.",
+        "There is no issue if the database is relational."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "Clean boundaries keep persistence representations at the edge. Mapping to an application or domain model prevents ORM annotations, lazy loading, and schema decisions from leaking into business behavior and presentation."
+    }
+  ]
+}

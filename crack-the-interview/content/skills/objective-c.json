@@ -1,0 +1,69 @@
+{
+  "skill": "objective-c",
+  "label": "Objective-C & legacy interop",
+  "questions": [
+    {
+      "id": "objective-c-01",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "ios",
+      "type": "mcq",
+      "prompt": "In an Objective-C file you inherited, a method is called on an object that turns out to be nil. What happens?",
+      "options": [
+        "It crashes with an unrecognised selector.",
+        "Nothing happens, and the return value is zero or nil — which is why the bug shows up three screens later.",
+        "It throws an NSException you can catch.",
+        "The compiler catches it."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Messaging nil is legal and silent in Objective-C. That's convenient and it's why bugs in old Objective-C code surface far from their cause — an empty table instead of a crash. Coming from Swift's optionals this is the mental adjustment that catches people out in a mixed codebase."
+    },
+    {
+      "id": "objective-c-02",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "platform": "ios",
+      "type": "red-flag",
+      "prompt": "From a five-year-old Objective-C module. What's wrong?",
+      "subject": {
+        "kind": "code",
+        "language": "objectivec",
+        "content": "@interface DownloadManager : NSObject\n@property (nonatomic, strong) id<DownloadManagerDelegate> delegate;\n@property (nonatomic, copy) NSString *destinationPath;\n@end"
+      },
+      "options": [
+        "destinationPath should be strong, not copy.",
+        "The delegate is strong — the delegate almost always owns the manager, so that's a retain cycle.",
+        "The delegate should be declared in the implementation file.",
+        "It should be nonatomic, readonly."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Delegates are weak by convention precisely because of this: the owner holds the manager, the manager holds the owner back, and neither is ever freed. In modern code it'd be assign or weak on the property. copy on the NSString is correct as written — it stops a mutable string being changed underneath you, which is a nice thing to point out rather than flag."
+    },
+    {
+      "id": "objective-c-03",
+      "stage": "technical",
+      "levels": [
+        "senior"
+      ],
+      "platform": "ios",
+      "type": "mcq",
+      "prompt": "An Objective-C delegate property is declared strong and the delegate owns the delegating object. What is the likely consequence?",
+      "options": [
+        "Automatic thread safety",
+        "A retain cycle that prevents both objects from being deallocated",
+        "The delegate callback runs twice",
+        "The compiler converts the property to weak"
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "If both objects retain each other, their retain counts never reach zero. Delegate references are normally weak to express observation without ownership and break that cycle."
+    }
+  ]
+}

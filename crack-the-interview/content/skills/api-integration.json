@@ -1,0 +1,112 @@
+{
+  "skill": "api-integration",
+  "label": "API integration & the data layer",
+  "questions": [
+    {
+      "id": "api-integration-01",
+      "stage": "technical",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A paginated feed occasionally shows duplicate rows and sometimes skips items, but only for active users. Most likely cause?",
+      "options": [
+        "The table view needs prefetching enabled.",
+        "Offset-based pagination on a list that changes between requests — items shift, so page 2 re-sends or skips rows.",
+        "The API responses aren't being cached.",
+        "The decoder is running on a background queue."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Offset pagination assumes a stable list. On a feed where new items arrive between page 1 and page 2, everything shifts by however many arrived. Cursor-based pagination fixes it properly; deduplicating by id on the client is the patch you ship while the API team gets there. 'Only for active users' is the clue — they're the ones whose feed changes mid-scroll."
+    },
+    {
+      "id": "api-integration-02",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "ios",
+      "type": "red-flag",
+      "prompt": "A crash report came in from this code, from a device you can't reproduce on.",
+      "subject": {
+        "kind": "code",
+        "language": "swift",
+        "content": "struct Profile: Decodable {\n    let id: String\n    let name: String\n    let avatarURL: URL\n}\n\nlet profile = try? JSONDecoder().decode(Profile.self, from: data)\nnameLabel.text = profile!.name"
+      },
+      "options": [
+        "avatarURL should be a String and converted later.",
+        "try? swallows the decoding error, then profile! crashes — so a server field going null takes the app down with no diagnostic.",
+        "Profile should be a class.",
+        "JSONDecoder should be reused rather than created each time."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "This is the worst of both: the error is discarded where it could have told you exactly which key failed, and then force-unwrapped where it crashes. Either handle the error or let it throw. In client work the server changes without telling you, so every non-optional field is a promise someone else can break."
+    },
+    {
+      "id": "api-integration-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "android",
+      "type": "mcq",
+      "prompt": "The list flickers between cached and freshly fetched data. How should this be structured?",
+      "options": [
+        "Show only network data and drop the cache.",
+        "Make the database the single source of truth: the UI observes a Flow from Room, and the network writes into Room rather than into the UI.",
+        "Hold the cache in memory in the ViewModel and merge manually.",
+        "Keep the UI on a loading spinner until the network returns."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "Flicker means two writers are racing to update one screen. With one source of truth there's only ever one place the UI reads from, so a network response is just a database write that the existing Flow picks up. It also gives you offline for free, which the manual-merge version never quite does."
+    },
+    {
+      "id": "api-integration-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A security review flagged this interface. What did they find?",
+      "subject": {
+        "kind": "code",
+        "language": "kotlin",
+        "content": "interface OrderApi {\n    @GET(\"orders\")\n    suspend fun getOrders(\n        @Query(\"token\") token: String,\n        @Query(\"page\") page: Int\n    ): List<Order>\n}"
+      },
+      "options": [
+        "The auth token is a query parameter, so it ends up in server access logs, proxy logs and analytics — anywhere URLs get recorded.",
+        "It should return Response<List<Order>> so HTTP errors can be inspected.",
+        "Retrofit doesn't support suspend functions on interfaces.",
+        "This should be a @POST since it takes parameters."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "Credentials belong in a header, added once by an OkHttp interceptor rather than threaded through every call site. Query strings are logged by default at every hop, and nobody thinks to scrub them. The Response<> point is a fair second finding — as written, a 401 is indistinguishable from an empty page."
+    },
+    {
+      "id": "api-integration-05",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A mobile client retries a POST after a timeout, but the server may already have processed it. What is the safest design?",
+      "options": [
+        "Never retry any POST request.",
+        "Retry immediately with a larger timeout.",
+        "Send a stable idempotency key so repeated attempts resolve to the same server-side operation.",
+        "Change the endpoint to GET."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "A timeout means the outcome is unknown, not necessarily failed. An idempotency key lets the server recognize the same logical operation and return the original result instead of charging, creating, or submitting twice."
+    }
+  ]
+}

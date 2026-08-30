@@ -1,0 +1,111 @@
+{
+  "skill": "ios-release",
+  "label": "App Store, guidelines & release",
+  "questions": [
+    {
+      "id": "ios-release-01",
+      "stage": "hr",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "ios",
+      "type": "red-flag",
+      "prompt": "A candidate explaining why an app took nine months to ship. What worries you?",
+      "subject": {
+        "kind": "quote",
+        "content": "App Store review kept rejecting us for no reason. Apple's guidelines are basically random — we just resubmitted until one of the reviewers let it through."
+      },
+      "options": [
+        "Admitting the app was rejected at all",
+        "Treating review as random instead of reading the rejection and fixing the cause — that's the whole skill they're hiring for",
+        "Blaming Apple rather than the client",
+        "Not saying how many times they resubmitted"
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "Everyone gets rejected; nobody holds that against you. Rejections cite a guideline number. Someone who has shipped several apps talks about 4.2 minimum functionality or 5.1.1 data collection by name. 'Resubmit until it passes' says they never read them — expensive on a client deadline."
+    },
+    {
+      "id": "ios-release-02",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "ios",
+      "type": "order",
+      "prompt": "A client app is code-complete and they want it live for a launch event.",
+      "instruction": "Order these.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Submit for App Store review"
+        },
+        {
+          "id": "b",
+          "text": "Archive a build with the distribution certificate and push it to TestFlight"
+        },
+        {
+          "id": "c",
+          "text": "Get the client to sign off on the TestFlight build"
+        },
+        {
+          "id": "d",
+          "text": "Fill in the store listing, privacy nutrition labels and screenshots"
+        },
+        {
+          "id": "e",
+          "text": "Release to the store"
+        }
+      ],
+      "correctOrder": [
+        "b",
+        "c",
+        "d",
+        "a",
+        "e"
+      ],
+      "explanation": "Client sign-off before submission, never after — a change request while you're in review means withdrawing and starting the queue again. The metadata has to be complete before you can submit anyway, and privacy labels are a common rejection all by themselves. Keeping the final release manual is what lets you hit the launch event rather than whenever review finishes."
+    },
+    {
+      "id": "ios-release-03",
+      "stage": "ask",
+      "levels": [
+        "senior"
+      ],
+      "platform": "ios",
+      "type": "mcq",
+      "prompt": "An app is rejected under guideline 4.2, Minimum Functionality. What did it most likely do?",
+      "options": [
+        "Collected user data without a privacy policy.",
+        "Wrapped a website in a web view without adding anything native.",
+        "Used a private API.",
+        "Included a link to an external payment page."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "4.2 is the web-view wrapper rejection, and it's the one that hits client work hardest — the client wanted 'our site, as an app'. The others are all real rejections under different guidelines. Knowing which number maps to which failure is exactly the experience the posting is asking for when it says you've shipped apps yourself."
+    },
+    {
+      "id": "ios-release-04",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "ios",
+      "type": "mcq",
+      "prompt": "An urgent iOS fix is approved, but many devices will not receive it immediately. Which release reality must the design account for?",
+      "options": [
+        "App Store updates install synchronously on every device.",
+        "Multiple app versions will coexist, so backend contracts and feature flags must remain compatible during rollout.",
+        "The backend should reject every older build immediately.",
+        "TestFlight automatically updates production users."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Mobile clients update on user and platform schedules. Production therefore contains a version distribution, not one version, and server changes must tolerate supported older clients while rollout and adoption progress."
+    }
+  ]
+}

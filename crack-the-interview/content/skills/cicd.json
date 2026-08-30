@@ -1,0 +1,61 @@
+{
+  "skill": "cicd",
+  "label": "CI/CD & release engineering",
+  "questions": [
+    {
+      "id": "cicd-01",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "The team deploys manually on Thursday nights and it usually goes badly. What changes the most, soonest?",
+      "options": [
+        "A dedicated release manager to run the deploys.",
+        "A pipeline that builds one artifact, tests it, and ships that same artifact to staging then production.",
+        "Move everything to Kubernetes.",
+        "Deploy on Mondays instead."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "Manual deploys go wrong because they're different every time. One tested artifact promoted through environments removes the variable. Moving the day helps a little — at least someone's awake to fix it — but it's treating the symptom. Kubernetes is a much larger change that doesn't address why the deploy is unrepeatable."
+    },
+    {
+      "id": "cicd-02",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "order",
+      "prompt": "A production deployment fails its post-deploy smoke test.",
+      "instruction": "Order the immediate response.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Preserve logs and deployment metadata for diagnosis"
+        },
+        {
+          "id": "b",
+          "text": "Stop progression and roll back or shift traffic to the last known-good version"
+        },
+        {
+          "id": "c",
+          "text": "Confirm user-facing recovery and key health signals"
+        },
+        {
+          "id": "d",
+          "text": "Investigate the failure and add a prevention or detection improvement"
+        }
+      ],
+      "correctOrder": [
+        "b",
+        "c",
+        "a",
+        "d"
+      ],
+      "explanation": "Restore service first, confirm recovery, preserve evidence, then investigate and improve the system. Debugging while users remain on a known-bad release extends the incident unnecessarily."
+    }
+  ]
+}

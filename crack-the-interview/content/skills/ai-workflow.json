@@ -1,0 +1,142 @@
+{
+  "skill": "ai-workflow",
+  "label": "Working with AI coding agents",
+  "questions": [
+    {
+      "id": "ai-workflow-01",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "We're an AI-native engineering team — agentic IDEs, coding assistants, the lot. How do you feel about that?",
+      "options": [
+        "I prefer writing everything myself. If I didn't type it, I don't really understand it.",
+        "I use them daily — tests, migrations, first drafts, unfamiliar APIs — and I review every line before it goes in.",
+        "Great. I let the assistant write the feature and then fix whatever breaks.",
+        "I look things up with a chatbot sometimes."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "They're screening for two failure modes at once: refusal, and abdication. The answer that works names specific uses and then names the boundary. 'Fix whatever breaks' is the one that ends the conversation on a team that has to keep an app stable for hundreds of thousands of users."
+    },
+    {
+      "id": "ai-workflow-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Your team's coding agent keeps producing code that ignores the project's architecture. Cheapest thing that fixes it?",
+      "options": [
+        "Write longer, more detailed prompts each time.",
+        "Commit the conventions to a context file in the repo, so every engineer's session starts with the same house rules.",
+        "Move everyone to a larger model.",
+        "Stop using the agent for feature work."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "This is what context engineering means in practice. Rules that live in one person's prompt history help one person once; rules committed next to the code help everyone forever and get reviewed like any other shared config. Reaching for a bigger model to fix a missing-context problem is expensive and doesn't work."
+    },
+    {
+      "id": "ai-workflow-03",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "An agent generated this test and it passes. You're reviewing the PR.",
+      "subject": {
+        "kind": "code",
+        "language": "kotlin",
+        "content": "@Test\nfun `returns empty list when the api fails`() = runTest {\n    coEvery { api.getOrders() } throws IOException()\n\n    val result = repo.getOrders()\n\n    assertTrue(result.isEmpty())\n}"
+      },
+      "options": [
+        "runTest should be runBlocking.",
+        "The test locks in a design mistake: swallowing a network failure into an empty list makes 'no connection' indistinguishable from 'no orders', and the UI will show an empty state for both.",
+        "coEvery should be every.",
+        "There's no @After teardown."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Generated tests are excellent at describing the code as written and incapable of asking whether it should have been written that way. This one is green, correct, and cements a bug users will report as 'my orders disappeared'. Reviewing generated tests means reading each assertion as a product decision, not a coverage line."
+    },
+    {
+      "id": "ai-workflow-04",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "How do you use an agentic IDE on a large codebase without the code quietly drifting away from your conventions?",
+      "modelAnswer": "Put the conventions in the repo, not in prompts — a context file with the architecture, the module boundaries, the testing style, and the things we've decided not to do. It gets reviewed and updated like any other shared config, so the whole team's agents behave the same way. Then scope the work: small, verifiable tasks with a clear definition of done, not 'build the feature'. Make the agent run the tests and the linter itself, so the feedback loop closes before I read the diff. Review generated diffs at least as strictly as human ones — more strictly, because they're fluent and confident-looking, and a large one is where review honestly breaks down. And be deliberate about cost: the expensive reasoning is worth it for design and debugging, not for renaming things.",
+      "keyPoints": [
+        "Conventions committed to the repo as context, reviewed like code",
+        "Small scoped tasks with a clear definition of done",
+        "The agent runs tests and lint before you read the diff",
+        "Review generated code at least as strictly as human code — refuse diffs too big to review honestly",
+        "Match model cost to task: reasoning for design, cheap for mechanical work"
+      ],
+      "explanation": "The posting asks for context engineering and cost-effective AI use by name, which means they've already been burned. The answer that lands is procedural — what's committed, what's scoped, what's reviewed — not enthusiasm about how much faster it is."
+    },
+    {
+      "id": "ai-workflow-05",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "Where has AI genuinely saved you time, and where has it cost you time?",
+      "modelAnswer": "Saved: unit tests and the edge cases I wouldn't have thought of, migration scripts, boilerplate, first-pass PR descriptions and RFCs, and exploring an unfamiliar API far faster than reading its docs cover to cover. Cost: confidently wrong code in a domain I didn't know well enough to catch it, library APIs that were right two versions ago, and one large refactor where the diff was too big to review honestly so I approved things I hadn't really read. The rule I ended up with is that it's worth it wherever I can verify the output faster than I could have written it — tests I can run, code I can read in one sitting. Where verification is slow or I'm not the expert, it costs more than it saves.",
+      "keyPoints": [
+        "Concrete wins: tests, edge cases, migrations, boilerplate, docs, unfamiliar APIs",
+        "Concrete losses: plausible-but-wrong code, stale library APIs, unreviewably large diffs",
+        "The governing rule: use it where verification is cheap",
+        "Honest about a time it went wrong, and what changed afterwards"
+      ],
+      "explanation": "Answering this with only the upside reads as someone who hasn't used these tools much. Naming a specific cost — and the rule you derived from it — is what makes the upside believable."
+    },
+    {
+      "id": "ai-workflow-06",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "order",
+      "prompt": "An agent has produced a large refactor that passes its own tests.",
+      "instruction": "Order the safest review workflow.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Review the diff in small logical slices and challenge its assumptions"
+        },
+        {
+          "id": "b",
+          "text": "Run the repository's independent checks and targeted regression tests"
+        },
+        {
+          "id": "c",
+          "text": "Read the task, constraints, and existing behavior before judging the patch"
+        },
+        {
+          "id": "d",
+          "text": "Commit only the verified changes with a clear explanation"
+        }
+      ],
+      "correctOrder": [
+        "c",
+        "a",
+        "b",
+        "d"
+      ],
+      "explanation": "Start from intent and existing behavior, then inspect what changed, verify it independently, and only then preserve it. Agent-authored tests are evidence, not proof, because the same mistaken assumption can shape both implementation and test."
+    }
+  ]
+}

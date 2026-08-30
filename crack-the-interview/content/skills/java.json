@@ -1,0 +1,112 @@
+{
+  "skill": "java",
+  "label": "Java & the JVM",
+  "questions": [
+    {
+      "id": "java-01",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A HashMap keyed on your entity starts losing entries. It only happens after the code mutates those entities. Why?",
+      "options": [
+        "HashMap isn't thread-safe and this is a race.",
+        "A mutated field is part of hashCode(), so the key now hashes to a different bucket than the one it was stored in — it's still in the map, just unreachable.",
+        "HashMap has an entry limit and silently evicts.",
+        "The key class needs to implement Comparable."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "Hash-based collections assume keys don't change while they're in there. The entry isn't removed, it's stranded — get() looks in the new bucket and finds nothing. Which is why mutable objects make bad keys, and why value-like keys should be immutable."
+    },
+    {
+      "id": "java-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Two threads both run count++ on a shared int. What's actually wrong, and what's the cheapest correct fix?",
+      "options": [
+        "Nothing — int operations are atomic on the JVM.",
+        "count++ is a read-modify-write, so increments get lost. AtomicInteger fixes it, or LongAdder if contention is high.",
+        "Mark count volatile — that makes the increment atomic.",
+        "A synchronized block is the only correct answer."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "volatile is the tempting wrong answer: it guarantees visibility, not atomicity, so two threads can still read the same value and both write back the same increment. synchronized is correct but heavier than needed. LongAdder trades exact-at-any-instant reads for far less contention, which is usually the right trade for a counter."
+    },
+    {
+      "id": "java-03",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This method is in a service that queries a table with billions of rows.",
+      "subject": {
+        "kind": "code",
+        "language": "java",
+        "content": "public List<Message> loadAll(long campaignId) {\n    List<Message> all = new ArrayList<>();\n    ResultSet rs = stmt.executeQuery(\n        \"SELECT * FROM messages WHERE campaign_id = \" + campaignId);\n    while (rs.next()) all.add(map(rs));\n    return all;\n}"
+      },
+      "options": [
+        "Two things: SQL built by concatenation, and an unbounded result set pulled entirely into heap — on a big campaign this is an OutOfMemoryError waiting for a busy day.",
+        "ResultSet should be a CachedRowSet.",
+        "map(rs) should be a static method.",
+        "The method should be synchronized."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "The memory problem is the one that takes the service down. Return a stream or page it, and let the caller decide how much to hold. The concatenated SQL is the finding you escalate even though campaignId is a long — the pattern outlives the type. There's no try-with-resources either, so the ResultSet leaks; a fair third point."
+    },
+    {
+      "id": "java-04",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "Deliveries are failing in production and nobody can work out why.",
+      "subject": {
+        "kind": "code",
+        "language": "java",
+        "content": "try {\n    deliveryService.send(message);\n} catch (Exception e) {\n    log.error(\"send failed\");\n}"
+      },
+      "options": [
+        "The exception is never logged — no stack trace, no cause, no message id. At 3am this line tells you something broke and nothing else.",
+        "It should catch Throwable to be safe.",
+        "log.error should be log.warn since it's recoverable.",
+        "send() should return a boolean instead of throwing."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "log.error(\"send failed\", e) is the entire fix and it's the difference between a five-minute diagnosis and a five-hour one. Catching Exception broadly is a second, quieter problem: it swallows InterruptedException too, so the thread's cancellation is lost. And the message keeps going as if nothing happened, which is worse than crashing."
+    },
+    {
+      "id": "java-05",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "When would you choose a Java record, and when would you avoid one?",
+      "modelAnswer": "I would use a record for a transparent immutable data carrier whose identity is its complete set of components, such as a command, response, or value-like DTO. It gives concise construction, accessors, equality, hash code, and a useful string representation. I would avoid it for mutable lifecycle-heavy entities, types whose identity is not all fields, framework models that require proxying or a no-argument mutable shape, and abstractions that need to hide representation behind behavior.",
+      "keyPoints": [
+        "Good for immutable transparent data carriers",
+        "Generated value-based equality is part of the decision",
+        "Poor fit for mutable entities and partial identity",
+        "Check framework proxy and construction requirements",
+        "Do not expose representation when behavior should be the abstraction"
+      ],
+      "explanation": "Records are a semantic choice, not just shorter syntax. Their contract says the components are the state and the state is transparent, which is excellent for values and potentially wrong for entities."
+    }
+  ]
+}

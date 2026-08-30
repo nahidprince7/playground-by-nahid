@@ -1,0 +1,264 @@
+{
+  "skill": "behavioral",
+  "label": "Motivation, teamwork & how you handle disagreement",
+  "questions": [
+    {
+      "id": "behavioral-01",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "So — why are you looking to leave your current job?",
+      "options": [
+        "My manager kept blocking my promotion and I was done waiting.",
+        "I've been shipping the same CRUD screens for two years. I want to work somewhere the architecture actually matters.",
+        "The salary is low and I want more money.",
+        "Honestly, I'm just exploring what's out there."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "Every version of this answer is true for somebody. The one that works points forward at the work, not backward at a grievance. Money is a fine reason to move and a terrible reason to lead with — it invites them to solve for you with the smallest number that works."
+    },
+    {
+      "id": "behavioral-02",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A candidate said this about their last team. What's the thing that will cost them the job?",
+      "subject": {
+        "kind": "quote",
+        "content": "The codebase was a mess and honestly nobody there knew what they were doing. So I mostly just rewrote things my own way without asking anyone."
+      },
+      "options": [
+        "Saying the codebase was messy",
+        "Rewriting shared code without telling anyone — on a team of 40 that's the expensive part",
+        "Working alone on a big change",
+        "Not mentioning whether there were tests"
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "Calling a codebase messy is fine; every codebase is. What lands badly is unilateral rewriting. In an ERP that 33 outlets depend on, the question behind every question is 'will this person break something without telling us first' — and that sentence answers it."
+    },
+    {
+      "id": "behavioral-03",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "The posting asks for 4-8 years. You have 3. It comes up. What do you do?",
+      "options": [
+        "Don't raise it and hope the conversation moves on.",
+        "Name the gap once, then immediately point at the closest thing you've actually built and shipped.",
+        "Round it up to 4 — everyone pads a little.",
+        "Say years of experience don't really measure anything."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "Experience ranges are a filter, not a wall — but only if you replace the missing years with evidence in the same breath. Padding is the one option that can end the process later, after they've already decided they like you, which is the worst possible time."
+    },
+    {
+      "id": "behavioral-04",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "The recruiter asks your expected salary before you've spoken to anyone technical. Best move?",
+      "options": [
+        "Name one number well above market and say it's not negotiable.",
+        "Give a researched range, and say you're flexible on how the whole package is put together.",
+        "Say 'whatever the company policy is'.",
+        "Refuse to discuss numbers until they make an offer."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "A range keeps you in the process; a hard number ends the conversation in one direction or the other. Deferring entirely to company policy sounds agreeable and quietly hands over your entire negotiating position — recruiters remember the number you didn't give."
+    },
+    {
+      "id": "behavioral-05",
+      "stage": "hr",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A signed-off requirement lands on your desk and you're fairly sure it's wrong. What do you do?",
+      "options": [
+        "Build exactly what's written. It's signed off, it's not your call.",
+        "Build what you think is actually right — you'll explain later.",
+        "Build what's written, but put the concern in writing before you start.",
+        "Refuse to start until it's rewritten."
+      ],
+      "correct": 2,
+      "eliminate": 1,
+      "explanation": "This question is asking whether you can disagree without becoming a blocker. Raising it in writing first means that if you were right there's a record, and if you were wrong you still delivered. Silently building something different is the answer that ends careers on enterprise teams."
+    },
+    {
+      "id": "behavioral-06",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "Tell me about a time you disagreed with a technical decision on your team.",
+      "modelAnswer": "Name a specific decision, not a category. Say what your concern was and what evidence you had — a benchmark, an incident, a number — rather than a preference. Say how you raised it: in the design review, in writing, before the work started, not in a comment on the PR three weeks later. Then say what actually happened, including if you turned out to be wrong, and that you committed to the decision once it was made. The story should end with the team, not with you being vindicated.",
+      "keyPoints": [
+        "One specific decision, not a general complaint",
+        "Evidence rather than preference",
+        "Raised early, in the right forum",
+        "Say honestly how it ended — including being wrong",
+        "You committed to the outcome either way"
+      ],
+      "explanation": "Everyone prepares a story where they were right. The version that lands is the one where you were overruled and the project was fine, because that's the one that answers what they're really asking: what are you like to work with when you don't get your way?"
+    },
+    {
+      "id": "behavioral-07",
+      "stage": "hr",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Seven years in. Why move now?",
+      "options": [
+        "The projects got boring and management wouldn't listen to anyone.",
+        "I've taken two apps from nothing to the store and maintained them for years. I want that at a bigger scale, on more than one product.",
+        "I've been at the same salary band for three years.",
+        "A friend told me you were hiring."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "At seven years the question underneath is 'why aren't you a lead yet, or why are you still moving?' The answer that works reframes the years as accumulated shipping, then points at what's next. The friend answer isn't fatal but it wastes the one question where you get to set the frame."
+    },
+    {
+      "id": "behavioral-08",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "The role is on-site in Dhaka. You've worked fully remote for three years and would rather keep some of that. It comes up in the HR call.",
+      "options": [
+        "Say on-site is fine and raise it after you have the offer.",
+        "Say on-site works, and ask what the team's actual pattern looks like day to day.",
+        "Say you'll only consider it if they allow three days remote.",
+        "Don't mention it — see if it becomes flexible later."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "The posting says on-site, so leading with a hard condition ends the call. Accepting and then asking a genuine question gets you the real answer — most on-site teams have an unwritten pattern — without spending leverage you don't have yet. Agreeing and reopening it after the offer is how people start a job already resented."
+    },
+    {
+      "id": "behavioral-09",
+      "stage": "hr",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Salary is listed as negotiable, based on years and area of expertise. HR asks for your number.",
+      "options": [
+        "Give the number you want and stop talking.",
+        "Give a range anchored to what senior iOS pays in this market, and tie the top of it to the specific expertise they asked for.",
+        "Ask what they've budgeted before saying anything.",
+        "Say you'd need to know the full benefits package first."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "'Negotiable based on area of expertise' is an invitation — they've told you the lever. Naming Objective-C legacy work or App Store release ownership as the reason for the top of your range is the whole game. Asking their budget first sometimes works; at senior level it more often reads as not knowing your own worth."
+    },
+    {
+      "id": "behavioral-10",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "This is a multi-country service provider — you'd be on calls with overseas clients. HR asks how comfortable you are working in English.",
+      "options": [
+        "Say you're fluent and move on quickly.",
+        "Say yes, and give one concrete example — a client demo you ran, a spec you wrote, a standup you led in English.",
+        "Say your written English is strong but you're shy on calls.",
+        "Say you'd prefer written communication where possible."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Claiming fluency is what everyone does, so it carries no information. One concrete instance of having already done the thing does — and it's the same technique that works for every skill claim in an interview. The honest-about-shyness answer is admirable and will cost you a client-facing role."
+    },
+    {
+      "id": "behavioral-11",
+      "stage": "hr",
+      "levels": [
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A candidate with exactly seven years describing their work. What's the problem?",
+      "subject": {
+        "kind": "quote",
+        "content": "I've been on the same app for six of my seven years. Mostly bug fixes and small feature requests from the client — I didn't set up the project or handle releases, that was the lead."
+      },
+      "options": [
+        "Six years on one app is too long",
+        "Seven years of tenure, but no architecture decisions and no release ownership — it may be one year repeated seven times",
+        "Only doing bug fixes",
+        "Not naming the client"
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Staying on one product for six years can be a real strength — you see the consequences of decisions. What's missing here is ownership: never having set up a project or shipped a release means the depth the posting asks for may not be there. If this is your history, the fix is to lead with the hardest thing you owned, however small."
+    },
+    {
+      "id": "behavioral-12",
+      "stage": "ask",
+      "levels": [
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "You'd be one of two senior iOS engineers across several projects at once. How do you stop quality sliding when you're split three ways?",
+      "modelAnswer": "Standardise the things that don't need thinking about, so attention goes where it matters. Same project template, same architecture, same linting and CI on every project — a build that runs tests and produces a TestFlight build on merge, set up once and reused. Then be explicit about what I will not do: I won't be the only person who can release a project, so someone else on each one has done a release with me watching. I'd rather review someone's code every day than write all of it. And I'd push back on being the sole owner of three projects — say so in the interview, because the honest answer is that quality slides at some number of concurrent projects and the useful conversation is about what that number is here.",
+      "keyPoints": [
+        "Standardise setup, CI and release across projects so context-switching is cheap",
+        "No single point of failure — someone else can release every project",
+        "Review more, write less; leverage over throughput",
+        "Automated tests and crash metrics do the watching you can't",
+        "Say honestly where the limit is instead of promising infinite capacity"
+      ],
+      "explanation": "The tempting answer is 'I work hard and I manage my time well.' It's what everyone says and it commits you to being the bottleneck. Naming a limit out loud is counterintuitive in an interview and reads as senior — it's what someone who has actually been stretched across three clients would say."
+    },
+    {
+      "id": "behavioral-13",
+      "stage": "ask",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "What would you want to understand in your first 30 days before proposing major changes here?",
+      "modelAnswer": "I would first map the product goals, critical user journeys, team ownership, release process, operational risks, and why the current architecture evolved as it did. I would read incidents and decision records, ship a small change through the real pipeline, and talk to engineering, product, support, and operations. That gives me evidence about where change is valuable and where apparent mess is carrying an important constraint.",
+      "keyPoints": [
+        "Learn product goals and critical journeys",
+        "Understand ownership, delivery, and operational history",
+        "Ship something small through the actual system",
+        "Talk across engineering and non-engineering functions",
+        "Treat existing choices as context to investigate, not incompetence to erase"
+      ],
+      "explanation": "A strong answer balances initiative with humility. The first month is for acquiring the context that makes later technical judgment trustworthy, not announcing a rewrite before understanding the system."
+    }
+  ]
+}
