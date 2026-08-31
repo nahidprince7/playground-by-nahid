@@ -1,0 +1,115 @@
+{
+  "slug": "rust-software-engineer-industrial",
+  "title": "Rust Software Engineer (Industrial, 5+ years)",
+  "level": "senior",
+  "difficulty": 5,
+  "platform": "systems",
+  "stack": [
+    "Rust",
+    "Tokio",
+    "Linux",
+    "Docker"
+  ],
+  "briefing": {
+    "summary": "Production-grade Rust for industrial systems — the software that runs on and around machines, where a stall is a stopped line rather than a slow page. The posting wants deep Rust and says so at length: ownership and borrowing, lifetimes, error handling, concurrency and async, and performance and resource management. Underneath that it is a systems job — memory behaviour, latency, Linux, debugging something you cannot attach a debugger to, and hardware, protocols and networked devices at the edges. It also asks for architecture, unit and integration tests, code review and documentation, so expect to be asked how you work as much as what you know.",
+    "requirements": [
+      "Proven professional Rust: ownership, borrowing, lifetimes, error handling, unsafe boundaries",
+      "Concurrency and async — threads, tasks, channels, Send and Sync, cancellation",
+      "Performance and resource management: memory, allocation, latency and stability",
+      "Systems and Linux work — profiling, root-cause analysis, low-level behaviour",
+      "Hardware and protocol integration, networking, APIs and distributed systems",
+      "Modular, maintainable architecture and design patterns across the SDLC",
+      "Unit and integration tests, code review, Git and Agile delivery",
+      "CI/CD, Docker and modern DevOps; AI-assisted development tools",
+      "Technical documentation for design, implementation and operations"
+    ]
+  },
+  "topics": [
+    {
+      "id": "rust",
+      "label": "Rust: ownership, lifetimes & errors",
+      "skills": [
+        "rust"
+      ]
+    },
+    {
+      "id": "concurrency",
+      "label": "Concurrency, async & thread safety",
+      "skills": [
+        "rust-concurrency"
+      ]
+    },
+    {
+      "id": "systems",
+      "label": "Systems, memory & Linux performance",
+      "skills": [
+        "systems-programming"
+      ]
+    },
+    {
+      "id": "devices",
+      "label": "Devices, protocols & distributed systems",
+      "skills": [
+        "hardware-integration",
+        "microservices"
+      ]
+    },
+    {
+      "id": "craft",
+      "label": "Architecture, testing & code review",
+      "skills": [
+        "architecture",
+        "testing",
+        "tech-leadership"
+      ]
+    },
+    {
+      "id": "delivery",
+      "label": "Debugging, delivery & AI-assisted work",
+      "skills": [
+        "incident-response",
+        "cicd",
+        "ai-workflow"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "id": "hr",
+      "name": "HR Screen",
+      "interviewer": {
+        "name": "Rubaiya",
+        "role": "Recruiter"
+      },
+      "count": 5
+    },
+    {
+      "id": "technical",
+      "name": "Technical Screen",
+      "interviewer": {
+        "name": "Emon",
+        "role": "Senior Rust Engineer"
+      },
+      "count": 7
+    },
+    {
+      "id": "deepdive",
+      "name": "Deep Dive",
+      "interviewer": {
+        "name": "Kaniz",
+        "role": "Principal Systems Engineer"
+      },
+      "count": 6
+    },
+    {
+      "id": "ask",
+      "name": "The Ask",
+      "interviewer": {
+        "name": "Shahriar",
+        "role": "Head of Engineering"
+      },
+      "count": 5
+    }
+  ],
+  "extra": []
+}
