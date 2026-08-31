@@ -1,0 +1,185 @@
+{
+  "skill": "websockets",
+  "label": "WebSockets & realtime updates",
+  "questions": [
+    {
+      "id": "websockets-01",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "red-flag",
+      "prompt": "A candidate is describing the live-updates feature they built. What will worry the interviewer?",
+      "subject": {
+        "kind": "quote",
+        "content": "The socket dropped sometimes on mobile, so I put the connect call in a setInterval that runs every five seconds. If it's already connected it just opens another one — the server didn't seem to mind."
+      },
+      "options": [
+        "Using WebSockets at all instead of polling the API.",
+        "Reconnecting on a timer without checking whether a connection is already open — duplicate sockets stack up, so every message arrives several times and the server pays for all of them.",
+        "Not using a library like Socket.IO instead of the raw WebSocket API.",
+        "Not saying how many users the feature had."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The phrase that costs them is 'the server didn't seem to mind' — it did, they just had no way to see it. What an interviewer is listening for is whether someone reconnects deliberately, on close, or blindly on a clock. Choosing WebSockets over polling was fine; the reconnect around it was not."
+    },
+    {
+      "id": "websockets-02",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "A dashboard needs to show new form submissions as they land. They arrive less than once a minute, and the browser never sends anything back up the same channel. What fits best?",
+      "options": [
+        "A WebSocket, because anything live means a WebSocket.",
+        "Polling the list endpoint every thirty seconds.",
+        "Server-Sent Events — one long-lived HTTP response, server to browser only, with reconnection already handled by the browser.",
+        "A WebSocket per browser tab, kept awake with a ping every second."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "WebSockets earn their extra machinery when the browser also sends — chat, cursors, collaborative editing. One-way and infrequent is what SSE is for, and EventSource reconnects on its own. Polling is the honest second-best: it works, it is simpler than either, and it costs a request per client per interval to say 'nothing new' most of the time."
+    },
+    {
+      "id": "websockets-03",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "red-flag",
+      "prompt": "This shipped on Friday. By Monday the realtime server was out of file descriptors. Why?",
+      "subject": {
+        "kind": "code",
+        "language": "javascript",
+        "content": "function Submissions() {\n  const [rows, setRows] = useState([]);\n  const socket = new WebSocket('wss://api.example.com/feed');\n  socket.onmessage = (e) => setRows(r => [...r, JSON.parse(e.data)]);\n  return <List rows={rows} />;\n}"
+      },
+      "options": [
+        "JSON.parse is not wrapped in a try/catch, so one malformed message kills the handler.",
+        "The socket is opened in the component body, so every render opens another one — and each message sets state, which renders, which opens another. Nothing ever closes them.",
+        "The handler should be assigned with addEventListener rather than onmessage.",
+        "rows should be held in a ref, because a socket handler cannot see state."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "Anything with a lifetime — a socket, a timer, a subscription — belongs in a useEffect with a cleanup that closes it, keyed on what it depends on. Locally you open a handful and never notice; in production it is one new connection per render per user. The missing try/catch is a real bug and would have been the answer on a quieter day."
+    },
+    {
+      "id": "websockets-04",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "The live feed dies on hotel wifi and does not come back until the user reloads the page. What is the right fix?",
+      "options": [
+        "Reconnect immediately in the onclose handler and keep retrying in a tight loop until it succeeds.",
+        "Reconnect on close, but wait longer after each failed attempt — with a little randomness — and only tell the user once several attempts have failed.",
+        "Show a 'connection lost, please refresh' banner and leave it to the user.",
+        "Raise the connection timeout on the server."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The immediate loop is tempting because it feels responsive, and it is the same code running in every browser at once: when the outage is the server's, thousands of clients retrying every 50ms is what turns a restart into an outage. Backoff spreads the load, the randomness stops everyone retrying on the same tick, and the banner is what you show after backoff gives up — not instead of it."
+    },
+    {
+      "id": "websockets-05",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "After a brief network drop, a few submissions appear twice in the live list. What is the most likely explanation?",
+      "options": [
+        "The server is sending every message twice.",
+        "On reconnect the client resubscribes and the server replays the recent messages it thinks were missed, and the client appends whatever arrives without checking whether it already holds that id.",
+        "The list component is rendering twice.",
+        "The list is missing a key prop on its rows."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Realtime delivery is at-least-once in practice: a reconnect cannot know exactly what you received, so the safe thing for a server to do is send a little too much. That makes deduplication the client's job — key the list by the server's message id and a repeat replaces rather than appends. Double rendering is the tempting one because React does double-invoke in development; this survives into production, which rules it out."
+    },
+    {
+      "id": "websockets-06",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "order",
+      "prompt": "The live feed silently stops updating after a few minutes, but only on the client's office network. You have the page open in front of you.",
+      "instruction": "Order these by what you would do first.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Watch the browser's network panel to see whether the socket closed, and with what close code"
+        },
+        {
+          "id": "b",
+          "text": "Check whether it also happens on a phone off that network"
+        },
+        {
+          "id": "c",
+          "text": "Add a heartbeat ping so an idle connection is not dropped by whatever sits in the middle"
+        },
+        {
+          "id": "d",
+          "text": "Look in the server logs for a disconnect at the same timestamp"
+        }
+      ],
+      "correctOrder": [
+        "a",
+        "d",
+        "b",
+        "c"
+      ],
+      "explanation": "The close code and the server log together tell you who hung up — your code, the server, or something in between that neither end knows about. Only then does the network comparison mean anything. The heartbeat is last on purpose: it is very likely the fix, and shipping it first means you never learn what you fixed, so you cannot tell whether it worked or the problem simply moved."
+    },
+    {
+      "id": "websockets-07",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "The realtime feed works perfectly for you and dies after about a minute for the one client whose office sits behind a corporate proxy. Most likely cause?",
+      "options": [
+        "The proxy is closing the connection because nothing has travelled over it — many proxies and load balancers cut idle connections after a fixed timeout.",
+        "That client's browser does not support WebSockets.",
+        "The messages are larger than the proxy will forward.",
+        "The proxy blocks wss:// traffic on port 443."
+      ],
+      "correct": 0,
+      "eliminate": 1,
+      "explanation": "'Works, then dies' is the clue. Anything that blocks WebSockets outright fails at the handshake — the connection would never open, not open and then go quiet. A connection with no traffic on it looks abandoned to every box between you and the server, so a ping every 30 seconds or so keeps it alive and, as a bonus, tells you within one interval when it has genuinely gone."
+    },
+    {
+      "id": "websockets-08",
+      "stage": "ask",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "open",
+      "prompt": "We use WebSockets across the product and you have never built anything realtime. How would your first month go?",
+      "modelAnswer": "I would say plainly that I have not done it, and then spend the answer on how I would close the gap rather than on apologising for it. I would read the client code we already have first — where the connection is opened, where reconnects live, what the message shapes are — and get one small change through review early, so someone senior sees how I work while the stakes are low. I would sit with the network panel and watch a real connection drop and come back, because reading about reconnects and watching one are different things. And I would ask the team which realtime failures have already bitten them — duplicate messages, state that is stale after a reconnect, the feed that dies behind a proxy — since that list is much faster than rediscovering them one at a time in production.",
+      "keyPoints": [
+        "Say the gap out loud rather than implying experience you do not have",
+        "Read the realtime code that already exists before writing new code",
+        "Get a small change reviewed early instead of a large one late",
+        "Watch a real connection fail and recover, not only the happy path",
+        "Ask which realtime failures the team has already hit"
+      ],
+      "explanation": "They can see from your CV that you have not done this — the question is whether you have a method for learning something with people and a codebase around you. The answer that quietly overclaims loses; so does 'I would do a course at the weekend', which learns the topic and not the system."
+    }
+  ]
+}
