@@ -55,8 +55,411 @@ window.CTI_CONTENT = {
      "level": "mid",
      "difficulty": 3,
      "questionCount": 24
+    },
+    {
+     "slug": "software-engineer-frontend-polygon",
+     "title": "Software Engineer (Frontend, 3-5 years)",
+     "stack": [
+      "React",
+      "Next.js",
+      "SASS",
+      "Node.js"
+     ],
+     "level": "mid",
+     "difficulty": 3,
+     "questionCount": 24
+    },
+    {
+     "slug": "rust-software-engineer-industrial",
+     "title": "Rust Software Engineer (Industrial, 5+ years)",
+     "stack": [
+      "Rust",
+      "Tokio",
+      "Linux",
+      "Docker"
+     ],
+     "level": "senior",
+     "difficulty": 5,
+     "questionCount": 23
+    },
+    {
+     "slug": "devops-engineer-paymentology",
+     "title": "DevOps Engineer (AWS + Kubernetes, 7+ years)",
+     "stack": [
+      "AWS",
+      "Terraform",
+      "Kubernetes",
+      "Kafka"
+     ],
+     "level": "senior",
+     "difficulty": 5,
+     "questionCount": 24
+    },
+    {
+     "slug": "sqa-engineer-polygon",
+     "title": "Software Quality Assurance Engineer (2-5 years)",
+     "stack": [
+      "Selenium",
+      "Cypress",
+      "Postman",
+      "JMeter"
+     ],
+     "level": "mid",
+     "difficulty": 3,
+     "questionCount": 24
+    },
+    {
+     "slug": "reactjs-developer-snapform",
+     "title": "ReactJS Developer (React & Realtime, 1-2 years)",
+     "stack": [
+      "React",
+      "JavaScript",
+      "WebSockets",
+      "REST APIs"
+     ],
+     "level": "junior",
+     "difficulty": 2,
+     "questionCount": 22
     }
    ]
+  },
+  "content/job-titles/devops-engineer-paymentology.json": {
+   "slug": "devops-engineer-paymentology",
+   "title": "DevOps Engineer (AWS + Kubernetes, 7+ years)",
+   "level": "senior",
+   "difficulty": 5,
+   "platform": "cloud",
+   "stack": [
+    "AWS",
+    "Terraform",
+    "Kubernetes",
+    "Kafka"
+   ],
+   "briefing": {
+    "summary": "Card issuing infrastructure — the platform banks and fintechs run their card programmes on, so an outage is somebody's declined transaction at a till. Everything is AWS: EC2, RDS, VPC, EKS and MSK, described in Terraform and shipped by pipelines, with Kafka carrying the transaction events between services. The posting asks for seven years and it means it — this is the person who owns the cluster upgrade, the topic that must not lose a message, and the pipeline that deploys to production without anyone holding their breath. Expect the interview to spend as much time on how you keep it running — observability, incidents, on-call, security through the pipeline — as on how you build it, and to ask how you use AI-assisted tools without letting them near production unreviewed.",
+    "requirements": [
+     "7+ years in DevOps, SRE or infrastructure engineering, on systems that take real money",
+     "AWS in practice: EC2, S3, IAM, RDS, VPC, EKS and MSK, and what each costs to run badly",
+     "Infrastructure as code in Terraform — state, modules, drift and blast radius",
+     "Deploying, upgrading and troubleshooting Kubernetes clusters and the workloads on them",
+     "Kafka and Amazon MSK: brokers, topics, partitions, consumer groups, replication, ACLs and lag",
+     "CI/CD pipelines that build once, test, and promote the same artefact to production",
+     "Bash and Python automation, and comfort debugging a Linux host from first principles",
+     "Observability and incident response — SLOs, actionable alerting, blameless reviews",
+     "Security and compliance carried through the pipeline and the infrastructure, not bolted on",
+     "Effective, reviewed use of AI-assisted tools for routine engineering, planning and troubleshooting"
+    ]
+   },
+   "topics": [
+    {
+     "id": "cloud",
+     "label": "AWS & cloud infrastructure",
+     "skills": [
+      "aws"
+     ]
+    },
+    {
+     "id": "iac",
+     "label": "Terraform & infrastructure as code",
+     "skills": [
+      "terraform"
+     ]
+    },
+    {
+     "id": "containers",
+     "label": "Kubernetes, Docker & orchestration",
+     "skills": [
+      "kubernetes"
+     ]
+    },
+    {
+     "id": "streaming",
+     "label": "Kafka, MSK & event-driven systems",
+     "skills": [
+      "kafka",
+      "microservices"
+     ]
+    },
+    {
+     "id": "delivery",
+     "label": "CI/CD, scripting & AI-assisted automation",
+     "skills": [
+      "cicd",
+      "linux-automation",
+      "ai-workflow"
+     ]
+    },
+    {
+     "id": "reliability",
+     "label": "Observability, incidents & SRE practice",
+     "skills": [
+      "observability",
+      "incident-response"
+     ]
+    }
+   ],
+   "rounds": [
+    {
+     "id": "hr",
+     "name": "HR Screen",
+     "interviewer": {
+      "name": "Tahmina",
+      "role": "Talent Partner"
+     },
+     "count": 5
+    },
+    {
+     "id": "technical",
+     "name": "Technical Screen",
+     "interviewer": {
+      "name": "Rayhan",
+      "role": "Senior DevOps Engineer"
+     },
+     "count": 7
+    },
+    {
+     "id": "deepdive",
+     "name": "Deep Dive",
+     "interviewer": {
+      "name": "Ayesha",
+      "role": "Principal SRE"
+     },
+     "count": 7
+    },
+    {
+     "id": "ask",
+     "name": "The Ask",
+     "interviewer": {
+      "name": "Kamrul",
+      "role": "Head of Platform Engineering"
+     },
+     "count": 5
+    }
+   ],
+   "extra": []
+  },
+  "content/job-titles/reactjs-developer-snapform.json": {
+   "slug": "reactjs-developer-snapform",
+   "title": "ReactJS Developer (React & Realtime, 1-2 years)",
+   "level": "junior",
+   "difficulty": 2,
+   "platform": "web",
+   "stack": [
+    "React",
+    "JavaScript",
+    "WebSockets",
+    "REST APIs"
+   ],
+   "briefing": {
+    "summary": "An early frontend seat on a small product team, building the screens of a form service in React and wiring them to a REST API. Most of the work is ordinary component work done properly — state in the right place, lists that survive a delete, a request whose failure the user can actually see — so expect to be asked why something behaves oddly rather than to define a term. Live updates run over WebSockets, and the questions follow what that costs in a browser: connections that need closing, reconnects that need patience, the same message arriving twice. Clean code and Git come up as often as React does, because the team is small enough that your commits and your pull requests are how everyone else finds out what you did. Nothing here needs you to have designed a system; it needs you to have shipped features and paid attention to what went wrong.",
+    "requirements": [
+     "React components, state, effects and lists that behave under edit and delete",
+     "JavaScript fundamentals — promises, async/await, and what is really falsy",
+     "REST API integration, including error responses, loading states and races",
+     "WebSockets for live updates: connection lifecycle, reconnects and duplicates",
+     "Semantic, accessible forms and CSS you can still read next month",
+     "Git and code review: small commits, honest messages, readable pull requests"
+    ]
+   },
+   "topics": [
+    {
+     "id": "react",
+     "label": "React components, state & hooks",
+     "skills": [
+      "react"
+     ]
+    },
+    {
+     "id": "javascript",
+     "label": "JavaScript & the browser",
+     "skills": [
+      "javascript"
+     ]
+    },
+    {
+     "id": "realtime",
+     "label": "WebSockets & live updates",
+     "skills": [
+      "websockets"
+     ]
+    },
+    {
+     "id": "api",
+     "label": "REST API integration",
+     "skills": [
+      "api-integration"
+     ]
+    },
+    {
+     "id": "collaboration",
+     "label": "Git & working with a team",
+     "skills": [
+      "git-workflow"
+     ]
+    },
+    {
+     "id": "ui",
+     "label": "Forms, CSS & accessible markup",
+     "skills": [
+      "css",
+      "accessibility"
+     ]
+    }
+   ],
+   "rounds": [
+    {
+     "id": "hr",
+     "name": "HR Screen",
+     "interviewer": {
+      "name": "Samiha",
+      "role": "People Lead"
+     },
+     "count": 5
+    },
+    {
+     "id": "technical",
+     "name": "Technical Screen",
+     "interviewer": {
+      "name": "Fahim",
+      "role": "Frontend Engineer"
+     },
+     "count": 6
+    },
+    {
+     "id": "deepdive",
+     "name": "Deep Dive",
+     "interviewer": {
+      "name": "Tanzil",
+      "role": "Founding Engineer"
+     },
+     "count": 6
+    },
+    {
+     "id": "ask",
+     "name": "The Ask",
+     "interviewer": {
+      "name": "Orin",
+      "role": "Co-founder & CTO"
+     },
+     "count": 5
+    }
+   ],
+   "extra": []
+  },
+  "content/job-titles/rust-software-engineer-industrial.json": {
+   "slug": "rust-software-engineer-industrial",
+   "title": "Rust Software Engineer (Industrial, 5+ years)",
+   "level": "senior",
+   "difficulty": 5,
+   "platform": "systems",
+   "stack": [
+    "Rust",
+    "Tokio",
+    "Linux",
+    "Docker"
+   ],
+   "briefing": {
+    "summary": "Production-grade Rust for industrial systems — the software that runs on and around machines, where a stall is a stopped line rather than a slow page. The posting wants deep Rust and says so at length: ownership and borrowing, lifetimes, error handling, concurrency and async, and performance and resource management. Underneath that it is a systems job — memory behaviour, latency, Linux, debugging something you cannot attach a debugger to, and hardware, protocols and networked devices at the edges. It also asks for architecture, unit and integration tests, code review and documentation, so expect to be asked how you work as much as what you know.",
+    "requirements": [
+     "Proven professional Rust: ownership, borrowing, lifetimes, error handling, unsafe boundaries",
+     "Concurrency and async — threads, tasks, channels, Send and Sync, cancellation",
+     "Performance and resource management: memory, allocation, latency and stability",
+     "Systems and Linux work — profiling, root-cause analysis, low-level behaviour",
+     "Hardware and protocol integration, networking, APIs and distributed systems",
+     "Modular, maintainable architecture and design patterns across the SDLC",
+     "Unit and integration tests, code review, Git and Agile delivery",
+     "CI/CD, Docker and modern DevOps; AI-assisted development tools",
+     "Technical documentation for design, implementation and operations"
+    ]
+   },
+   "topics": [
+    {
+     "id": "rust",
+     "label": "Rust: ownership, lifetimes & errors",
+     "skills": [
+      "rust"
+     ]
+    },
+    {
+     "id": "concurrency",
+     "label": "Concurrency, async & thread safety",
+     "skills": [
+      "rust-concurrency"
+     ]
+    },
+    {
+     "id": "systems",
+     "label": "Systems, memory & Linux performance",
+     "skills": [
+      "systems-programming"
+     ]
+    },
+    {
+     "id": "devices",
+     "label": "Devices, protocols & distributed systems",
+     "skills": [
+      "hardware-integration",
+      "microservices"
+     ]
+    },
+    {
+     "id": "craft",
+     "label": "Architecture, testing & code review",
+     "skills": [
+      "architecture",
+      "testing",
+      "tech-leadership"
+     ]
+    },
+    {
+     "id": "delivery",
+     "label": "Debugging, delivery & AI-assisted work",
+     "skills": [
+      "incident-response",
+      "cicd",
+      "ai-workflow"
+     ]
+    }
+   ],
+   "rounds": [
+    {
+     "id": "hr",
+     "name": "HR Screen",
+     "interviewer": {
+      "name": "Rubaiya",
+      "role": "Recruiter"
+     },
+     "count": 5
+    },
+    {
+     "id": "technical",
+     "name": "Technical Screen",
+     "interviewer": {
+      "name": "Emon",
+      "role": "Senior Rust Engineer"
+     },
+     "count": 7
+    },
+    {
+     "id": "deepdive",
+     "name": "Deep Dive",
+     "interviewer": {
+      "name": "Kaniz",
+      "role": "Principal Systems Engineer"
+     },
+     "count": 6
+    },
+    {
+     "id": "ask",
+     "name": "The Ask",
+     "interviewer": {
+      "name": "Shahriar",
+      "role": "Head of Engineering"
+     },
+     "count": 5
+    }
+   ],
+   "extra": []
   },
   "content/job-titles/senior-android-engineer.json": {
    "slug": "senior-android-engineer",
@@ -493,6 +896,417 @@ window.CTI_CONTENT = {
     }
    ],
    "extra": []
+  },
+  "content/job-titles/software-engineer-frontend-polygon.json": {
+   "slug": "software-engineer-frontend-polygon",
+   "title": "Software Engineer (Frontend, 3-5 years)",
+   "level": "mid",
+   "difficulty": 3,
+   "platform": "web",
+   "stack": [
+    "React",
+    "Next.js",
+    "SASS",
+    "Node.js"
+   ],
+   "briefing": {
+    "summary": "A product front end built in React and Next.js, where the work is turning design handoffs into interfaces that behave the same on every device and browser, and wiring them to REST APIs. The posting spends most of its words on the browser itself — the DOM, the Virtual DOM, rendering, performance, accessibility — so expect to be asked why something is slow rather than what a hook is. Bootstrap, Ant Design and SASS come up as day-to-day tools, which means questions about theming a component library rather than writing CSS from scratch. Node, Express and Mongoose appear as familiarity: enough to be asked how the data reaches you and where a payment can go wrong, not to design the database. Payments experience is called out as an advantage, so the correctness and security questions have teeth.",
+    "requirements": [
+     "React and Next.js, including when to render where",
+     "JavaScript fundamentals, the DOM and browser APIs",
+     "HTML5, CSS3, SASS and responsive interfaces across browsers",
+     "Bootstrap and Ant Design, themed to a design system",
+     "REST API integration, browser rendering and web performance",
+     "Working familiarity with Node.js, Express, MongoDB and Mongoose"
+    ]
+   },
+   "topics": [
+    {
+     "id": "react",
+     "label": "React components, state & hooks",
+     "skills": [
+      "react"
+     ]
+    },
+    {
+     "id": "nextjs",
+     "label": "Next.js & rendering strategy",
+     "skills": [
+      "nextjs"
+     ]
+    },
+    {
+     "id": "javascript",
+     "label": "JavaScript, the DOM & browser APIs",
+     "skills": [
+      "javascript"
+     ]
+    },
+    {
+     "id": "ui",
+     "label": "CSS3, SASS, responsive UI & accessibility",
+     "skills": [
+      "css",
+      "accessibility"
+     ]
+    },
+    {
+     "id": "performance",
+     "label": "Web performance & REST integration",
+     "skills": [
+      "web-performance",
+      "api-integration"
+     ]
+    },
+    {
+     "id": "backend",
+     "label": "Node.js, Express & MongoDB",
+     "skills": [
+      "nodejs",
+      "mongodb"
+     ]
+    }
+   ],
+   "rounds": [
+    {
+     "id": "hr",
+     "name": "HR Screen",
+     "interviewer": {
+      "name": "Ishrat",
+      "role": "Recruiter"
+     },
+     "count": 5
+    },
+    {
+     "id": "technical",
+     "name": "Technical Screen",
+     "interviewer": {
+      "name": "Tahmid",
+      "role": "Senior Frontend Engineer"
+     },
+     "count": 7
+    },
+    {
+     "id": "deepdive",
+     "name": "Deep Dive",
+     "interviewer": {
+      "name": "Ridwan",
+      "role": "Frontend Lead"
+     },
+     "count": 7
+    },
+    {
+     "id": "ask",
+     "name": "The Ask",
+     "interviewer": {
+      "name": "Naushin",
+      "role": "Engineering Manager"
+     },
+     "count": 5
+    }
+   ],
+   "extra": []
+  },
+  "content/job-titles/sqa-engineer-polygon.json": {
+   "slug": "sqa-engineer-polygon",
+   "title": "Software Quality Assurance Engineer (2-5 years)",
+   "level": "mid",
+   "difficulty": 3,
+   "platform": "web",
+   "stack": [
+    "Selenium",
+    "Cypress",
+    "Postman",
+    "JMeter"
+   ],
+   "briefing": {
+    "summary": "Quality for a product that ships on the web and on mobile from one shared backend. The posting wants both halves of the job: the manual craft — reading a half-written spec and turning it into test cases, exploratory passes, regression and UAT before every release — and the automation, with Selenium, Cypress or Playwright covering the critical flows and running in the build. Underneath that it asks for API testing in Postman, SQL to check the data really changed, and enough performance testing to know whether a release survives a busy day. Expect to be judged less on tools than on judgement: what you test first when the window shrinks, what you refuse to automate, and how you write a defect a developer can act on without asking you a single question.",
+    "requirements": [
+     "Test planning, test case design, and risk-based regression, smoke and UAT",
+     "Manual functional, integration and exploratory testing across web and mobile",
+     "Clear, reproducible defect reports and triage on severity versus priority",
+     "UI automation with Selenium, Cypress, Playwright or Appium, running in CI",
+     "REST API testing with Postman and SQL queries to verify data integrity",
+     "Basic performance and load testing, and validating stability across releases"
+    ]
+   },
+   "topics": [
+    {
+     "id": "planning",
+     "label": "Test planning, design & QA strategy",
+     "skills": [
+      "test-design"
+     ]
+    },
+    {
+     "id": "quality",
+     "label": "Manual, regression & where tests belong",
+     "skills": [
+      "testing"
+     ]
+    },
+    {
+     "id": "defects",
+     "label": "Defect reporting, triage & severity",
+     "skills": [
+      "defect-management"
+     ]
+    },
+    {
+     "id": "automation",
+     "label": "Selenium, Cypress & automation frameworks",
+     "skills": [
+      "test-automation"
+     ]
+    },
+    {
+     "id": "backend",
+     "label": "API testing & SQL data validation",
+     "skills": [
+      "api-integration",
+      "mysql"
+     ]
+    },
+    {
+     "id": "reliability",
+     "label": "Load testing & release stability",
+     "skills": [
+      "performance-testing",
+      "incident-response"
+     ]
+    }
+   ],
+   "rounds": [
+    {
+     "id": "hr",
+     "name": "HR Screen",
+     "interviewer": {
+      "name": "Nabila",
+      "role": "Talent Acquisition"
+     },
+     "count": 5
+    },
+    {
+     "id": "technical",
+     "name": "Technical Screen",
+     "interviewer": {
+      "name": "Zubair",
+      "role": "Senior SQA Engineer"
+     },
+     "count": 7
+    },
+    {
+     "id": "deepdive",
+     "name": "Deep Dive",
+     "interviewer": {
+      "name": "Tasnim",
+      "role": "QA Lead"
+     },
+     "count": 7
+    },
+    {
+     "id": "ask",
+     "name": "The Ask",
+     "interviewer": {
+      "name": "Rezwan",
+      "role": "Engineering Manager"
+     },
+     "count": 5
+    }
+   ],
+   "extra": []
+  },
+  "content/skills/accessibility.json": {
+   "skill": "accessibility",
+   "label": "Accessibility & semantic HTML",
+   "questions": [
+    {
+     "id": "accessibility-01",
+     "stage": "hr",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Two days before release, QA finds that the checkout flow cannot be completed with a keyboard. The product manager wants to ship and fix it next sprint. What do you do?",
+     "options": [
+      "Agree — it is one group of users and the date has been announced.",
+      "Say what it costs in plain terms — anyone using a keyboard, a screen reader, or a broken trackpad cannot pay you — then offer the small fix and the full fix, and let them choose knowing that.",
+      "Refuse to sign off on the release until the flow is fully compliant.",
+      "Log it as a low-priority ticket and let the backlog decide."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The third option is the one principled engineers reach for, and it converts a solvable conversation into a standoff you will probably lose. What the interviewer is listening for is translation: a technical objection turned into a business consequence, with options attached, so the person who owns the date can make the call with the facts."
+    },
+    {
+     "id": "accessibility-02",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "The design calls for a custom dropdown, so a developer builds it from divs with click handlers. What is the right correction in review?",
+     "options": [
+      "Add role='listbox' and aria-label to the divs so assistive tech announces them correctly.",
+      "Start from the native element, or an accessible component from the library, because keyboard interaction, focus management and screen-reader behaviour come with it — ARIA describes those behaviours but does not implement any of them.",
+      "Add tabindex='0' so the control can be reached by keyboard.",
+      "Render a visually hidden <select> alongside it for screen-reader users."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The ARIA option is tempting because it is the one that looks like accessibility work, and it produces a control that announces itself as a listbox and then ignores the arrow keys. tabindex is the same mistake one step further: reachable, still not operable. Roles are labels on behaviour you still have to write."
+    },
+    {
+     "id": "accessibility-03",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "red-flag",
+     "prompt": "This payment modal passed visual QA. What did the accessibility audit find?",
+     "subject": {
+      "kind": "code",
+      "language": "jsx",
+      "content": "<div className=\"modal\" onClick={close}>\n  <div className=\"modal-body\">\n    <img src={cardIcon} />\n    <input placeholder=\"Card number\" />\n    <span className=\"btn\" onClick={pay}>Pay</span>\n  </div>\n</div>"
+     },
+     "options": [
+      "The overlay handler should be on mousedown so a drag that ends outside doesn't close the modal.",
+      "The placeholder is standing in for a label, the image has no alt text, and the pay control is a span — so a keyboard or screen-reader user cannot label, read, or reach the payment.",
+      "The modal should be rendered through a portal so it escapes the parent's stacking context.",
+      "The input is uncontrolled, so React cannot validate the card number as it is typed."
+     ],
+     "correct": 1,
+     "eliminate": 0,
+     "explanation": "The portal point is real and is a fair second finding — as is the missing focus trap, which is the next thing an auditor writes down. But a span is not focusable and does not fire on Enter or Space, so the only way to complete this payment is with a mouse. That is the finding that stops a release in a regulated product."
+    },
+    {
+     "id": "accessibility-04",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "An audit says the light-green call-to-action on white fails contrast. The brand team will not change the brand colour. What is the right resolution?",
+     "options": [
+      "Ship it — contrast is a guideline and the brand is a business decision.",
+      "Keep the brand colour where it is decoration and use a darker variant of it for text and interactive states: contrast is a property of the pairing, not of the colour.",
+      "Add a high-contrast theme behind an accessibility toggle so users who need it can switch.",
+      "Add an aria-label to the button so screen readers announce it clearly."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The accessibility toggle is the well-meaning trap: real work, shipped, that leaves the default experience the broken one and asks the people who struggle most to go and find a setting. The aria-label answer misses the category — contrast is about seeing, and the users affected here are mostly not using a screen reader at all."
+    },
+    {
+     "id": "accessibility-05",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "How would you get accessibility into a team's normal workflow, rather than a panic before launch?",
+     "modelAnswer": "Mostly by making the default correct instead of asking people to remember. That means a component library whose inputs, dialogs and buttons are already accessible, so most screens inherit it without anyone thinking about it. Then automation for what can be automated — lint rules for the obvious markup mistakes, an axe run in CI on the key journeys — while being honest that automated checks catch roughly a third of real issues. The human part is cheap if it is small: a keyboard-only pass in the definition of done, contrast decided at design time in the tokens rather than argued at review, and one screen-reader run per release on the flows that make money. And fix classes of problem rather than instances, or you audit the same thing every quarter.",
+     "keyPoints": [
+      "Make the shared components accessible so screens inherit it",
+      "Automate what automation can catch, and know its limits",
+      "Keyboard pass in the definition of done",
+      "Decide contrast at design time, in the tokens",
+      "Fix the class of issue, not the single instance"
+     ],
+     "explanation": "The signal is whether someone treats this as engineering process or as goodwill. Answers built on individual diligence do not survive a deadline; answers built into components and CI do."
+    },
+    {
+     "id": "accessibility-06",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "order",
+     "prompt": "A new checkout page is code complete and you have an afternoon to check it is usable by everyone.",
+     "instruction": "Order these checks by what you would do first.",
+     "items": [
+      {
+       "id": "a",
+       "text": "Tab through the whole flow using only the keyboard"
+      },
+      {
+       "id": "b",
+       "text": "Run an automated accessibility scan on the page"
+      },
+      {
+       "id": "c",
+       "text": "Check the design's colour and focus-state tokens against contrast requirements"
+      },
+      {
+       "id": "d",
+       "text": "Walk the flow with a screen reader"
+      }
+     ],
+     "correctOrder": [
+      "c",
+      "b",
+      "a",
+      "d"
+     ],
+     "explanation": "Cheapest and earliest first: a contrast problem in the tokens is a design fix, not a code fix, and finding it after implementation means rework. The scan clears the mechanical issues in seconds so the human passes are not wasted on missing alt text. The screen-reader walk is last because it is the slowest and the most skilled, and it finds what the others cannot."
+    },
+    {
+     "id": "accessibility-07",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "A form ships with placeholders instead of labels, because the design left no room for them. What do you say in review?",
+     "options": [
+      "Add aria-label to each input and leave the design as drawn.",
+      "Add a real <label>, visually hidden if the design demands it — a placeholder disappears the moment someone types, so the field loses its name for everyone, while a label survives typing, autofill and screen readers.",
+      "Add a title attribute so the field name shows on hover.",
+      "Raise the placeholder's contrast so it is easier to read."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "This is the accessibility bug that hurts sighted users too: everyone who fills in a form, gets interrupted, and comes back to eight boxes of text with no idea what the third one was. aria-label is the tempting answer because it fixes the screen-reader half and looks like accessibility work — it leaves everyone looking at the screen without a name for the field."
+    },
+    {
+     "id": "accessibility-08",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "platform": "web",
+     "type": "red-flag",
+     "prompt": "Everything works when the reviewer clicks it. What did they flag anyway?",
+     "subject": {
+      "kind": "code",
+      "language": "jsx",
+      "content": "<div className=\"btn-primary\" onClick={submit}>\n  Send submission\n</div>"
+     },
+     "options": [
+      "It is a button drawn as a div: it cannot be reached with Tab or fired with Enter or Space, and nothing announces it as a button — a real <button> brings all of that with it.",
+      "onClick should be onSubmit.",
+      "It needs role='button' to be correct.",
+      "className should be class."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "role='button' is tempting because the word 'button' now appears in the code: it changes what a screen reader announces and adds no focusability, no Enter or Space handling, no disabled state and no form submission. Whenever the answer is a div plus a list of attributes, the shorter answer is the element that already does all of it."
+    }
+   ]
   },
   "content/skills/ai-integration.json": {
    "skill": "ai-integration",
@@ -950,6 +1764,111 @@ window.CTI_CONTENT = {
      "correct": 2,
      "eliminate": 3,
      "explanation": "A timeout means the outcome is unknown, not necessarily failed. An idempotency key lets the server recognize the same logical operation and return the original result instead of charging, creating, or submitting twice."
+    },
+    {
+     "id": "api-integration-06",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "red-flag",
+     "prompt": "Users report a toast reading 'Created undefined' when a form fails validation. What is wrong here?",
+     "subject": {
+      "kind": "code",
+      "language": "javascript",
+      "content": "const res = await fetch('/api/forms', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify(values),\n});\nconst form = await res.json();\nshowSuccess(`Created ${form.name}`);"
+     },
+     "options": [
+      "fetch only rejects when the network fails — a 422 or a 500 arrives here as an ordinary response, so a rejected submission is announced as a success. res.ok has to be checked before the body is treated as a result.",
+      "The response should be read with res.text() and parsed, in case the body is not JSON.",
+      "The request needs a timeout.",
+      "The whole thing should be wrapped in try/catch."
+     ],
+     "correct": 0,
+     "eliminate": 1,
+     "explanation": "This is the single most common integration bug in a browser app: fetch resolves happily for 404 and 500 alike, and only a dropped connection rejects. The try/catch is worth adding and catches none of this — the request succeeded, the operation did not, and the difference between those two is the whole job of the status code."
+    },
+    {
+     "id": "api-integration-07",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "The API answers an invalid submission with 422 and a body naming the fields that failed. The UI shows 'Something went wrong. Please try again.' What should change?",
+     "options": [
+      "Retry the request a few times automatically before showing the message.",
+      "Show the server's per-field messages against the fields they belong to, and keep the generic message for failures you genuinely cannot explain.",
+      "Log the response to the console so support can ask the user to read it out.",
+      "Change the API to return 200 with an error flag, so the client can read the body."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "'Try again' is advice that cannot work — nothing changes on a retry when the input is the reason, and the automatic retry spends the server's time proving it. The status code tells you whose problem it is: 4xx means the request has to change, 5xx means retrying might genuinely help. Rendering the body is the difference between a user fixing their own typo and a support ticket."
+    },
+    {
+     "id": "api-integration-08",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "A search box fires a request per keystroke. Users say the results sometimes belong to a shorter, earlier query. Best fix?",
+     "options": [
+      "Debounce the input so far fewer requests go out.",
+      "Debounce, and also ignore any response that is not for the query currently in the box — fewer requests makes this rarer, not impossible, because responses can still come back out of order.",
+      "Send the requests strictly one at a time, waiting for each before firing the next.",
+      "Cache responses by query string."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Debouncing alone is the answer most people give, and it is half of one: it cuts the number of racing requests without ordering them, so the bug survives, becomes rare, and turns into something QA cannot reproduce. Tracking the latest query — or aborting the previous request — is what actually makes the newest response the one that wins."
+    },
+    {
+     "id": "api-integration-09",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "red-flag",
+     "prompt": "The page sometimes sits on its spinner forever and nobody can say why. What is wrong with this?",
+     "subject": {
+      "kind": "code",
+      "language": "javascript",
+      "content": "setLoading(true);\ntry {\n  const res = await fetch(url);\n  const data = await res.json();\n  setRows(data.rows);\n  setLoading(false);\n} catch (e) {\n  console.log(e);\n}"
+     },
+     "options": [
+      "The catch swallows the failure — nothing tells the user, nothing reaches error tracking, and loading is never turned off, so a failed request is indistinguishable from a slow one for as long as the tab stays open.",
+      "console.log should be console.error.",
+      "The fetch should be retried inside the catch.",
+      "setRows should be called after setLoading, not before."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "A catch that only logs is worse than no catch at all, because an unhandled rejection would at least surface somewhere. Turning loading off belongs in a finally so it happens on both paths, and the user needs a state that says what failed and offers a way to try again. console.error instead of log is a fair nit that leaves the spinner spinning."
+    },
+    {
+     "id": "api-integration-10",
+     "stage": "ask",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "open",
+     "prompt": "The endpoint you need does not behave the way its documentation says. What do you do?",
+     "modelAnswer": "First I would check it is really the API and not me — call it outside the app, with a plain request, and look at the exact status and body coming back rather than what my code did with them. Then I would write down the smallest reproduction: this request, this response, the line of the docs that says otherwise. That turns 'the API is broken' into something a backend engineer can confirm in a minute. I would take it to them rather than quietly working around it, because a client-side workaround for a server bug outlives the bug and nobody remembers why it is there. If the behaviour turns out to be intended and the docs are simply stale, I would offer the doc fix while it is fresh. And I would keep moving on the parts that do not depend on it, and say in standup what I am waiting on.",
+     "keyPoints": [
+      "Verify outside your own code before blaming the API",
+      "Reduce it to one request, one response, one line of documentation",
+      "Take it to the owner rather than silently working around it",
+      "Fix or flag the docs if the behaviour was intended",
+      "Say early what you are blocked on, and work on something else meanwhile"
+     ],
+     "explanation": "The question is really about how you behave when blocked, and the two weak answers are the extremes — sitting on it quietly for two days, or announcing in the channel that the API is broken before checking. What a team wants is a small checkable report from someone who is not idle while they wait for the answer."
     }
    ]
   },
@@ -1171,6 +2090,156 @@ window.CTI_CONTENT = {
     }
    ]
   },
+  "content/skills/aws.json": {
+   "skill": "aws",
+   "label": "AWS & cloud infrastructure",
+   "questions": [
+    {
+     "id": "aws-01",
+     "stage": "hr",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "The recruiter reads back something the candidate said earlier in the call.",
+     "subject": {
+      "kind": "quote",
+      "content": "\"We were blocked on a permissions error the night before launch, so I gave the service account AdministratorAccess to get it out the door. We were going to tighten it up the week after.\""
+     },
+     "options": [
+      "They should have raised a change request instead of touching IAM at all.",
+      "The launch shipped on a permission grant nobody scoped, nobody reviewed and nobody removed — 'we'll tighten it later' is how production ends up with admin credentials in it, and there is no sign they went back.",
+      "AdministratorAccess is fine for a service account as long as it is in a non-production account.",
+      "They should have used an IAM user rather than a service account."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Nobody is scoring them on knowing least privilege — they clearly do. The flag is the trade they made and never unwound. The strongest wrong answer is the change-request one, because process would have helped; but the thing an interviewer at a card issuer actually hears is a temporary security exception with no owner and no date."
+    },
+    {
+     "id": "aws-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Your Multi-AZ RDS instance failed over at 3am. The failover finished in about 90 seconds, but the application stayed broken for twenty minutes until someone restarted it.",
+     "options": [
+      "Multi-AZ only protects the backups — you need a read replica promoted manually for real failover.",
+      "The application cached the resolved IP of the endpoint. Failover moves the CNAME, so a client that never re-resolves DNS keeps dialling the old, now-dead, address until it is restarted.",
+      "The instance class is too small, so recovery took longer than the health check allowed.",
+      "The connection pool was too large and exhausted the new primary."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "Multi-AZ failover is a DNS change, and any client that pins the address — a JVM with an infinite DNS cache, a pooled connection that is never validated — sits out the whole event. The read-replica answer is the tempting one because promoting a replica is a real recovery story; it is just not what Multi-AZ does, and it would not explain why a restart fixed it."
+    },
+    {
+     "id": "aws-03",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A CI runner in your tooling account needs to deploy into the production account. How should it authenticate?",
+     "options": [
+      "Create an IAM user in production, generate an access key, and store the key in the CI system's secret store.",
+      "Federate the CI provider as an OIDC identity provider in production and let the pipeline assume a role whose trust policy is scoped to that specific repository and branch.",
+      "Put the production credentials in an encrypted file in the deployment repository so the pipeline can decrypt them at run time.",
+      "Peer the two accounts' VPCs so the runner reaches production over private networking."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "A short-lived role assumed through OIDC has no secret to leak, rotate or find in a log, and the trust policy pins it to one repo and branch, so a fork or a feature branch cannot deploy. The IAM-user answer is the tempting one because it is what most teams actually do and it does work — but a long-lived key in a CI secret store is a credential that outlives every person who knew about it. VPC peering answers a networking question nobody asked."
+    },
+    {
+     "id": "aws-04",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "cloud",
+     "type": "mcq",
+     "prompt": "Pods in private subnets read and write S3 all day. The NAT gateway's data-processing charge is now one of the largest lines on the bill.",
+     "options": [
+      "Move the nodes into public subnets with public IPs so the traffic skips NAT.",
+      "Add a gateway VPC endpoint for S3, so that traffic is routed to S3 inside the VPC and never touches the NAT gateway at all.",
+      "Put CloudFront in front of the bucket so repeat reads are cached.",
+      "Replace the NAT gateway with a NAT instance on a smaller instance type."
+     ],
+     "correct": 1,
+     "eliminate": 0,
+     "explanation": "S3 and DynamoDB have gateway endpoints that cost nothing and are a route-table entry — the single highest-leverage line item in most AWS bills with private subnets. CloudFront is the tempting answer because caching does cut egress, but it does nothing for writes and the pods would still leave via NAT unless you changed the endpoint they call. A NAT instance trades a bill for an on-call pager."
+    },
+    {
+     "id": "aws-05",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "This bucket policy is on the bucket that holds settlement files.",
+     "subject": {
+      "kind": "code",
+      "language": "json",
+      "content": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Principal\": \"*\",\n      \"Action\": \"s3:*\",\n      \"Resource\": \"arn:aws:s3:::settlement-files/*\",\n      \"Condition\": {\n        \"StringEquals\": { \"aws:SourceVpce\": \"vpce-0a12b34c\" }\n      }\n    }\n  ]\n}"
+     },
+     "options": [
+      "The statement has no Sid, so it cannot be referenced in an audit.",
+      "The Resource covers objects but not the bucket itself, so ListBucket will fail.",
+      "Any principal that can reach that VPC endpoint gets every S3 action on the bucket, deletes and policy changes included — the condition is a network boundary standing in for an identity boundary.",
+      "It should specify a KMS key so the objects are encrypted."
+     ],
+     "correct": 2,
+     "eliminate": 0,
+     "explanation": "The endpoint condition makes this look tightly scoped, and it is the reason a policy like this survives review. But it only says where the caller came from, not who they are: every workload sharing that VPC — including a compromised sidecar — is now an admin of the settlement bucket. The Resource observation is the strong distractor: it is genuinely true and will cause a bug, it just is not the security hole."
+    },
+    {
+     "id": "aws-06",
+     "stage": "deepdive",
+     "levels": [
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "Card authorisation has to keep working when an availability zone goes away. Walk us through how you would build for that on AWS.",
+     "modelAnswer": "Everything stateless runs in at least three AZs behind an ALB, with auto scaling groups and EKS node groups per AZ and pod topology spread so a lost zone costs a third of capacity rather than a service. Every AZ must be able to carry the load with one zone gone, so I size for N-1 and check the reserved capacity and per-AZ quotas actually exist rather than assuming the API will give me instances during a regional event. Stateful things get zone-aware equivalents: RDS Multi-AZ with the application re-resolving DNS on failure, MSK across three zones with replication factor three and min.insync.replicas of two, and nothing important living on instance storage or a single-AZ EBS volume. I would keep the whole thing in code so the recovery path is a rebuild rather than a memory, and I would prove it — fault injection that actually removes a zone in a lower environment, and a game day, because a design that has never been tested is a hypothesis. Then I would be honest about what is still single-zone or single-region, write it down, and decide whether the card scheme's availability commitments make it worth fixing.",
+     "keyPoints": [
+      "Three AZs, and capacity sized so N-1 still carries peak",
+      "Zone-aware data tier: RDS Multi-AZ, MSK RF3 with min.insync.replicas 2",
+      "No state on single-AZ storage; clients re-resolve DNS on failover",
+      "Quotas and reserved capacity checked, not assumed",
+      "Recovery is a rebuild from code, not tribal knowledge",
+      "Tested with fault injection or a game day",
+      "The remaining single points of failure written down and consciously accepted"
+     ],
+     "explanation": "Anyone can say 'multi-AZ'. What separates a seven-year answer is the capacity arithmetic (does N-1 hold?), the admission that AWS may not hand you instances during a zone event, and having actually tested it. An answer that never mentions testing is describing a diagram, not a system."
+    },
+    {
+     "id": "aws-07",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "You join and inherit an AWS estate nobody has fully mapped. What do you do in the first fortnight?",
+     "options": [
+      "Start rewriting the highest-risk resources in Terraform immediately, so at least something is under control.",
+      "Read the bill, CloudTrail and the existing IaC together — the bill says what exists, CloudTrail says who changes it and how, and the gap between them is the work.",
+      "Turn on every AWS security service and triage the findings.",
+      "Propose a migration plan to a single well-architected landing zone."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The bill is the only inventory that cannot lie, and CloudTrail tells you whether changes arrive through a pipeline or through someone's console session — which decides everything about how you fix it. Importing into Terraform first is the tempting answer, and you will get there, but importing an estate you have not mapped just encodes the mess with a state file attached."
+    }
+   ]
+  },
   "content/skills/behavioral.json": {
    "skill": "behavioral",
    "label": "Motivation, teamwork & how you handle disagreement",
@@ -1263,6 +2332,7 @@ window.CTI_CONTENT = {
      "id": "behavioral-05",
      "stage": "hr",
      "levels": [
+      "junior",
       "mid",
       "senior"
      ],
@@ -1282,6 +2352,7 @@ window.CTI_CONTENT = {
      "id": "behavioral-06",
      "stage": "ask",
      "levels": [
+      "junior",
       "mid",
       "senior"
      ],
@@ -1432,6 +2503,105 @@ window.CTI_CONTENT = {
       "Treat existing choices as context to investigate, not incompetence to erase"
      ],
      "explanation": "A strong answer balances initiative with humility. The first month is for acquiring the context that makes later technical judgment trustworthy, not announcing a rewrite before understanding the system."
+    },
+    {
+     "id": "behavioral-14",
+     "stage": "hr",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "You have been stuck on the same bug for two hours. What is the right move?",
+     "options": [
+      "Keep going — asking this early makes it look like you cannot work on your own.",
+      "Ask in the team channel: what you are trying to do, what you have already tried, and where it stops.",
+      "Ask a senior to drop what they are doing and screen-share until it is solved.",
+      "Rewrite the whole section from scratch and hope it does not come back."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Teams do not mind being asked; they mind being asked with nothing attached. The version with what-you-tried costs a minute of someone's time rather than twenty, and writing it out solves the problem before you press send often enough to be worth doing anyway. Two hours is a sensible ceiling to agree with your lead — what juniors regret is the two days, not the two hours."
+    },
+    {
+     "id": "behavioral-15",
+     "stage": "ask",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "open",
+     "prompt": "First day, and you have the codebase in front of you. What do you want to find out before you write anything?",
+     "modelAnswer": "How to run it and how to ship it, first — the app running locally, and what happens between a merged pull request and production, because that tells me what a mistake costs here and how carefully to move. Then the shape of it: where the code for the screen I will be working on lives, how the data reaches it, and what the team's conventions actually are — which I would learn from two or three recently merged pull requests rather than a document, because those show the real standard rather than the aspirational one. I would work out who to ask about what, and whether asking in a channel is normal here or people prefer a direct message. And I would want a first task small enough to get through review in a day or two, so I have been through the whole pipeline once on something that does not matter much.",
+     "keyPoints": [
+      "Get it running locally and learn how code reaches production",
+      "Read recent merged pull requests to learn the real conventions",
+      "Trace the path from the screen you will work on to the data behind it",
+      "Find out who to ask, and where asking is normal",
+      "Ship something small end to end early"
+     ],
+     "explanation": "The interviewer is checking whether you have a plan for being new, since that is most of your first month. The weak answer is a request to be taught — 'I would want a walkthrough of the architecture' — which hands the work to the team. The strong one is mostly things you can do by yourself, with the questions saved for what reading cannot tell you."
+    },
+    {
+     "id": "behavioral-16",
+     "stage": "ask",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "You estimated two days. It is the end of day two and you are about halfway. What do you do?",
+     "options": [
+      "Say nothing yet — you might still catch up tomorrow.",
+      "Tell your lead now: where you are, what turned out bigger than you expected, and your new estimate.",
+      "Work the evening and the weekend and land it on time.",
+      "Ship the half that works on time and finish the rest quietly afterwards."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Estimates slip constantly and nobody senior is surprised by that; the damage is entirely in when the news arrives. A day late told on day two is a scheduling adjustment, and the same day late discovered on day four is a broken promise to whoever was told it would be ready. Working the weekend is the tempting one because it looks like ownership — it hides exactly the same information, and it teaches everyone that your estimates are fine."
+    },
+    {
+     "id": "behavioral-17",
+     "stage": "ask",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "An interviewer asks about a tool on the job description that you have never used. Best answer?",
+     "options": [
+      "Describe roughly what you have read about it and hope the follow-up does not come.",
+      "Say you have not used it, name the nearest thing you have used and what you would expect to carry over, and ask how it is used here.",
+      "Say you are a fast learner and can pick anything up in a week.",
+      "Move the conversation to something you do know well."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Everyone knows a short CV has gaps; what the interview is finding out is how you behave at the edge of what you know. 'I learn fast' is not wrong so much as empty — it is what everyone says and gives them nothing to assess. Naming the nearest neighbour shows you can map a new thing onto an old one, which is the skill actually being tested, and the question at the end turns it into a conversation."
+    },
+    {
+     "id": "behavioral-18",
+     "stage": "ask",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "red-flag",
+     "prompt": "A candidate is asked what they do when they do not know something. What worries the interviewer?",
+     "subject": {
+      "kind": "quote",
+      "content": "I don't really like asking — it makes it look like I can't do the job. I'd rather spend the weekend on it and come in Monday with it working, even if the code ends up a bit odd."
+     },
+     "options": [
+      "Working weekends, which suggests poor time management.",
+      "Waiting until Monday: the team loses two days it did not know it was losing, and the odd code arrives with nobody having seen the reasoning that produced it.",
+      "Not naming the resources they would use to learn.",
+      "Admitting in an interview that there are things they do not know."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The instinct is sympathetic and the cost lands on other people: the work is invisible until it is finished, and by then the wrong approach is already written and defended. Interviewers are not listening for someone who knows everything — they are listening for someone whose progress they can see. The weekend is not the red flag on its own; the silence is."
     }
    ]
   },
@@ -1493,6 +2663,461 @@ window.CTI_CONTENT = {
       "d"
      ],
      "explanation": "Restore service first, confirm recovery, preserve evidence, then investigate and improve the system. Debugging while users remain on a known-bad release extends the incident unnecessarily."
+    },
+    {
+     "id": "cicd-03",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "The pipeline takes 55 minutes. People have stopped waiting for it and merge on a green-ish feeling.",
+     "options": [
+      "Move the test suite to a nightly run so the merge pipeline is fast again.",
+      "Find where the time goes, then attack it: cache dependencies, parallelise the unit tests, and split the slow end-to-end suite out of the pre-merge gate into a post-merge stage that can block promotion instead of the merge.",
+      "Buy larger runners — most of the time is spent on under-provisioned CI machines.",
+      "Delete the flaky tests, which are the ones people are ignoring anyway."
+     ],
+     "correct": 1,
+     "eliminate": 0,
+     "explanation": "Nobody knows where 55 minutes goes until they measure it, and it is usually two stages, not fifty. The staged split is what keeps a fast honest gate on merges without losing the slow coverage. Bigger runners is the tempting answer because it sometimes helps and takes an afternoon — it does nothing for a serial forty-minute end-to-end stage, which is the usual culprit."
+    },
+    {
+     "id": "cicd-04",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "A pipeline definition in the infrastructure repository.",
+     "subject": {
+      "kind": "code",
+      "language": "yaml",
+      "content": "on: [push]\n\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@main\n      - run: |\n          mkdir -p ~/.aws\n          printf 'aws_access_key_id=%s\\naws_secret_access_key=%s\\n' \\\n            \"${{ secrets.AWS_KEY }}\" \"${{ secrets.AWS_SECRET }}\" > ~/.aws/credentials\n      - run: terraform apply -auto-approve\n"
+     },
+     "options": [
+      "`runs-on: ubuntu-latest` should be a pinned image so builds are reproducible.",
+      "The AWS credentials are long-lived and written to disk — the job should assume a role through OIDC and get short-lived credentials instead.",
+      "A push to any branch applies Terraform to production with `-auto-approve`: no reviewed plan, no environment protection, and a typo on a feature branch reaches the payments infrastructure.",
+      "`actions/checkout@main` should be pinned to a commit SHA."
+     ],
+     "correct": 2,
+     "eliminate": 0,
+     "explanation": "Both of the other real findings are worth raising — the long-lived key is the strongest of them, and an unpinned third-party action running in a job that holds production credentials is a supply-chain hole — but the trigger is the one that can destroy the estate this afternoon, without anyone being malicious. Gate on the branch, require an environment approval, and apply a plan someone read."
+    },
+    {
+     "id": "cicd-05",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Dev, staging and production have drifted apart and nobody is sure what differs. How should the pipeline be organised so they stay consistent?",
+     "options": [
+      "One pipeline definition, parameterised per environment, promoting the same built artefact through each — with configuration in version control and secrets pulled from a store at deploy time.",
+      "A long-lived branch per environment, each carrying the pipeline file and configuration for that environment.",
+      "A copy of the pipeline per environment, so a change to staging can never break production.",
+      "Keep one pipeline and set the per-environment differences by hand at deploy time."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "If the environments run different definitions, they will differ, and the differences will be discovered in production. Branch-per-environment is the interesting wrong answer because plenty of teams run it and it feels tidy — but the pipeline file then diverges between branches exactly like the config did, and every merge is a chance to promote the wrong thing. The same artefact through every environment is the property that makes staging evidence rather than decoration."
+    },
+    {
+     "id": "cicd-06",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "Suppose you find a team here that deploys once a month, on a Saturday, with everyone on a call. How would you move them towards continuous delivery?",
+     "modelAnswer": "I would not start by deploying more often — that just makes the frightening thing happen more. I would start by making a rollback boring: one command or one click, tested in a lower environment, so the worst case is minutes rather than a Saturday. Then find out why the batch is monthly, which is usually one of two things — a manual test cycle nobody trusts to shrink, or a release that bundles a database change with the code. Feature flags decouple deploying from releasing, so code can ship dark while the release decision stays with the product owner, which is often the actual objection. Get the pipeline green, fast and trusted, add a post-deploy smoke test and a canary, and go weekly to staging on every merge before touching the production cadence. Measure it in DORA terms — lead time, deployment frequency, change failure rate, time to restore — because the argument that wins is showing that smaller changes fail less, not that a book recommends it. And I would do it with one willing service first rather than mandating it: a team that has had a calm Tuesday deploy will convince the others faster than I can.",
+     "keyPoints": [
+      "Make rollback boring before increasing frequency",
+      "Find the real constraint — manual test cycle, or coupled database changes",
+      "Feature flags to separate deploy from release",
+      "Smoke tests and canaries so a bad deploy is caught by the pipeline, not by customers",
+      "Shrink the batch gradually: staging on every merge first",
+      "Measure with lead time, deployment frequency, change failure rate, time to restore",
+      "Demonstrate with one volunteer service instead of mandating it"
+     ],
+     "explanation": "The failure mode in this answer is enthusiasm — proposing daily production deploys to a team whose last one took eight hours. Fear of deploying is nearly always rational, and it is really fear of not being able to undo it, so the rollback comes first and the cadence follows."
+    }
+   ]
+  },
+  "content/skills/css.json": {
+   "skill": "css",
+   "label": "CSS3, SASS & responsive UI",
+   "questions": [
+    {
+     "id": "css-01",
+     "stage": "hr",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "A candidate is describing how they handled a design handoff. What costs them the offer?",
+     "subject": {
+      "kind": "quote",
+      "content": "The Figma was a fixed 1440px layout with no mobile screens, so I built it at 1440. Responsive wasn't in the ticket, and if the designer wanted it they should have drawn it."
+     },
+     "options": [
+      "Building the page at a fixed 1440px width.",
+      "Treating a gap in the design as permission to ship a desktop-only page, instead of going back to the designer with the one question that would have unblocked it.",
+      "Not using a CSS framework's grid for the layout.",
+      "Not writing the ticket in more detail themselves."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Building to the design you were given is defensible; the sentence that lands badly is the last one. On a team where designers, product and engineers share a deadline, the expensive habit is answering an ambiguity alone and silently. Most of the traffic is on phones, so this is also a product failure with a clear owner."
+    },
+    {
+     "id": "css-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "A card grid should be four across on desktop, two on tablet and one on a phone — and the client keeps sending new device widths to support. Best approach?",
+     "options": [
+      "One media query per breakpoint, with a column-count modifier class for each.",
+      "Let the grid work it out: repeat(auto-fit, minmax(240px, 1fr)) so the column count follows the space available and a new device needs no new CSS.",
+      "Measure the container in JavaScript on resize and set the column count from there.",
+      "Use the framework's grid classes — col-lg-3 col-md-6 col-12 — one per breakpoint."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "The framework grid is the tempting answer because it ships today and everyone can read it — it just hard-codes the same arithmetic against viewport widths, so the next device size is another edit in every template. Breakpoints are for design decisions the browser cannot make; column counts are arithmetic, and the browser is better at it than you are."
+    },
+    {
+     "id": "css-03",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "On phones the page scrolls sideways by about thirty pixels. Nothing looks too wide in DevTools at desktop sizes. What do you do?",
+     "options": [
+      "Set overflow-x: hidden on the body and move on.",
+      "Find what is actually overflowing — a fixed-width image, an unbroken string, a negative margin — by comparing scrollWidth with clientWidth as you walk down the tree.",
+      "Add width: 100% and box-sizing: border-box to every container.",
+      "Check that the viewport meta tag is present and correct."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "overflow-x: hidden is what most teams ship, and it is why nobody ever finds the cause: the element is still there, still wide, and now it also breaks position: sticky in some browsers. The viewport meta tag is worth a glance, but a missing one scales the whole page rather than overhanging it by thirty pixels."
+    },
+    {
+     "id": "css-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "red-flag",
+     "prompt": "A reviewer left one comment on this SASS. What was it about?",
+     "subject": {
+      "kind": "code",
+      "language": "scss",
+      "content": ".card {\n  .header {\n    .title {\n      span { color: $blue; }\n    }\n  }\n  &.is-active .header .title span { color: $blue-dark !important; }\n}"
+     },
+     "options": [
+      "Nesting to match the markup compiles to .card .header .title span, so the only way to override it later is a longer selector or !important — which is exactly what the next line resorts to.",
+      "The colours should be CSS custom properties rather than SASS variables, so themes can change at runtime.",
+      "SASS does not allow & to be combined with a class in a nested selector.",
+      "The rules should be split into partials, one file per component."
+     ],
+     "correct": 0,
+     "eliminate": 2,
+     "explanation": "Nesting feels like structure and is actually specificity, compounding one level at a time. The tell is the !important on the very next line — the file has already started fighting itself. Custom properties are a real point and a good second comment, but that is about theming, not about why this stylesheet gets harder to change every week."
+    },
+    {
+     "id": "css-05",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "The design system says buttons are brand green with a 6px radius; the component library ships blue at 2px. The team is overriding it with .ant-btn { ... !important } in a global stylesheet. What should happen instead?",
+     "options": [
+      "Nothing — it is one file, it is obvious where to look, and it works.",
+      "Configure the library's theme once at the root — its design tokens, or its SASS variables set before the import — so components come out correct and its internal class names stay private.",
+      "Fork the library and edit its stylesheet, so the defaults are simply right.",
+      "Wrap every button in a local component that re-declares the styles the design system requires."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "The wrapper option is the near-miss: it works, and you repeat it for every component the library ships, and the two drift. Overriding by internal class name couples your styling to a name the library is free to rename in a patch release — and the upgrade that breaks all your buttons produces no error, just blue."
+    },
+    {
+     "id": "css-06",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "A layout is pixel-perfect in Chrome and visibly broken in Safari on iOS. What is the most reliable way to work?",
+     "options": [
+      "Add vendor prefixes across the stylesheet until it renders.",
+      "Check support before using a feature, keep a real-device pass in the review checklist, and branch with @supports only where a fallback is genuinely needed.",
+      "Detect Safari from the user agent string and serve it a separate stylesheet.",
+      "Log it as a known issue and wait for the next Safari release."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "Prefixing everything is the reflex, and a build-time autoprefixer already does it better than you will by hand — what it cannot do is tell you the feature is unsupported entirely. User-agent sniffing is the answer that gets remembered for the wrong reason: it breaks on every browser released after you wrote it."
+    },
+    {
+     "id": "css-07",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "open",
+     "prompt": "Our stylesheet is 400KB and nobody dares delete anything from it. What would you do about that?",
+     "modelAnswer": "I would stop it growing before I try to shrink it: new work goes into component-scoped styles with clear ownership, so the global sheet is frozen rather than compounding. Then I would get evidence — coverage tooling per route tells me what is unused, though carefully, because class names built at runtime look unused and are not. I would delete in small, verifiable increments, one page or one component at a time, with visual regression screenshots so a removal that changes rendering shows up in review rather than in production. Alongside that, pull colours, spacing and typography into tokens so the duplicates become visible, and put a size budget in CI so the number can only go down.",
+     "keyPoints": [
+      "Stop the growth first — scoped styles and ownership for anything new",
+      "Use coverage data, while knowing why it over-reports unused rules",
+      "Delete in small increments, protected by visual regression",
+      "Extract tokens so duplication becomes visible",
+      "Put a budget in CI so the win holds"
+     ],
+     "explanation": "The interesting part of the answer is 'nobody dares' — the problem is fear, and fear is fixed with a safety net, not with a bigger delete. Anyone who opens with a full rewrite of the stylesheet has skipped the part where the current one is what keeps the product looking right."
+    },
+    {
+     "id": "css-08",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "Your new rule does not apply. Adding !important makes it work. What has actually happened?",
+     "options": [
+      "The stylesheets are loading in the wrong order.",
+      "Another rule matches the same element with a more specific selector and wins — !important overrules the entire cascade instead of resolving the mismatch, so the next person needs a bigger hammer than you did.",
+      "The class name is misspelled somewhere.",
+      "The browser is serving a cached copy of the old CSS."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "DevTools answers this in seconds: the losing rule is struck through and the winner sits right above it. Matching or lowering the specificity of the rule that wins keeps the cascade readable. !important wins today and guarantees the next override has to be !important too — which is exactly how a stylesheet nobody dares touch gets built, one urgent fix at a time."
+    },
+    {
+     "id": "css-09",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "platform": "web",
+     "type": "red-flag",
+     "prompt": "The card matches the designer's screenshot exactly. What did the reviewer flag?",
+     "subject": {
+      "kind": "code",
+      "language": "css",
+      "content": ".submission-card .title {\n  height: 48px;\n  overflow: hidden;\n  margin-top: -6px;\n}"
+     },
+     "options": [
+      "A fixed height with hidden overflow cuts off any title that wraps to a second line — which is every long title, and most titles in a language that is not English.",
+      "The selector should be a single class rather than a nested one.",
+      "Negative margins are never acceptable in CSS.",
+      "48px should be written as 3rem."
+     ],
+     "correct": 0,
+     "eliminate": 2,
+     "explanation": "A fixed height encodes the content you happened to have on the day you built it. min-height with padding lets the card grow rather than quietly eating the end of a sentence, and if truncation really is wanted it should look deliberate — an ellipsis or a line clamp, not a clipped letter. The rem point is a real convention worth raising in review; it is not the thing that breaks in production."
+    }
+   ]
+  },
+  "content/skills/defect-management.json": {
+   "skill": "defect-management",
+   "label": "Defect reporting, triage & severity",
+   "questions": [
+    {
+     "id": "defect-management-01",
+     "stage": "hr",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "A candidate is asked how they handle a developer disagreeing with a bug they raised. What's the red flag?",
+     "subject": {
+      "kind": "quote",
+      "content": "If the developer says it's not a bug, I close it. They wrote the code, so they know it better than I do — and honestly, arguing with developers is not a fight a tester wins."
+     },
+     "options": [
+      "They should escalate straight to the engineering manager, who can overrule the developer.",
+      "They're settling a question about intended behaviour by seniority rather than by going to the requirement and the person who owns it.",
+      "They're admitting they don't read code, which is disqualifying for an SQA role.",
+      "Closing a defect at all is a decision only the person who raised it should make."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "'Is this a bug?' is a question about what the product is supposed to do, and the developer's opinion is one input, not the answer — the spec, the designs and the PM are. Escalating is the tempting alternative because it looks assertive, but reaching for a manager on the first disagreement burns the working relationship this job depends on; you go to the requirement first, and only escalate when the requirement genuinely doesn't say."
+    },
+    {
+     "id": "defect-management-02",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "red-flag",
+     "prompt": "This defect came back from the developer as 'Cannot reproduce' two days later. What's the main problem with it?",
+     "subject": {
+      "kind": "quote",
+      "content": "Title: Payment not working\nPriority: High\nDescription: I tried to pay and it failed. Same thing happened yesterday too. Please check and fix urgently."
+     },
+     "options": [
+      "The priority should have been set by the product manager, not by the tester.",
+      "There's no build, environment, account, payment method, steps, actual result, expected result or evidence — nothing a developer can act on, so the round trip costs two days before any work starts.",
+      "The title is too short and doesn't name the module.",
+      "It should have been raised in a chat message first so the developer sees it sooner."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "A defect report is a set of instructions for recreating a failure; this one is a complaint. The priority point is a fair second finding — a tester proposing priority without impact evidence tends to get ignored — but even a perfectly triaged ticket is unworkable if nobody can get the system into the failing state. The cheapest minute you will ever spend is the one adding the build number and the exact steps."
+    },
+    {
+     "id": "defect-management-03",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Two defects, one release. (A) The company name is misspelled in the checkout header on every page. (B) An admin report used once a quarter crashes on export. How should these be classified?",
+     "options": [
+      "A is low severity but high priority; B is high severity but lower priority.",
+      "A is low severity and low priority; B is high severity and high priority.",
+      "Both are high priority, since a crash and a customer-visible error are equally urgent.",
+      "Severity and priority should always match, otherwise the fields contradict each other."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "Severity is how badly the product is broken; priority is how soon it must be fixed — and they come apart exactly here. The typo breaks nothing but is seen by every customer and takes five minutes, so it goes now. The crash is severe but hits one person once a quarter, who has a workaround, so it can wait for the next sprint. Answer B is the tempting one because severity is the loudest signal in the room and people let it drive the schedule."
+    },
+    {
+     "id": "defect-management-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "You've hit a checkout failure once in about twenty attempts and you cannot make it happen on demand. Release is in four days. What do you do?",
+     "options": [
+      "Hold off on filing until you can reproduce it reliably, so you don't send the developer on a hunt.",
+      "File it now as intermittent, with the frequency you observed, the exact build, timestamps, request and response, logs from that attempt and what differed between the runs that failed and the ones that passed.",
+      "File it as a low-severity defect, since it only happens 5% of the time.",
+      "Mention it verbally in standup and move on to the planned test cases."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Timestamps are the whole point: with them a developer can find your one failure in the server logs, and a rare bug in payments is usually a race or a timeout that is far more frequent under production load than under one tester. Waiting for a clean reproduction is the tempting answer because it's what good practice usually demands — but the evidence you have decays as builds roll and logs rotate, and 'five percent of checkouts' is a severe defect, not a minor one."
+    },
+    {
+     "id": "defect-management-05",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "order",
+     "prompt": "You've just seen a feature behave wrongly on the QA build.",
+     "instruction": "Put the defect's life cycle in the order you'd actually run it.",
+     "items": [
+      {
+       "id": "a",
+       "text": "Verify the fix on the build that actually contains it, and retest the area around it"
+      },
+      {
+       "id": "b",
+       "text": "Log it with steps, environment, actual vs expected and evidence, and propose severity and priority"
+      },
+      {
+       "id": "c",
+       "text": "Reproduce it deliberately, narrow the steps, and check it still happens on the latest build"
+      },
+      {
+       "id": "d",
+       "text": "Search the tracker for an existing or previously closed ticket for the same behaviour"
+      },
+      {
+       "id": "e",
+       "text": "Agree the severity and priority with the PM and the developer in triage"
+      }
+     ],
+     "correctOrder": [
+      "c",
+      "d",
+      "b",
+      "e",
+      "a"
+     ],
+     "explanation": "Reproducing first is what turns 'something looked wrong' into a defect, and confirming it on the latest build stops you filing something already fixed. The duplicate search comes before writing, not after, because a reopened ticket carries the earlier investigation with it. Verifying on the build that contains the fix, rather than whatever is deployed, is the step teams skip and then re-open the same bug over."
+    },
+    {
+     "id": "defect-management-06",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "A defect you raised as critical was downgraded in triage and shipped. Two weeks later it caused a production incident. What would you do differently?",
+     "modelAnswer": "The honest lesson is that I argued with a label instead of with evidence. 'Critical' is my opinion; what moves a triage is impact expressed in the business's own terms — how many users hit this path a day, what it costs them when it fails, whether there's a workaround, and whether it's recoverable or silently corrupts data. I'd bring that to triage, and where I don't have the numbers I'd ask for a day to get them rather than turning up with an adjective. Second, I'd make the decision explicit and written: the ticket should record that the risk was described, understood and accepted, and by whom — not so there's someone to blame afterwards, but so the same trade isn't made accidentally next time. After the incident I'd bring the timeline and the actual cost to the retro without naming anyone, because the goal is to recalibrate how the team triages, and blame is the fastest way to stop people raising things at all. Then the concrete fixes: the scenario goes into the regression pack and, if it's automatable, into the suite, so this specific bug can never return quietly.",
+     "keyPoints": [
+      "Argue impact in business terms — frequency, cost, workaround, recoverability — not the severity label",
+      "Get the numbers before triage rather than turning up with an adjective",
+      "Record the accepted risk and who accepted it, in writing on the ticket",
+      "Bring the timeline and real cost to the retro without blaming a person",
+      "Add the scenario to the regression pack and to automation so it can't return silently",
+      "Own the part that was yours — a downgraded bug is usually a communication failure, not a QA one"
+     ],
+     "explanation": "The answer that impresses is the one where the candidate takes a share of the failure without theatrics, and shows they know severity labels don't persuade anyone — impact numbers do. Answers that stop at 'I would have escalated harder' miss that the escalation only works if it carries evidence."
+    },
+    {
+     "id": "defect-management-07",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "The bug backlog has grown to 400 open tickets and nobody looks at it any more. What's the useful move?",
+     "options": [
+      "Bulk-close everything older than six months; if it mattered, someone will raise it again.",
+      "Ask for a dedicated bug-fixing sprint to clear the whole list.",
+      "Run a timeboxed triage where every ticket gets one of three outcomes — fix now with an owner, fix by a named date, or won't-fix and closed with the reason — and keep new bugs triaged weekly so it never rebuilds.",
+      "Leave it; a large backlog is normal for any mature product and closing tickets doesn't improve quality."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "A backlog only has value if it's a list of decisions; 400 undecided items is noise that hides the ten tickets that matter. The bulk-close is tempting because it's honest about the fact nobody will read them, but it throws away real reproduction steps unread and teaches people that filing bugs is pointless. A bug sprint is the second-best answer — it clears the list once, then it fills right back up because the intake was never fixed."
     }
    ]
   },
@@ -1674,6 +3299,325 @@ window.CTI_CONTENT = {
      "correct": 1,
      "eliminate": 3,
      "explanation": "Change tracking costs memory and CPU so EF can persist later mutations. A read-only projection does not need that machinery; no-tracking plus a narrow select reduces both retained state and transferred data."
+    }
+   ]
+  },
+  "content/skills/git-workflow.json": {
+   "skill": "git-workflow",
+   "label": "Git & collaborative workflow",
+   "questions": [
+    {
+     "id": "git-workflow-01",
+     "stage": "hr",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "You are three days into a task on your own branch and have not pushed anything yet. What is the better habit?",
+     "options": [
+      "Keep it local until it is finished — half-done code on the remote confuses people.",
+      "Push the branch daily even while it is unfinished, and say plainly at standup what works and what does not.",
+      "Push it and open the pull request now, so someone can start reviewing the parts that are done.",
+      "Say it is nearly done and finish it tonight."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "A pushed branch is a backup and somewhere a teammate can look when you are stuck; nobody is confused by a branch that is obviously in progress. Opening the review early is the tempting one — it sounds collaborative and spends someone's afternoon on code that is about to change underneath them. Push daily, open it as a draft if you want eyes on it early."
+    },
+    {
+     "id": "git-workflow-02",
+     "stage": "hr",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "A candidate is describing how they work with Git. What does the interviewer take away?",
+     "subject": {
+      "kind": "quote",
+      "content": "I commit everything at the end of the day as 'wip'. When a merge goes wrong I copy my files somewhere safe, delete the branch, clone the repo again and paste them back. It's faster than fighting with it."
+     },
+     "options": [
+      "Committing once a day is too infrequent to be useful history.",
+      "The re-clone: a conflict means two people changed the same lines, and pasting your copy over the top silently discards theirs with no record of what went.",
+      "They should be rebasing onto main rather than merging into their branch.",
+      "They did not say which Git host or client they use."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The commit habit is worth a comment, not a rejection — plenty of good engineers tidy their history later. The re-clone is the one that ends the conversation, because it is a workflow built on the belief that a conflict is Git being difficult rather than Git reporting a fact. Merge versus rebase is a team preference; overwriting a colleague's work without knowing it is not."
+    },
+    {
+     "id": "git-workflow-03",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "You bring main into your branch and hit a conflict in a file where a teammate rewrote the same function you changed. What do you do?",
+     "options": [
+      "Keep your version — it is the one you have tested.",
+      "Keep theirs — main is the source of truth.",
+      "Read both sides to work out what each change was for, and if the intent is not obvious from the code, ask them before resolving.",
+      "Keep both versions of the function, with the one you are not using commented out."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "Conflict markers tell you where two intentions met; they do not tell you which one is right, and nothing in the build will tell you either — a resolution that deletes a colleague's fix compiles and passes just fine. Keeping your side is the tempting default because your half is the half you understand. Thirty seconds of asking is cheaper than the week that starts with 'who deleted my validation?'."
+    },
+    {
+     "id": "git-workflow-04",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "red-flag",
+     "prompt": "A reviewer opened the history before opening the diff and stopped here. What is the problem?",
+     "subject": {
+      "kind": "code",
+      "language": "bash",
+      "content": "$ git log -1 --stat\ncommit 4f2a9c1\n\n    fix\n\n src/Feed.jsx      | 142 +++++++++++++-----------\n src/Feed.css      |  38 ++++-----\n src/utils/date.js |  12 +--\n package-lock.json | 802 ++++++++++++++++++++++++"
+     },
+     "options": [
+      "The message says 'fix' and the commit carries a bug fix, a reformat and a dependency bump together — there is nothing for a reviewer to check the change against, and no way to revert one part without the others.",
+      "package-lock.json should not be in version control at all.",
+      "142 changed lines is too much for one commit, whatever is in it.",
+      "The message is missing a ticket number."
+     ],
+     "correct": 0,
+     "eliminate": 2,
+     "explanation": "Size is not the fault — a rename can touch a thousand lines and still be one idea. The fault is that three ideas share one commit and the message names none of them, so the reviewer cannot tell the formatting churn from the one line that changed behaviour, and a revert takes the dependency bump with it. The lockfile belongs in the repo; it just does not belong in this commit."
+    },
+    {
+     "id": "git-workflow-05",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "You resolved a conflict last week by keeping your side. Today a teammate says their validation change is missing from main. Fastest honest way out?",
+     "options": [
+      "Ask them to write it again — it was only a few lines.",
+      "Find the merge commit, look at what came in from their branch with git show or git log on that file, and put back what you dropped.",
+      "Revert main to before the merge and have everyone re-merge their work.",
+      "Check the deploy logs to find out when the validation stopped running."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Nothing was lost. Their commit still exists on their branch and behind the merge's other parent, so the change is recoverable from history in a couple of minutes rather than from memory. Reverting the merge is tempting because it feels like undoing the mistake — it also undoes everything merged since, and replays the same conflict for someone else to get wrong."
+    },
+    {
+     "id": "git-workflow-06",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "order",
+     "prompt": "Your feature is finished on a branch and you are about to open the pull request.",
+     "instruction": "Order these by what you would do first.",
+     "items": [
+      {
+       "id": "a",
+       "text": "Read your own diff top to bottom, as if someone else had written it"
+      },
+      {
+       "id": "b",
+       "text": "Bring in the latest main and resolve whatever conflicts"
+      },
+      {
+       "id": "c",
+       "text": "Run the tests and click through the feature once more"
+      },
+      {
+       "id": "d",
+       "text": "Write the description — what changed, why, and how you checked it"
+      }
+     ],
+     "correctOrder": [
+      "b",
+      "c",
+      "a",
+      "d"
+     ],
+     "explanation": "Main comes first because everything after it is then checked against the code that will actually merge; review your diff before merging main and you have reviewed something that no longer exists. The self-read catches the leftover console.log and the debug flag before a reviewer spends their attention on them. The description is last because by then you genuinely know what you are describing."
+    },
+    {
+     "id": "git-workflow-07",
+     "stage": "ask",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "open",
+     "prompt": "What do you look for when you read your own pull request before sending it out?",
+     "modelAnswer": "First, whether the diff contains only the change I meant to make — no stray console.logs, no commented-out attempt, no file the editor reformatted, nothing renamed on a whim, because every one of those costs a reviewer attention I would rather they spent on the logic. Then whether someone could follow it without me sitting next to them: names that say what things are, and a description that explains why, since the what is already in the diff. I flag the parts I am least sure about, in the description or as a comment on the line, because that is where I want the review to go. And I check the unhappy paths — what this does when the request fails or the list comes back empty — since that is what I get asked about anyway, and I would rather find it myself.",
+     "keyPoints": [
+      "The diff holds only the intended change — no debug leftovers, no incidental reformatting",
+      "A reviewer can follow it unaided; the description says why, not what",
+      "Point reviewers at the parts you are least confident about",
+      "Check the failure and empty paths, not just the happy one",
+      "Read it as though someone else wrote it"
+     ],
+     "explanation": "The answer that lands is about reading, not tooling. 'CI runs the linter' is true and misses the question — the point of a self-review is everything a linter cannot see, like a change that is correct and impossible for the next person to follow."
+    },
+    {
+     "id": "git-workflow-08",
+     "stage": "ask",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "Your first pull request comes back with fourteen comments, several about naming and structure. Best response?",
+     "options": [
+      "Apply every comment exactly as written, push, and say nothing.",
+      "Push back on the naming ones — they are subjective and the code works.",
+      "Work through them, ask about the two you did not understand or do not agree with, and say what you changed.",
+      "Quietly ask a different reviewer next time."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "Fourteen comments on a first PR usually means someone read it properly, which is a good sign about the team. Silent compliance is the tempting one because it looks cooperative — it also means you make the same choice again next week without knowing why it was wrong, and the reviewer never learns which of their conventions are unwritten. The two you ask about are where the actual onboarding happens."
+    }
+   ]
+  },
+  "content/skills/hardware-integration.json": {
+   "skill": "hardware-integration",
+   "label": "Devices, protocols & hardware integration",
+   "questions": [
+    {
+     "id": "hardware-integration-01",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "platform": "systems",
+     "prompt": "A poller reading registers from devices on a serial bus sometimes returns the value belonging to the register it asked for a moment earlier. It only happens on a busy bus.",
+     "options": [
+      "The register addresses are off by one — the protocol numbers registers from one and the code numbers them from zero.",
+      "Raise the response timeout until it stops happening.",
+      "A late reply to a request you already timed out is still sitting in the receive buffer, so every following read is answered by the previous request's response. After a timeout the port has to be drained and resynchronised, not simply retried.",
+      "The baud rate is misconfigured."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "The off-by-one is a genuine trap in these protocols and a great answer to a different question — but an addressing mistake is wrong on every single read, and this one is intermittent and load-dependent. 'Sometimes, when busy' points at state left behind by a timeout. Raising the timeout does help, which is what makes it dangerous: it moves the failure to the next busy day and leaves the desynchronisation bug in place."
+    },
+    {
+     "id": "hardware-integration-02",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "This is the polling loop for one device on a shared bus. A field engineer reports that when one device is unplugged, readings from the others get slow and unreliable.",
+     "subject": {
+      "kind": "code",
+      "language": "rust",
+      "content": "loop {\n    match client.read_holding_registers(addr, 8) {\n        Ok(regs) => cache.store(addr, regs),\n        Err(_) => continue,\n    }\n}"
+     },
+     "options": [
+      "The eight registers should be read one at a time so a single bad register cannot spoil the batch.",
+      "A dead device turns this into a busy loop: it retries as fast as the bus will let it, saturating the shared line that everyone else needs, and it discards the error, so nothing anywhere records that the device is gone. It needs backoff between attempts, a point marked stale after N failures, and the error logged with the address.",
+      "cache.store should be behind a mutex before it is called from a polling thread.",
+      "The match should be written as if let Ok(regs) — the Err arm does nothing anyway."
+     ],
+     "correct": 1,
+     "eliminate": 0,
+     "explanation": "The last option is the finding a reviewer offers when they are reading for style: it is true that the arm does nothing, and rewriting it as if let makes the bug tidier and just as harmful. Err(_) is the character of the whole thing — the code has decided in advance that no failure is worth knowing about. On a shared bus a retry storm is not just wasted work; it is a fault in one device becoming an outage across the plant."
+    },
+    {
+     "id": "hardware-integration-03",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "platform": "systems",
+     "prompt": "An operator points out that a temperature on the dashboard hasn't changed in twenty minutes. The value is being served from a cache and the sensor behind it stopped responding half an hour ago.",
+     "options": [
+      "Poll the sensor more often so the cache is fresher.",
+      "Every reading carries the time it was sampled and a validity window, and once it is outside that window it is presented as stale rather than as a number — greyed out, flagged, or absent. In a control context a confidently wrong value is worse than a missing one, because someone will act on it.",
+      "Drop the cache and read straight from the device on every request.",
+      "Keep showing the last value but refresh the display more often so it looks live."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Reading through to the device every time is the tempting answer because it sounds like choosing correctness over performance, and it does not help at all — the device is not answering, so you are now choosing between hammering a dead bus and showing the same stale number more expensively. The bug is not the cache, it is that the data has no age attached to it. Any value crossing a system boundary in a plant should carry when it was true."
+    },
+    {
+     "id": "hardware-integration-04",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A TCP link to a line controller survives a network switch reboot as far as your process is concerned — the socket is still open and writes still succeed — but no data ever comes back again.",
+     "options": [
+      "TCP guarantees delivery, so the bytes must be arriving and the framing code is dropping them.",
+      "Enable SO_REUSEADDR on the socket.",
+      "A half-open connection: your side has no way to learn the peer is gone until something it sends goes unacknowledged long enough to give up, and even then the default retransmit budget is generous. Application heartbeats with a read deadline are what detect this — OS keepalive works too, but its defaults are measured in hours.",
+      "Switch the link to UDP so a dead peer stops mattering."
+     ],
+     "correct": 2,
+     "eliminate": 1,
+     "explanation": "'Writes still succeed' is the detail that makes the first option so attractive, and it means less than it looks: a successful write only says the bytes reached your kernel's send buffer. The rule worth carrying is that a connection is only as alive as your last successful round trip, so anything that must notice a dead peer within seconds has to ask, at the application level, and act on the silence."
+    },
+    {
+     "id": "hardware-integration-05",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "How would you make code that talks to real hardware testable in CI, where there is no hardware?",
+     "modelAnswer": "I split the code at the transport. Framing, decoding and the state machine become pure functions over bytes with no I/O in them, and those get the bulk of the unit tests — including property tests that a frame survives an encode and decode round trip, and fuzzing the decoder with truncated and corrupted input, because that is exactly what a real bus delivers. Behind a transport trait I can put a fake that replays traces captured from the real device, which is the part that makes the tests credible: the corpus comes from the plant, so the tests encode what the hardware actually does rather than what the manual claims. Integration tests run against a simulator for the protocol, covering the awkward paths that are hard to produce on demand — timeouts, a device that answers late, a partial frame, a reset mid-transaction. Then I accept that this is not everything: timing, electrical behaviour and vendor quirks only show up on a rig, so I keep a small hardware-in-the-loop setup running the same suite nightly, and I treat any bug found there as a missing trace in the corpus.",
+     "keyPoints": [
+      "Separate pure protocol logic from I/O; test that logic directly",
+      "A transport trait with a fake that replays captured traces",
+      "Property tests on encode/decode, fuzzing for truncated and corrupt frames",
+      "Simulate the awkward paths: timeouts, late replies, partial frames, resets",
+      "A nightly hardware-in-the-loop rig for what a fake cannot reproduce",
+      "Every bug found on real hardware becomes a new recorded case"
+     ],
+     "explanation": "Answering only 'mock the device' is the trap — a mock you wrote encodes your beliefs about the hardware, and the bugs live precisely where those beliefs are wrong. Recorded traces and a rig are what stop the test suite from being a very fast way to confirm your own assumptions."
+    },
+    {
+     "id": "hardware-integration-06",
+     "stage": "hr",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "platform": "systems",
+     "prompt": "A candidate is asked how working on software that runs a production line changes the way they work.",
+     "subject": {
+      "kind": "quote",
+      "content": "Honestly, it's the same as any other backend job. I'd push to main, we have good tests, and if something does break we roll forward fast — I've never really believed in slowing down. Moving fast is how you keep quality up, and the line is just another user."
+     },
+     "options": [
+      "They mention rolling forward instead of rolling back, which shows they don't know how deployments work.",
+      "They admit to pushing to main, which means they haven't worked with code review.",
+      "They have flattened away the one thing that makes this job different: on a running line you often cannot deploy on demand, a bad change stops production rather than an endpoint, and 'roll forward fast' assumes a deploy channel that may only open in a maintenance window. Good instincts for a web service, applied where they don't hold.",
+      "They sound arrogant about their own speed, which suggests they will be difficult to work with."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "This one is uncomfortable because everything they said is defensible advice somewhere — continuous delivery and rolling forward are genuinely better than a change-freeze culture in most jobs. The problem is 'the line is just another user': it isn't, and the answer never tests its own assumptions against this environment. Read against a candidate saying the same thing then adding 'though I'd want to understand the deployment window and what the safe state is first', and the gap is obvious."
     }
    ]
   },
@@ -1961,6 +3905,287 @@ window.CTI_CONTENT = {
     }
    ]
   },
+  "content/skills/javascript.json": {
+   "skill": "javascript",
+   "label": "JavaScript, the DOM & the browser runtime",
+   "questions": [
+    {
+     "id": "javascript-01",
+     "stage": "hr",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "A candidate was asked how they debug. What will worry the interviewer?",
+     "subject": {
+      "kind": "quote",
+      "content": "When the UI misbehaves I add console.logs until it stops. If that doesn't work I wrap the call in a setTimeout — that usually clears up the race and then I move on."
+     },
+     "options": [
+      "Using console.log instead of the debugger.",
+      "The setTimeout: it makes the symptom go away without ever finding out what the race was, so it comes back on a slower device or a slower network.",
+      "Not writing a failing test before fixing.",
+      "Not asking a senior engineer for help sooner."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "console.log is fine; plenty of strong engineers debug that way. The problem is 'usually clears up' — a timing fix that is not understood is a bug you have rescheduled, not removed, and it reappears in production on the exact devices your customers have. Interviewers listen for whether someone stops at 'it works now'."
+    },
+    {
+     "id": "javascript-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "A click handler runs a 400ms transform over a large JSON payload. Users report the whole page freezes — even the loading spinner stops spinning. What actually fixes it?",
+     "options": [
+      "Wrap the transform in a Promise — asynchronous code doesn't block.",
+      "It runs on the same thread as rendering, so move it to a Web Worker, or chunk it and hand the thread back between slices.",
+      "Run it inside a requestAnimationFrame callback so it is scheduled together with painting.",
+      "Turn off StrictMode so the work only happens once."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The first option is the misconception the whole question is built on: a Promise changes when your code runs, never where. A 400ms synchronous body blocks paint whether or not it is wrapped in one, which is why the spinner — a CSS animation driven by the same main thread — stops dead. requestAnimationFrame is worse, not better; it books the block right before a frame."
+    },
+    {
+     "id": "javascript-03",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "Why is the Virtual DOM faster than manipulating the DOM directly?",
+     "options": [
+      "It batches all changes and applies them in one pass, so it always beats hand-written DOM code.",
+      "It isn't inherently faster. It is a diffing layer that makes 'describe the whole UI as a function of state' cheap enough to be practical, and it removes the accidental thrash that hand-written updates tend to accumulate.",
+      "It runs in a separate thread, so layout never blocks the UI.",
+      "It keeps a copy of the DOM in memory, so reads like offsetHeight don't cost anything."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "This is asked to see whether you repeat the marketing line. Careful hand-written DOM updates beat a diff every time — the diff is overhead you accept in exchange for never having to work out which nodes changed. Saying that plainly reads as someone who knows what the framework is buying them; the first option reads as someone who has only heard it described."
+    },
+    {
+     "id": "javascript-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "red-flag",
+     "prompt": "Users say the app gets sluggish after twenty minutes of use and a refresh fixes it. This runs on every route change.",
+     "subject": {
+      "kind": "code",
+      "language": "javascript",
+      "content": "function mountTicker(el) {\n  const rows = [];\n  window.addEventListener('resize', () => layout(el, rows));\n  setInterval(async () => rows.push(await fetchRow()), 1000);\n}"
+     },
+     "options": [
+      "fetchRow is awaited inside the interval callback, so ticks can overlap.",
+      "Nothing is ever torn down: every route change adds another resize listener and another interval, each holding the previous element and its growing rows array alive.",
+      "rows should be component state rather than a local array.",
+      "setInterval should be a self-scheduling setTimeout."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "In a single-page app the page never reloads, so anything you attach you own until you detach it. The first option is a real overlap bug and worth mentioning second. But 'slow after twenty minutes, fine after refresh' is the signature of accumulated listeners and timers, and the fix is a teardown function the caller actually invokes."
+    },
+    {
+     "id": "javascript-05",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A dashboard awaits five independent API calls one after another and takes four seconds to load. What is the right change?",
+     "options": [
+      "Start them together and await them as a group — nothing depends on anything else, so serialising them costs the sum instead of the slowest one.",
+      "Move the awaits into a for loop so the runtime can batch them.",
+      "Use Promise.race so the fastest response renders first.",
+      "Cache the responses so the next load is instant."
+     ],
+     "correct": 0,
+     "eliminate": 2,
+     "explanation": "Caching is the tempting one because it is genuinely useful — and it does nothing for the first visit, which is the one that decides whether someone stays. Worth adding in the same breath: use allSettled rather than all, or one failing widget blanks a dashboard where the other four were fine."
+    },
+    {
+     "id": "javascript-06",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "A table renders 3,000 rows, each with its own click handler closing over that row. Initial render is slow and memory is high. Best fix?",
+     "options": [
+      "Put one listener on the table body and read the row id off the event target — one closure instead of three thousand.",
+      "Wrap each row's handler in useCallback so the functions are stable.",
+      "Debounce the click handlers.",
+      "Use onMouseDown instead of onClick to skip the click delay."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "useCallback is the reflex and it makes this worse: you keep all three thousand closures and add three thousand cache entries to hold them. Delegation works because events bubble, which is also how React attaches its own listeners at the root — one handler at the container is both the cheap answer and the idiomatic one."
+    },
+    {
+     "id": "javascript-07",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "A bug only reproduces on one client's machine, in their browser, about once a day. How do you go after it?",
+     "modelAnswer": "I would start by narrowing what 'their machine' means — browser and version, extensions, screen size, network, and whether it is one user or one environment — because that list usually contains the answer. Then I would make the failure visible rather than trying to catch it live: error monitoring with source maps and breadcrumbs so I get a stack and the actions leading up to it, plus structured logging around the path I suspect. If it still hides, I would narrow by bisecting — feature-flag the suspect code path off for that user and see whether it stops. Once it reproduces reliably I write the failing test first, so the fix is provable and the bug cannot come back quietly.",
+     "keyPoints": [
+      "Pin down what is different about that environment before theorising",
+      "Instrument for evidence — source maps, breadcrumbs, structured logs",
+      "Narrow by bisecting or flagging, rather than reading code hoping to spot it",
+      "Get a reliable reproduction before attempting a fix",
+      "Lock it down with a test so it cannot return silently"
+     ],
+     "explanation": "Frequency and locality are the clues, and a strong answer treats them as data. The weak version of this answer jumps straight to a guess about the cause; the strong one describes how to turn a rumour into a reproduction."
+    },
+    {
+     "id": "javascript-08",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "Where should the session token from a payments API live in a browser app?",
+     "options": [
+      "localStorage — it survives a refresh and the fetch wrapper can read it easily.",
+      "An httpOnly, Secure, SameSite cookie set by the server, so no JavaScript on the page — including anything injected into it — can read the token at all.",
+      "sessionStorage — it is cleared when the tab closes, so a script cannot get at it.",
+      "In a hidden input on the page, so it is never in storage."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "sessionStorage is the trap: shorter lifetime feels safer, but any script running on your origin reads it exactly as easily as localStorage, and one compromised npm package is all it takes. httpOnly moves the token somewhere your own code cannot reach — which is the point, and also why it forces you to think about CSRF instead."
+    },
+    {
+     "id": "javascript-09",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "getForm is an async function. `const form = getForm(id); console.log(form.name)` prints undefined, and no error appears anywhere. Why?",
+     "options": [
+      "The API response has no name field.",
+      "An async function returns a Promise immediately, so form is the Promise and not the data — reading .name off it gives undefined. It needs await, or .then.",
+      "console.log runs before the assignment, because it is hoisted.",
+      "getForm is missing a return statement."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "The silence is what makes this cost an afternoon: reading a property that does not exist on an object is not an error in JavaScript, it is undefined. Learn the shape of it — a result you used without waiting for it looks exactly like an API that returned nothing, and you can burn a morning in the network tab where the response was fine all along."
+    },
+    {
+     "id": "javascript-10",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "A field renders the fallback 'Not set' whenever the stored value is 0. The code is `value || 'Not set'`. What is the right fix?",
+     "options": [
+      "Use `value ?? 'Not set'` so only null and undefined fall through — || also catches 0, '' and false, which are real values here.",
+      "Convert it with String(value) before the check.",
+      "Use `value === undefined ? 'Not set' : value`.",
+      "Store the value as a string so it can never be falsy."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "|| asks 'is this falsy', and 0, empty string and false are all falsy and all legitimate answers a user gave you. ?? asks the question you meant: is there a value at all. The explicit undefined check is close enough to pass review and leaves the bug in place for every endpoint that returns null instead — which is most of them."
+    },
+    {
+     "id": "javascript-11",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "red-flag",
+     "prompt": "'All saved' appears instantly and the saves are still going. What is wrong?",
+     "subject": {
+      "kind": "code",
+      "language": "javascript",
+      "content": "async function saveAll(rows) {\n  rows.forEach(async (row) => {\n    await save(row);\n  });\n  console.log('all saved');\n}"
+     },
+     "options": [
+      "forEach ignores whatever its callback returns, and an async callback returns a Promise — so nothing is awaited, the function resolves while the saves are in flight, and a failure inside the loop becomes an unhandled rejection nobody sees.",
+      "save should be called without await inside the callback.",
+      "forEach should be map, so the rows come back out.",
+      "saveAll does not need to be async at all."
+     ],
+     "correct": 0,
+     "eliminate": 1,
+     "explanation": "await only waits inside the function it is written in, and here that function is the callback, not saveAll. Use for…of with await for saves that must happen in order, or map to promises and await Promise.all for parallel ones. Option three is half the fix and stops just short of the half that matters — map alone still does not wait."
+    },
+    {
+     "id": "javascript-12",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "red-flag",
+     "prompt": "The table sorts correctly. A completely different list on the same page quietly changed order too.",
+     "subject": {
+      "kind": "code",
+      "language": "javascript",
+      "content": "function SubmissionTable({ rows }) {\n  const newest = rows.sort((a, b) => b.createdAt - a.createdAt);\n  return <Table rows={newest} />;\n}"
+     },
+     "options": [
+      "sort reorders the array in place and hands back the same array, so this rearranges the caller's rows — the prop, and the state it came from.",
+      "The comparator is backwards; it should be a.createdAt - b.createdAt.",
+      "The sort should happen in a useEffect rather than during render.",
+      "The sort should be wrapped in useMemo so it does not run on every render."
+     ],
+     "correct": 0,
+     "eliminate": 1,
+     "explanation": "Almost every array method you reach for returns a new array; sort and reverse are the two that do not. Mutating a prop means mutating something a parent still holds and believes nobody touched, which is precisely the assumption React's rendering rests on. [...rows].sort(…) costs one copy and removes the whole class of bug. Memoising is a fair thought that does nothing about the mutation."
+    },
+    {
+     "id": "javascript-13",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "A form with a real <form> and a submit button flashes, reloads the page, and the fetch never finishes. What is going on?",
+     "options": [
+      "The submit handler never calls preventDefault, so the browser performs its own form submission — a navigation, which throws away the page and the request in flight with it.",
+      "The button needs type='button'.",
+      "The fetch is not being awaited.",
+      "The form is missing an action attribute."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "The default action of a submit button inside a form is to submit that form to the current URL, and a navigation cancels everything the page was doing. type='button' does stop the reload, which is why it is such a common fix, and it quietly kills pressing Enter in a text field — which is how a lot of people submit forms, and how nobody tests them. preventDefault keeps both."
+    }
+   ]
+  },
   "content/skills/jetpack-compose.json": {
    "skill": "jetpack-compose",
    "label": "Jetpack Compose & UI",
@@ -2050,6 +4275,172 @@ window.CTI_CONTENT = {
      "correct": 1,
      "eliminate": 2,
      "explanation": "Composable bodies may execute many times and must be safe to re-run. Side effects need explicit lifecycle semantics through effect APIs or a state holder that survives and governs the work."
+    }
+   ]
+  },
+  "content/skills/kafka.json": {
+   "skill": "kafka",
+   "label": "Kafka, MSK & event streaming",
+   "questions": [
+    {
+     "id": "kafka-01",
+     "stage": "hr",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "The candidate is talking about how their last team handled monitoring.",
+     "subject": {
+      "kind": "quote",
+      "content": "\"We had a consumer lag alert that went off most afternoons. It always caught up eventually, so in the end we just switched the alert off and nobody missed it.\""
+     },
+     "options": [
+      "They should have raised the alert threshold instead of switching it off.",
+      "Consumer lag is not a meaningful alert in the first place — throughput would have been the right signal.",
+      "The alert was reporting a real thing — consumers that cannot keep up with the afternoon peak — and the team removed the signal instead of the cause or the noise.",
+      "They should have added partitions to the topic."
+     ],
+     "correct": 2,
+     "eliminate": 1,
+     "explanation": "Nobody is against deleting a noisy alert; alert fatigue is real and this team was right to be annoyed. The flag is that they never established which it was — noise, or a system running at its limit every afternoon with no headroom left for a bad day. Raising the threshold is the strong distractor because it is the same decision made with better manners, and it is defensible only after you know the answer."
+    },
+    {
+     "id": "kafka-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Authorisation, capture and reversal events for a single card must be processed in the order they happened. Throughput is tens of thousands of events a second across millions of cards.",
+     "options": [
+      "Use a single-partition topic, which is the only way Kafka guarantees ordering.",
+      "Partition by card identifier, so every event for one card lands on the same partition and one consumer in the group owns that partition.",
+      "Set `acks=all` on the producer so events are written in order.",
+      "Enable the idempotent producer, which preserves ordering across the cluster."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "Kafka orders within a partition, never across them, so ordering is a partitioning-key decision. The single-partition answer is the honest trap: it is completely correct about the guarantee and completely unusable at this rate, because one partition means one consumer. Idempotence prevents duplicates from producer retries and preserves order per partition — useful, but it is not what puts a card's events together."
+    },
+    {
+     "id": "kafka-03",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A topic has 10 partitions. You scale the consumer group to 14 pods to clear a backlog, and four of them sit idle.",
+     "options": [
+      "Raise `max.poll.records` so each consumer takes more work per poll.",
+      "A partition is assigned to at most one consumer within a group, so partitions — not pods — are the unit of parallelism. More consumers than partitions does nothing.",
+      "The idle consumers are failing their group join and need a longer session timeout.",
+      "Give each consumer its own group id so they all receive the data."
+     ],
+     "correct": 1,
+     "eliminate": 0,
+     "explanation": "The ceiling is the partition count, and raising it later is not free: adding partitions changes which partition a key hashes to, so ordering guarantees for in-flight keys break at the boundary. The separate-group-id answer is the instructive wrong one — every consumer would indeed receive data, but each would receive all of it, which is fan-out, not sharing the work."
+    },
+    {
+     "id": "kafka-04",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "This is the configuration for the topic that carries card authorisations.",
+     "subject": {
+      "kind": "code",
+      "language": "properties",
+      "content": "# topic: card-authorisations\nreplication.factor=3\nmin.insync.replicas=1\nunclean.leader.election.enable=true\nretention.ms=3600000\n\n# producer\nacks=1"
+     },
+     "options": [
+      "`retention.ms` of one hour leaves no room to replay after a bad consumer deploy.",
+      "`replication.factor=3` is too low for a payments workload; it should be 5.",
+      "The durability settings cancel out the replication: `acks=1` with `min.insync.replicas=1` acknowledges an authorisation that exists on one broker, and unclean leader election then lets an out-of-date replica take over and drop it.",
+      "The topic name should be namespaced by environment."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "Three replicas look like safety and buy nothing here: nothing waits for them and an out-of-sync broker is allowed to become leader, so an acknowledged authorisation can vanish. `acks=all` with `min.insync.replicas=2` and unclean election off is the standard payments posture. The retention answer is the strong distractor — one hour genuinely is too short to recover from a bad deploy, and you would fix it in the same change."
+    },
+    {
+     "id": "kafka-05",
+     "stage": "deepdive",
+     "levels": [
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Your consumers keep dropping out of the group mid-batch. The group rebalances every few minutes and the same records are processed more than once.",
+     "options": [
+      "Raise `max.poll.interval.ms` until the rebalances stop.",
+      "The processing loop is exceeding the poll interval, so the coordinator considers the consumer dead. Cut the batch size or move the slow work off the poll thread, so the consumer keeps polling and the offsets keep advancing.",
+      "Add partitions so each consumer has less to process per poll.",
+      "Switch to at-most-once by committing offsets before processing."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Every rebalance replays whatever was uncommitted, which is why duplicates appear. Raising the interval is the tempting answer because it is the documented knob and it does stop the symptom — at the cost of a genuinely dead consumer now taking minutes to be detected. Fix the pace first, then tune the timeout to fit what the workload actually needs. Committing before processing turns the duplicates into lost authorisations."
+    },
+    {
+     "id": "kafka-06",
+     "stage": "deepdive",
+     "levels": [
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "On an Amazon MSK cluster, one broker is at 85% disk while the others sit around 40%.",
+     "options": [
+      "Scale the cluster up to a larger broker type.",
+      "Partitions are unevenly distributed — often one high-volume, long-retention topic's leaders clustered on that broker. Reassign partitions to rebalance, and keep storage autoscaling as a safety net rather than the fix.",
+      "Reduce `retention.ms` across all topics until the disk drops.",
+      "Delete and recreate the topic so partitions are placed evenly."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "MSK adds brokers and storage but does not move existing partitions for you, so the imbalance follows you up to the bigger instance type — which is why scaling up is the tempting answer and only buys weeks. Cutting retention across every topic is the blunt version: it works, and it silently removes the replay window you will want during the next incident."
+    },
+    {
+     "id": "kafka-07",
+     "stage": "deepdive",
+     "levels": [
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "Set up the topic that carries card transactions so that we can defend it in an audit. What do you configure, and what do you monitor?",
+     "modelAnswer": "Durability first: replication factor three across three availability zones, min.insync.replicas of two, acks=all, unclean leader election off. That combination means a write is only acknowledged once it is on two brokers in different zones, and a stale replica is never allowed to become leader, so an acknowledged transaction cannot silently disappear. Producers are idempotent, and anything that must be atomic with a database write goes through an outbox rather than a dual write. Key by card or account so ordering holds where it matters, and size partitions for peak plus headroom, since repartitioning later breaks key affinity. Consumers are idempotent against a dedup key because at-least-once is what you actually get; poison messages go to a dead-letter topic with a documented replay path, and retention is long enough — days, not hours — to replay after a bad deploy. On access: TLS in transit, encryption at rest with a customer-managed key, IAM or SASL authentication and per-topic ACLs so a service can only read what it needs, plus client quotas so one misbehaving consumer cannot starve the cluster. Monitoring is consumer lag per group, under-replicated and offline partitions, ISR shrink events, broker disk and CPU, and request latency percentiles — with lag alerting on trend, not on a fixed number.",
+     "keyPoints": [
+      "RF3 across AZs, min.insync.replicas 2, acks=all, no unclean leader election",
+      "Idempotent producers; outbox rather than dual write",
+      "Key for ordering; partition count sized for peak because repartitioning breaks key affinity",
+      "Idempotent consumers with a dedup key; DLQ with a replay path",
+      "Retention long enough to replay a bad deploy",
+      "TLS, encryption at rest, authentication, per-topic ACLs, client quotas",
+      "Monitor lag, under-replicated and offline partitions, ISR shrinks, disk"
+     ],
+     "explanation": "The audit-ready answer is not a longer list of settings, it is the pairing: replication factor is meaningless without min.insync.replicas and acks, and ACLs are the part most candidates forget entirely. Mentioning that adding partitions later breaks ordering is the detail that separates operating a cluster from configuring one."
+    },
+    {
+     "id": "kafka-08",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A team proposes putting Kafka between two services because 'we should be event-driven'. What is the right response?",
+     "options": [
+      "Agree — decoupling services with events is good practice and Kafka is the standard choice.",
+      "Ask what it buys them. A durable, replayable log with multiple independent readers is worth a cluster to operate; a request that needs an answer now is not, and event-driven adds ordering, duplication and debugging problems they do not have today.",
+      "Push back on principle — a synchronous call between two services is simpler and always sufficient.",
+      "Suggest SQS instead, since it is managed and needs no cluster operations."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "The question is whether the workload wants a log — replay, fan-out to readers who arrive later, buffering a slow consumer — or just a message passed along. The SQS answer is the good distractor and is often right for a plain work queue, but recommending a technology before you know the requirement makes the same mistake in the other direction."
     }
    ]
   },
@@ -2183,6 +4574,341 @@ window.CTI_CONTENT = {
       "Supervision is an explicit failure-policy choice"
      ],
      "explanation": "Structured concurrency turns background work from detached activity into a tree of ownership. That makes cancellation, failure, cleanup, and testing predictable instead of relying on global jobs that outlive their purpose."
+    }
+   ]
+  },
+  "content/skills/kubernetes.json": {
+   "skill": "kubernetes",
+   "label": "Kubernetes, Docker & orchestration",
+   "questions": [
+    {
+     "id": "kubernetes-01",
+     "stage": "hr",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "Asked how they handle a misbehaving service in production, the candidate says this.",
+     "subject": {
+      "kind": "quote",
+      "content": "\"Usually I'll kubectl exec into the pod, patch the config file or bump the setting by hand, and restart the process. It's the quickest way to get people off my back while I work out the real fix.\""
+     },
+     "options": [
+      "They should be using `kubectl debug` with an ephemeral container rather than exec.",
+      "Exec into production pods should be disabled entirely by RBAC.",
+      "The fix lives inside one container until the next reschedule deletes it, and nothing in the repository records that production is no longer running what the manifests say it runs.",
+      "They should have copied the file in with `kubectl cp` so the change is reproducible."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "The problem is not the command, it is that the running cluster is now a source of truth that no one can read. The next node drain silently reverts the fix, usually at 2am, and the person debugging it is looking at a manifest that was never true. `kubectl debug` is the strong distractor because it genuinely is the better tool for investigating — but the flag here is editing, not inspecting."
+    },
+    {
+     "id": "kubernetes-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Under a traffic spike, pods start failing their liveness probe and get killed, which makes the overload worse. The probe hits `/health`, which checks the database and two downstream APIs.",
+     "options": [
+      "Increase the replica count so each pod carries less load.",
+      "Liveness is answering the wrong question: it should test whether this process is wedged, while the dependency check belongs in readiness, so an overloaded pod is taken out of rotation instead of executed.",
+      "Remove the liveness probe — Kubernetes will restart the container if it exits anyway.",
+      "Lower `initialDelaySeconds` so unhealthy pods are detected sooner."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "A liveness probe that depends on other systems turns a downstream slowdown into a cluster-wide restart storm: every pod fails at once, every restart drops in-flight requests, and the queue behind you grows. Adding replicas is the tempting answer because more capacity does help the spike — but it also multiplies the number of pods killing themselves over a shared dependency."
+    },
+    {
+     "id": "kubernetes-03",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "You are reviewing the Deployment for the card authorisation API.",
+     "subject": {
+      "kind": "code",
+      "language": "yaml",
+      "content": "spec:\n  replicas: 3\n  template:\n    spec:\n      containers:\n        - name: auth-api\n          image: registry.internal/auth-api:latest\n          resources: {}\n          env:\n            - name: DB_PASSWORD\n              value: \"prod-Kj29fbQ\"\n            - name: LOG_LEVEL\n              value: \"debug\""
+     },
+     "options": [
+      "`imagePullPolicy` is not set explicitly, so behaviour depends on the tag.",
+      "A production database password sits in plain text in a manifest that is in git and readable by anyone with get on the Deployment — and `:latest` means nobody can say what is running or roll back to a known image.",
+      "`resources: {}` leaves the pod BestEffort, so the scheduler cannot place it sensibly and it is first to be evicted under node pressure.",
+      "`replicas: 3` is too few for a production payments service."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The missing resources block is a genuine finding and you would raise it in the same review — it is why this pod gets evicted first and why the node bin-packs badly. But the credential in git is the one that cannot be undone by an edit, and a mutable `:latest` tag means the rollback you will reach for during the resulting incident does not exist. LOG_LEVEL=debug on a payments API is a third quiet problem: cardholder data in logs."
+    },
+    {
+     "id": "kubernetes-04",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "During a routine node upgrade, a service with three replicas went completely down for four minutes.",
+     "options": [
+      "The deployment strategy should have been Recreate rather than RollingUpdate.",
+      "All three replicas were scheduled on the drained node — nothing spread them across nodes, and no PodDisruptionBudget existed to make the drain wait for replacements.",
+      "The cluster autoscaler was disabled, so no replacement node was available.",
+      "The readiness probe's initial delay was too long for the new pods."
+     ],
+     "correct": 1,
+     "eliminate": 0,
+     "explanation": "Three replicas is a claim about redundancy that the scheduler is under no obligation to honour — without topology spread constraints or anti-affinity, they can all land on one node, and without a PDB the drain evicts them together. The readiness-delay answer is the good distractor: it genuinely lengthens the gap, so it is a contributing cause worth fixing, but it does not explain a full outage."
+    },
+    {
+     "id": "kubernetes-05",
+     "stage": "deepdive",
+     "levels": [
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A service has `cpu: limits: 500m`. Its p99 latency is terrible, but the dashboards show average CPU utilisation around 30%.",
+     "options": [
+      "Scale out — add replicas until the average utilisation drops further.",
+      "CFS throttling: the limit is enforced per 100ms slice, so a request that needs a short burst is stalled even though the average looks idle. Raise or remove the CPU limit and keep the request for scheduling.",
+      "The nodes are too small, so the pods are competing for the same cores.",
+      "Add a service mesh so you can see where the latency is coming from."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Averages hide throttling by construction — the pod is idle most of the slice and pinned for the rest of it, and `container_cpu_cfs_throttled_seconds_total` is the metric that tells you. Scaling out is the tempting move and it does help a genuinely CPU-bound service, but here every new replica gets the same 500m ceiling and the same p99. Many teams end up setting CPU requests and no CPU limit for exactly this reason."
+    },
+    {
+     "id": "kubernetes-06",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "How should application secrets reach pods in a regulated payments environment?",
+     "options": [
+      "Kubernetes Secrets are encrypted by the API server, so a Secret object plus namespace RBAC is sufficient.",
+      "Treat the cluster as a consumer rather than a store: secrets live in a managed store, are synced or projected in at run time with short-lived credentials, etcd encryption at rest is on, and RBAC limits who can read Secret objects at all.",
+      "Encrypt the secrets with a shared team key and commit them to the repository so they are version controlled alongside the manifests.",
+      "Move them into ConfigMaps and restrict access to the namespace."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The first option is the common misconception — Secrets are base64, not encrypted, unless you have turned on encryption at rest. Option three is the interesting wrong answer, because sealed secrets and SOPS are legitimate patterns used by good teams; they lose to a managed store here on rotation and audit, which is precisely what an auditor at a card issuer will ask about."
+    },
+    {
+     "id": "kubernetes-07",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "order",
+     "prompt": "A node needs to come out of service for maintenance during business hours.",
+     "instruction": "Order the steps.",
+     "items": [
+      {
+       "id": "a",
+       "text": "Cordon the node so nothing new is scheduled onto it"
+      },
+      {
+       "id": "b",
+       "text": "Check that the workloads on it have PodDisruptionBudgets and replicas that can run elsewhere"
+      },
+      {
+       "id": "c",
+       "text": "Drain it, letting the disruption budgets pace the evictions"
+      },
+      {
+       "id": "d",
+       "text": "Confirm the evicted workloads are healthy on other nodes, then start the maintenance"
+      }
+     ],
+     "correctOrder": [
+      "b",
+      "a",
+      "c",
+      "d"
+     ],
+     "explanation": "Cordon-then-drain is the muscle memory, but the check comes first: if a workload has one replica, or no budget, or nowhere else to fit, the drain finds that out by causing an outage. Confirming health elsewhere before touching the hardware is what stops a maintenance window becoming an incident."
+    },
+    {
+     "id": "kubernetes-08",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "You inherit a cluster built three years ago by someone who has left. What do you want to know first?",
+     "options": [
+      "Upgrade it to a supported version straight away — running out of support is the biggest risk.",
+      "Whether the cluster itself can be rebuilt from code, how far behind the supported version window it is, who holds cluster-admin, and what actually happens when a node dies.",
+      "Install a service mesh so you can see traffic between services before changing anything.",
+      "Plan a migration to a managed container service so the cluster stops being your problem."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The version question matters, which is what makes the first option tempting — but upgrading a cluster you cannot rebuild is a one-way door, and half of these clusters have a manual step in them nobody remembers. Find out whether it is reproducible before you touch it; that answer determines whether the upgrade is routine or a project."
+    }
+   ]
+  },
+  "content/skills/linux-automation.json": {
+   "skill": "linux-automation",
+   "label": "Linux, Bash & Python automation",
+   "questions": [
+    {
+     "id": "linux-automation-01",
+     "stage": "hr",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "How do you decide that something is worth automating?",
+     "options": [
+      "Anything done more than once should be automated — manual work is a failure of engineering.",
+      "When it repeats, or when doing it by hand is dangerous, and the automation is cheap enough to maintain that it will not become its own liability.",
+      "When it has become boring enough that people are making mistakes on it.",
+      "When a manager asks for it, since that is where the priority is set."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The interesting half of this answer is the cost side. Automation is code someone maintains at 3am, and a fragile script that runs quarterly can be worse than a checklist. The 'automate everything' answer is the tempting one because it sounds like enthusiasm — teams that live by it end up with a graveyard of scripts nobody trusts. The dangerous-by-hand criterion matters too: a rare task with a huge blast radius is worth automating on the first repetition."
+    },
+    {
+     "id": "linux-automation-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "This runs nightly from root's crontab on the database host.",
+     "subject": {
+      "kind": "code",
+      "language": "bash",
+      "content": "#!/bin/bash\n\nBACKUP_DIR=/var/backups/$APP_NAME\n\nrm -rf $BACKUP_DIR/*\ntar czf $BACKUP_DIR/db.tar.gz /var/lib/postgresql\naws s3 cp $BACKUP_DIR/db.tar.gz s3://backups/db.tar.gz\n\necho \"backup done\"\n"
+     },
+     "options": [
+      "The shebang should be `#!/bin/sh` for portability across hosts.",
+      "There is no `set -euo pipefail` and nothing is quoted, so an unset `APP_NAME` turns the first command into `rm -rf /var/backups/*`, and every later failure is ignored — the script still exits 0 and prints 'backup done'.",
+      "Tarring a live PostgreSQL data directory does not produce a restorable backup; it needs `pg_dump` or a filesystem snapshot with the database quiesced.",
+      "`aws s3 cp` should be `aws s3 sync` so unchanged files are not re-uploaded."
+     ],
+     "correct": 1,
+     "eliminate": 0,
+     "explanation": "The unquoted, unset variable is the one that destroys data tonight, and the missing `set -e` is what guarantees nobody finds out — cron sees exit 0 and the monitoring, if any, sees a successful job. The PostgreSQL answer is an excellent second finding and you would raise it in the same review: a tar of a running data directory usually restores into a corrupt cluster, so this backup is also a lie. Two silent failures, one script."
+    },
+    {
+     "id": "linux-automation-03",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "An application host is crawling. `top` shows load average around 30 on 8 cores, CPU mostly idle, and several processes in D state.",
+     "options": [
+      "The box is CPU-starved — the load average says so. It needs more cores.",
+      "The processes are blocked in uninterruptible I/O, which Linux counts in the load average. Check iowait, the disk or the network filesystem it is waiting on, and whether it is swapping.",
+      "A memory leak in the application — restart it and watch whether the load falls.",
+      "Too many threads: lower the worker count until the load average drops below the core count."
+     ],
+     "correct": 1,
+     "eliminate": 0,
+     "explanation": "Linux load average is not a CPU queue — it counts uninterruptible sleep too, which is why a stuck NFS mount or a saturated EBS volume produces a load of 30 with an idle CPU. The memory-leak answer is the good distractor because a host deep into swap shows exactly this shape, and checking swap is part of the correct diagnosis; the difference is that you check before restarting, because a restart destroys the evidence."
+    },
+    {
+     "id": "linux-automation-04",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "`df` says the root filesystem is 100% full. `du -sh /*` accounts for barely half of it.",
+     "options": [
+      "A process is still holding a deleted file open, so the space is not released until the file handle is closed — `lsof +L1` finds it, and restarting or truncating the holder frees the space.",
+      "Re-run `du` with sudo; it is skipping directories it cannot read.",
+      "The filesystem needs an fsck — the discrepancy means the free-space accounting is corrupt.",
+      "Clear out `/var/log`, which `du` under-reports because of log rotation."
+     ],
+     "correct": 0,
+     "eliminate": 2,
+     "explanation": "Classic on any host where someone deleted a big log to buy time while the writer kept its handle open — usually the very log they were trying to clear. Running `du` with sudo is the strong distractor: unreadable directories genuinely do hide space, so it is the right second check, and it is cheap. Reaching for fsck on a live production filesystem is how a full disk becomes an outage."
+    },
+    {
+     "id": "linux-automation-05",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A nightly reconciliation job started taking longer than a day. Two copies now overlap, and the output has duplicate records.",
+     "options": [
+      "Move the cron entry to a quieter hour so the job has more time to finish.",
+      "Take an exclusive lock — `flock` on a local host, or a lease if it can run anywhere — so a second instance exits rather than starts, and make the job idempotent so an overlap is harmless when the lock inevitably fails.",
+      "Split the schedule so it runs twice a day on half the data each time.",
+      "Increase the instance size so the job finishes inside its window."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Cron will happily start a job that is already running; nothing in it thinks about overlap. The lock is the fix, and idempotency is the belt to the lock's braces — locks are lost when a host dies mid-run, and the second copy will eventually start anyway. Moving the hour is the tempting answer because it works right up until the data grows again, which is what happened the first time."
+    },
+    {
+     "id": "linux-automation-06",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "cloud",
+     "type": "red-flag",
+     "prompt": "The service unit and sudoers entry for a payments API running on EC2.",
+     "subject": {
+      "kind": "code",
+      "language": "ini",
+      "content": "# /etc/systemd/system/payments-api.service\n[Service]\nUser=root\nEnvironmentFile=/opt/payments/api.env\nExecStart=/opt/payments/bin/api\nRestart=always\n\n# /etc/sudoers.d/deploy\ndeploy ALL=(ALL) NOPASSWD: ALL"
+     },
+     "options": [
+      "`Restart=always` with no `RestartSec` or `StartLimitBurst` will restart a crash-looping build forever, so an outage looks like flapping instead of a failure.",
+      "`ExecStart` should invoke the binary through a login shell so the environment is loaded properly.",
+      "The service runs as root with its credentials in a file on disk, and the deploy account can become root without a password — so any code execution in the API, or any compromise of the deploy key, is a full host compromise.",
+      "`EnvironmentFile` should be under `/etc/` rather than `/opt/`."
+     ],
+     "correct": 2,
+     "eliminate": 1,
+     "explanation": "Two independent privilege problems stack here: nothing forces the process to run as root, and the passwordless blanket sudo means the deploy path has no privilege boundary at all. A dedicated unprivileged user, a secret fetched at start rather than left on disk, and sudo scoped to the specific commands the deploy needs. The restart-loop finding is real and worth its own line in the review — it is an availability bug, not a way in."
+    },
+    {
+     "id": "linux-automation-07",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "Say half your week here turns out to be manual toil. How would you decide what to automate first, and how would you show it was worth doing?",
+     "modelAnswer": "I would spend the first couple of weeks writing down what I actually do — the task, how often, how long, and what happens when it goes wrong — because memory over-weights the annoying and under-weights the frequent. Then I would rank by frequency multiplied by cost, but push anything dangerous up the list regardless of frequency: a production change made by hand from a runbook is worth automating the first time, because the cost of getting it wrong is not measured in minutes. I would go after the things that wake people up before the things that merely bore them. The automation itself gets treated as production code — in version control, reviewed, idempotent so re-running is safe, with logging and an alert when it fails, because an automation that fails silently is worse than the manual step it replaced. And I would hand it over: documentation, a dry-run mode, and someone else running it once, so I do not become the single point of failure the automation was meant to remove. To show it worked: hours of toil before and after, how many manual production changes we still make in a month, and whether the runbook it replaced has been deleted.",
+     "keyPoints": [
+      "Measure the toil first — frequency, duration, failure rate — instead of guessing",
+      "Rank by frequency times cost, but promote anything dangerous by hand",
+      "Automate what pages people before what bores them",
+      "Treat the automation as production code: version controlled, reviewed, idempotent, observable",
+      "Hand it over — dry run, docs, someone else runs it — so it does not centre on you",
+      "Prove it with toil hours, manual change count, and the deleted runbook"
+     ],
+     "explanation": "The answer that fails is the one that jumps straight to what they would build. Measurement first is what makes the prioritisation defensible, and the handover is the part most engineers skip — automation that only its author can run has moved the toil, not removed it."
     }
    ]
   },
@@ -2321,6 +5047,131 @@ window.CTI_CONTENT = {
     }
    ]
   },
+  "content/skills/mongodb.json": {
+   "skill": "mongodb",
+   "label": "MongoDB & Mongoose",
+   "questions": [
+    {
+     "id": "mongodb-01",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A reviewer objects that each order line copies the product's name and price into the order document, duplicating data that already exists in the products collection. What is the right answer?",
+     "options": [
+      "They are right — reference the product and join at read time so the data has one home.",
+      "The copy is the point: an order records what the customer was actually charged, and must not change when the catalogue does. Keep the product id alongside it for traceability.",
+      "Keep the copy and add a nightly job that re-syncs order lines with the current catalogue.",
+      "Store both and have the application prefer whichever was written most recently."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "The first option is the relational instinct and it is usually right — for an order it is exactly wrong, because a normalised price means last March's invoice silently reprices itself when marketing runs a sale. The re-sync job is the same mistake with a schedule attached, and it corrupts financial records automatically at 2am."
+    },
+    {
+     "id": "mongodb-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A query filters on status and sorts by createdAt. Both fields have their own index, and the query still scans the collection. Why?",
+     "options": [
+      "One index is used per query here, so an equality filter plus a sort needs a single compound index with the equality field first and the sort field second.",
+      "The planner picked wrong; add a hint() forcing the createdAt index.",
+      "The indexes have become fragmented and need rebuilding.",
+      "It needs a compound index on (createdAt, status) so the sort field leads."
+     ],
+     "correct": 0,
+     "eliminate": 2,
+     "explanation": "The last option is the interesting wrong answer: a compound index in the wrong order cannot serve the filter efficiently, and people conclude compound indexes 'did not help'. Equality first, then sort, then range — the order of the keys is the whole design, not a detail. A hint only forces the planner to commit to the bad plan you gave it."
+    },
+    {
+     "id": "mongodb-03",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "This is the login handler for a payments dashboard. A penetration test got in without a password. How?",
+     "subject": {
+      "kind": "code",
+      "language": "javascript",
+      "content": "const user = await User.findOne({\n  email: req.body.email,\n  password: req.body.password\n});\nif (user) issueSession(user);"
+     },
+     "options": [
+      "findOne without a sort is non-deterministic when several documents match.",
+      "req.body values are not cast to strings, so posting {\"$ne\": null} as the password turns the filter into a match-anything query — and the password is being compared as a stored value at all, rather than hashed.",
+      "The query should use .lean() so a full Mongoose document is not hydrated on every login.",
+      "The email should be lowercased and trimmed before the lookup."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "A JSON body can contain objects, and an object in a query position becomes a query operator — which is the whole of NoSQL injection. Cast or validate every value before it reaches a filter. The second half matters just as much: with a hashed password there is nothing to compare in the query, so the vulnerable shape stops being expressible."
+    },
+    {
+     "id": "mongodb-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A transfer debits one account and credits another with two updateOne calls. Occasionally only the debit lands. What is the right fix?",
+     "options": [
+      "Put both writes in a multi-document transaction, or model the transfer as one document that a ledger process applies to both balances.",
+      "Retry the credit when it fails, with backoff.",
+      "Set writeConcern: 'majority' on both writes so neither can be lost.",
+      "Move the two updates into the same request handler so they execute back to back."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "The write concern answer is the best distractor because it is real and adjacent: majority buys you durability — the write will not vanish — and says nothing about whether two writes happen together. Retrying cannot help when the process died between them, and a retry without an idempotency key is how one transfer becomes two credits."
+    },
+    {
+     "id": "mongodb-05",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A dashboard loads 200 orders and then loops over them awaiting order.populate('customer') for each. The page takes nine seconds. What is the fix?",
+     "options": [
+      "Add an index on the customer field so each lookup is fast.",
+      "Stop making 200 round trips: populate the whole list in one call so the driver fetches the customers with a single query, or do it server-side in one aggregation.",
+      "Increase the connection pool so the lookups can run in parallel.",
+      "Call .lean() so Mongoose does not hydrate a full document per record."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "The index answer is nearly right and is the one most people give: it makes each of the 200 round trips faster, and 200 round trips is the actual problem. lean() is a genuine saving worth taking as well — it just trims the cost of each trip rather than removing 199 of them."
+    },
+    {
+     "id": "mongodb-06",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A payments team wants hard guarantees — account numbers unique, balances never negative. What is the honest answer about enforcing that here?",
+     "options": [
+      "MongoDB cannot enforce constraints; a relational database is the only correct choice for money.",
+      "Uniqueness is a unique index, and 'never negative' is a conditional single-document update — decrement guarded by a filter that requires a sufficient balance — so the rule lives where the write happens.",
+      "Put both rules in the Mongoose schema; validators run on every save.",
+      "Read the balance, check it in the application, then write the new value."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The Mongoose answer is the dangerous one: those validators run in your application, so they hold right up until someone uses updateOne, a migration script, or a second service — and then they silently do not. Read-then-write is the classic race, where two concurrent withdrawals both read a balance that was sufficient."
+    }
+   ]
+  },
   "content/skills/mysql.json": {
    "skill": "mysql",
    "label": "MySQL & data at scale",
@@ -2431,6 +5282,319 @@ window.CTI_CONTENT = {
     }
    ]
   },
+  "content/skills/nextjs.json": {
+   "skill": "nextjs",
+   "label": "Next.js & rendering strategy",
+   "questions": [
+    {
+     "id": "nextjs-01",
+     "stage": "hr",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "Half our app is still on the Pages Router and half is on the App Router, and it will stay that way for a while. How do you feel about working in that?",
+     "options": [
+      "I'd want the migration finished before adding features — two routers in one repo is too confusing to work in.",
+      "Fine. I'd build each feature in whichever router that route already lives in, and move a route across only when I'm touching it anyway and can test it properly.",
+      "I'd put everything new in the App Router and quietly port the old pages as I go, so the migration finishes itself.",
+      "I'd stay in the Pages Router and wait to be told the migration is done."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The tempting answer is the third one — it sounds proactive, and 'quietly' is the word that costs you the job: unannounced ports to routes you weren't asked to touch are how a Friday release breaks something nobody was reviewing. Half-migrated is the normal state of a real codebase, and they are checking whether that frustrates you or is just Tuesday."
+    },
+    {
+     "id": "nextjs-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "A product listing page has to be indexable by Google, and its prices change a few times a day. Which rendering strategy?",
+     "options": [
+      "Fetch the products in the browser after mount — Google executes JavaScript now, so it will still be indexed.",
+      "Pre-render the page and revalidate it on a timer, so crawlers and users get cached HTML that is at most a few minutes stale.",
+      "Server-render on every request, so the price in the HTML is never stale.",
+      "Generate it once at build time and redeploy the site whenever a price changes."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Server-rendering every request is the tempting answer because it is never wrong — it just pays full server cost, on every crawler hit, for data that changes three times a day. Incremental revalidation gives you the same HTML from cache. Client-side fetching does get indexed eventually, but 'eventually' is a strange thing to gamble a product catalogue on."
+    },
+    {
+     "id": "nextjs-03",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "A developer hits a 'useState is not allowed in a Server Component' error, so they add 'use client' to the top of the shared layout. What did that just do?",
+     "options": [
+      "Only that file became a client component; the components it renders are unaffected.",
+      "Everything imported below it in that tree is now client code — it ships in the browser bundle, and any server-only work it did moves to the browser with it.",
+      "Nothing at runtime; it is a hint the compiler is free to ignore.",
+      "It disabled server rendering for the route, so the page is blank until JavaScript loads."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "The directive marks a boundary, not a file. The reason it matters is that people apply it at the highest place the error appears rather than the lowest place the state is needed, and the bundle quietly grows back to a client-rendered app. The last option is a real fear but wrong: client components still render on the server for the first paint."
+    },
+    {
+     "id": "nextjs-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "red-flag",
+     "prompt": "This built fine locally and the reviewer stopped the pull request. What did they see?",
+     "subject": {
+      "kind": "code",
+      "language": "typescript",
+      "content": "'use client';\nimport { useEffect, useState } from 'react';\nimport { getSalesFor } from '@/lib/db';   // opens the Mongo connection\n\nexport default function Dashboard({ userId }) {\n  const [rows, setRows] = useState([]);\n  useEffect(() => { getSalesFor(userId).then(setRows); }, []);\n  return <Table rows={rows} />;\n}"
+     },
+     "options": [
+      "The effect closes over userId but does not list it, so switching user leaves the old rows on screen.",
+      "A server-only data module is imported into a client component, so the database layer — and whatever connection string it reads — is pulled toward the browser bundle.",
+      "rows should be typed rather than inferred from an empty array.",
+      "Data fetching in an effect should use a caching library instead."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "The missing dependency is a genuine bug and a fair second finding, but it is a stale-UI bug. Importing the data layer across the client boundary is the one that leaks credentials or breaks the build in a way nobody understands. Query on the server and pass the rows down, or put the query behind a route handler."
+    },
+    {
+     "id": "nextjs-05",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "A component picks its layout by reading window.innerWidth. The page renders, flickers, and React logs a hydration mismatch. Best fix?",
+     "options": [
+      "Guard the read with typeof window !== 'undefined' so the server render does not crash.",
+      "Move the width read into an effect and render a neutral placeholder on the first pass.",
+      "Express the breakpoint in CSS, so the server and the browser emit the same markup and the layout choice happens at paint.",
+      "Set suppressHydrationWarning on the wrapper so the console stops complaining."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "The second option is the honest JavaScript fix and it does work — at the cost of a flash and a layout shift on every load. The mismatch exists because a layout decision was made in JavaScript at all; a media query is the same decision made where it costs nothing and where the server has no opinion. The typeof guard is the popular one, and it only stops the crash — the server still renders desktop and the client still renders mobile."
+    },
+    {
+     "id": "nextjs-06",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "order",
+     "prompt": "You're moving a client-rendered React dashboard onto Next.js.",
+     "instruction": "Order the work.",
+     "items": [
+      {
+       "id": "a",
+       "text": "Move the first screen's data fetching to the server"
+      },
+      {
+       "id": "b",
+       "text": "Get the app running under Next.js with everything still client-rendered"
+      },
+      {
+       "id": "c",
+       "text": "Push the 'use client' boundary down to the interactive leaves"
+      },
+      {
+       "id": "d",
+       "text": "Record the current bundle size and load time on a throttled phone"
+      }
+     ],
+     "correctOrder": [
+      "d",
+      "b",
+      "a",
+      "c"
+     ],
+     "explanation": "Baseline first, or you will have no way to prove the migration helped — and migrations that cannot be proved get reverted by the next manager. Then a lift-and-shift that changes the framework without changing behaviour, so anything that breaks has one cause. Server rendering and trimming the client boundary are the payoff, and they come after you can measure them."
+    },
+    {
+     "id": "nextjs-07",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "open",
+     "prompt": "Our Next.js app takes about eight seconds to become interactive on a mid-range Android phone. Where would you start?",
+     "modelAnswer": "First I would reproduce it — that device class, throttled network, a cold cache — and take a trace, because eight seconds is a symptom with several possible causes and I don't want to guess. Then I would look at what is actually shipped: how much JavaScript the route pulls, how much of it is a component library or a chart package imported at the top level, and how far down the tree the client boundary starts. The usual wins are route-level code splitting, moving data fetching and non-interactive rendering to the server, deferring third-party scripts so analytics is not competing with the app for the main thread, and fixing images and fonts so the first paint is not waiting on them. Then I would re-measure the same journey and set a budget in CI so it does not creep back.",
+     "keyPoints": [
+      "Reproduce and measure on the real device class before changing anything",
+      "Look at what the route ships — bundle composition, not just size",
+      "Move work to the server and push the client boundary down",
+      "Defer or drop third-party scripts competing for the main thread",
+      "Re-measure and put a budget in CI so it stays fixed"
+     ],
+     "explanation": "The answer they are listening for starts with measurement. Everyone knows the optimisation list; what separates a mid-level engineer from a senior one is not jumping to it before knowing which of the six causes is theirs."
+    },
+    {
+     "id": "nextjs-08",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "A team has put 'use client' at the root of the app and treats Next.js as a React SPA with file-based routing. What is the best review response?",
+     "options": [
+      "Leave it — it is simpler, and the team already knows client-side React.",
+      "Block it and convert the app to server components before the next release.",
+      "Ask what each route actually needs: keep the client boundary as low as it can go and justify server rendering per route by what it saves users, otherwise you are paying for the framework's complexity and getting none of its benefit.",
+      "Ship it and revisit after launch — rendering strategy is a performance detail."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "The first option is the honest one and worth saying out loud: if nothing renders on the server, a simpler build tool would do. What makes the third answer better is that it is per route — a marketing page and an internal dashboard have different answers, and treating rendering as one global switch is how teams end up in this position."
+    }
+   ]
+  },
+  "content/skills/nodejs.json": {
+   "skill": "nodejs",
+   "label": "Node.js & Express",
+   "questions": [
+    {
+     "id": "nodejs-01",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "An Express endpoint hashes a 5MB upload with a synchronous crypto call. Under load, unrelated endpoints start timing out. Why, and what fixes it?",
+     "options": [
+      "The instance is under-provisioned; run more instances behind the load balancer.",
+      "One thread serves every request, so a synchronous CPU task blocks all of them — use the async API, a worker thread, or a background job so the loop keeps accepting.",
+      "The request timeout is too aggressive; raise it.",
+      "The hashing should be moved into middleware so it runs before routing."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "Scaling out is the tempting answer because it works — you pay for four machines to hide a problem one of them was creating, and every instance still stalls for the duration of a hash. The giveaway in the symptom is 'unrelated endpoints': one slow route is a slow route, but a slow route that takes the others down with it is the event loop."
+    },
+    {
+     "id": "nodejs-02",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "This is on Express 4. Under a brief database outage, requests to it hung until the client gave up and nothing appeared in the logs. Why?",
+     "subject": {
+      "kind": "code",
+      "language": "javascript",
+      "content": "app.get('/orders', async (req, res) => {\n  const page = Number(req.query.page) || 1;\n  const orders = await Order.find({ user: req.user.id })\n                            .limit(20)\n                            .skip((page - 1) * 20);\n  res.json(orders);\n});"
+     },
+     "options": [
+      "There is no error path: Express 4 does not catch a rejected promise from an async handler, so the request is never answered and the failure is never logged.",
+      "skip/limit pagination drifts when rows are inserted between page requests, so users see duplicates.",
+      "Large result arrays should be streamed rather than serialised with res.json.",
+      "The handler needs to set the Content-Type header before writing the body."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "The pagination point is true, and it is the second finding rather than the one that pages you at three in the morning. An unhandled rejection here produces the worst failure shape there is — no response, no error, no trace — so wrap async handlers in a small helper that forwards to next(), or move to a version of Express that does it for you."
+    },
+    {
+     "id": "nodejs-03",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A rate limiter was added with app.use(limiter) near the bottom of the file, after the route definitions. It never triggers. Why?",
+     "options": [
+      "Middleware runs in the order it is registered, and a matching route ends the chain — anything registered after that route never runs for it.",
+      "The limiter needs to be an async function to intercept requests.",
+      "Rate limiting has to be applied per router with router.use rather than app.use.",
+      "Express compiles the route table at startup, so middleware added later is ignored."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "The third option is the plausible one — it is true that per-router registration is often better organisation, and it is not the reason this is broken. Express is a list of handlers checked top to bottom; position in the file is the behaviour, which is also why the error handler goes last and the body parser goes first."
+    },
+    {
+     "id": "nodejs-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "The frontend decodes the JWT, checks the role claim, and only then renders the admin actions. The API trusts that the button was only shown to admins. Is that enough?",
+     "options": [
+      "No. Anything the browser decides can be changed by whoever holds the browser — the API has to authorise every request itself, and the frontend check exists only so users are not shown buttons that would fail.",
+      "It is enough as long as the frontend verifies the token's signature before trusting the claim.",
+      "It is enough while the admin routes are not linked anywhere a normal user would find them.",
+      "It is enough for reads; the server only needs to re-check on destructive actions."
+     ],
+     "correct": 0,
+     "eliminate": 2,
+     "explanation": "Verifying the signature client-side is the answer that sounds most rigorous and changes nothing: the code doing the verifying is code the attacker controls and can simply skip. The last option is the near-miss worth naming — a read of someone else's account balance is a breach even though it deletes nothing."
+    },
+    {
+     "id": "nodejs-05",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "An export endpoint builds a 60MB CSV in memory before sending it. The container runs out of memory whenever two people export at once. Best fix?",
+     "options": [
+      "Raise the container's memory limit to cover the worst case.",
+      "Stream it: read with a cursor and pipe rows into the response, so peak memory is one row rather than the whole export.",
+      "Compress the response so less data is held and sent.",
+      "Generate the file in the browser instead, from the raw records."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Raising the limit is the tempting one because it is a one-line change that makes the alert stop — until three people export, or the dataset grows, and the ceiling is now expensive as well as temporary. Compression is the subtler miss: it shrinks what goes over the wire while you still assemble the entire export in memory first."
+    },
+    {
+     "id": "nodejs-06",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "You own a Node service the frontend depends on. What has to be in place before it goes live?",
+     "modelAnswer": "The things you cannot add calmly once it is live. Health and readiness endpoints so the platform can tell 'starting' from 'broken', and graceful shutdown on SIGTERM so a deploy finishes in-flight requests instead of severing them. Structured logs with a request id that the frontend can pass through, so one user's complaint is one query. A single error handler that turns anything unexpected into a 500 with that id, and alerting on error rate and latency rather than on individual exceptions. Timeouts and a retry budget on every outbound call, because a dependency that hangs will otherwise consume every connection I have. Configuration and secrets from the environment. And a load test at the peak we actually expect, so the first time the service meets that traffic is not in production.",
+     "keyPoints": [
+      "Health and readiness checks, plus graceful shutdown on SIGTERM",
+      "Structured logs with a request id, and alerting on rates rather than events",
+      "One error handler; nothing unexpected escapes as a hang",
+      "Timeouts and retry budgets on outbound calls",
+      "Secrets from the environment, and a load test before real users arrive"
+     ],
+     "explanation": "Every item on that list is cheap before launch and painful afterwards, which is exactly the judgement the question is probing. Answers that begin and end with test coverage miss that most production incidents are operational, not logical."
+    }
+   ]
+  },
   "content/skills/objective-c.json": {
    "skill": "objective-c",
    "label": "Objective-C & legacy interop",
@@ -2497,6 +5661,336 @@ window.CTI_CONTENT = {
      "correct": 1,
      "eliminate": 3,
      "explanation": "If both objects retain each other, their retain counts never reach zero. Delegate references are normally weak to express observation without ownership and break that cycle."
+    }
+   ]
+  },
+  "content/skills/observability.json": {
+   "skill": "observability",
+   "label": "Observability, monitoring & SRE practice",
+   "questions": [
+    {
+     "id": "observability-01",
+     "stage": "hr",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "This role carries a pager. How do you feel about being on call?",
+     "options": [
+      "Happy to take whatever rotation you need — I don't mind being woken up.",
+      "It comes with owning what you ship. I'd want to know how many people are in the rotation, whether the alerts are actionable, and whether we're allowed to spend time removing the cause of a page that keeps coming back.",
+      "I'd prefer a role without on-call — I do my best work when I'm not interrupted.",
+      "Fine, as long as there's a runbook for everything so I always know what to do."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "They are listening for whether you have been on a rotation that was actually sustainable. The unconditional yes is the tempting answer and it reads as inexperience or as someone who will burn out and leave — the questions in the good answer are the ones people learn to ask the hard way. The runbook answer is closer than it looks, but it treats pages as permanent rather than as bugs."
+    },
+    {
+     "id": "observability-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Your alerting fires around forty times a week. The team has stopped reading it and real incidents get found by customers.",
+     "options": [
+      "Route the alerts to a dedicated channel so the noise stops interrupting the main one.",
+      "Alert on what the user feels — error rate and latency measured against an objective, with burn-rate windows so a slow burn and a fast burn page differently — and demote cause-based alerts to dashboards and tickets.",
+      "Raise every threshold by 50% so only the significant ones fire.",
+      "Add more alerts to cover the incidents that customers found first."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Forty alerts a week means the alerts describe causes — disk, CPU, queue depth — most of which have no user impact. Symptom-based alerting against an objective produces few pages, all of which matter. Raising every threshold is the tempting shortcut and does cut volume, but it keeps you alerting on the wrong thing and silently raises the bar for the alerts that were right."
+    },
+    {
+     "id": "observability-03",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A payment API's p99 doubled overnight. Every individual service's own latency dashboard looks normal.",
+     "options": [
+      "Turn up log verbosity on each service and correlate by request id.",
+      "Follow one slow request end to end with distributed tracing — when nobody looks slow, the time is usually in the spaces between: a retry, a connection pool wait, a queue, or an extra hop nobody counted.",
+      "Compare average latency across services to find which one moved.",
+      "Restart the pods — p99 shifts like this usually clear after a rollout."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Per-service dashboards measure time inside each service, which is exactly where this latency is not. The log-correlation answer is the strong distractor because it does work — it is how people did this before tracing — but reconstructing one request by hand across services is hours, and averages, as option three shows, will hide a p99 entirely."
+    },
+    {
+     "id": "observability-04",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "An alert rule someone added last week. It has paged four times, always at night.",
+     "subject": {
+      "kind": "code",
+      "language": "yaml",
+      "content": "- alert: HighCPU\n  expr: avg(rate(container_cpu_usage_seconds_total[5m])) > 0.8\n  for: 1m\n  labels:\n    severity: page\n  annotations:\n    summary: \"CPU is high\"\n"
+     },
+     "options": [
+      "`rate()` should be `irate()` to catch short spikes.",
+      "`for: 1m` is too short — it will fire on any brief spike and flap.",
+      "It wakes a human for a cause with no established user impact, averaged across every container so a single hot pod is invisible, and it names no service, no owner and no runbook — there is nothing the person woken up can do with it.",
+      "The severity label should be `critical` rather than `page`."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "High CPU is not an incident; a customer failing to pay is. This rule cannot even tell you which workload it is about, because the average flattens the one pod that matters. The `for: 1m` answer is the good distractor — it is genuinely wrong and does cause flapping — but lengthening it just makes a useless page less frequent."
+    },
+    {
+     "id": "observability-05",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Someone adds `card_id` as a label on the request-count metric. Within a day the metrics backend is out of memory and queries time out.",
+     "options": [
+      "Increase the memory limit and shard the metrics backend across more instances.",
+      "Every distinct label value creates a separate time series, so a unique identifier multiplies cardinality without bound. Identifiers belong in traces and logs, which are indexed for that; metrics carry bounded dimensions like status, route and region.",
+      "Lengthen the scrape interval so fewer samples are stored.",
+      "Drop the metric's retention to a few hours so old series expire."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "This is the most common way a monitoring system is taken down, and it is taken down by a well-intentioned change. Sharding is the tempting answer because it is what you do when metrics volume grows legitimately — here it just buys a week and doubles the bill, because the series count grows with your traffic, not with your users."
+    },
+    {
+     "id": "observability-06",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "order",
+     "prompt": "A production outage has just been mitigated.",
+     "instruction": "Order what happens next.",
+     "items": [
+      {
+       "id": "a",
+       "text": "Write the timeline from the logs, dashboards and chat while it is still fresh"
+      },
+      {
+       "id": "b",
+       "text": "Hold a blameless review asking what made the failure possible and what made it hard to see"
+      },
+      {
+       "id": "c",
+       "text": "Confirm the customer impact has actually stopped, not just the alert"
+      },
+      {
+       "id": "d",
+       "text": "Turn the findings into tracked actions with owners, including the detection gap"
+      }
+     ],
+     "correctOrder": [
+      "c",
+      "a",
+      "b",
+      "d"
+     ],
+     "explanation": "An alert going green is not recovery — confirm at the customer's end before you stand down, because a mitigation that only silences the symptom will page you again in an hour. The timeline comes before the meeting: reconstructed from memory a week later it is fiction, and the meeting is only as good as its facts. Actions without owners are the step that quietly turns reviews into theatre."
+    },
+    {
+     "id": "observability-07",
+     "stage": "ask",
+     "levels": [
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "We say we want shared ownership of reliability between development, QA and operations. What does that actually look like day to day, and how would you move a team towards it?",
+     "modelAnswer": "In practice it means the team that writes a service is on the rotation for it, and ships its dashboard, its alerts and its runbook as part of the change rather than as a follow-up ticket. My job as a DevOps engineer is to make that a reasonable thing to ask: a paved road where a new service gets a pipeline, a dashboard, a set of default alerts and its infrastructure module without anyone building it by hand — so ownership is cheap to accept. Then agree service level objectives with whoever owns the product, because reliability without a target is a matter of opinion, and an error budget turns the argument about features versus reliability into arithmetic: when the budget is spent, reliability work goes to the top of the backlog by prior agreement, not by someone shouting. Alerts belong to teams, and any page that was not actionable is a bug filed against the alert. Reviews are blameless, and the actions come with owners and dates. Culturally, the shift I care about is that I stop being the person who deploys and becomes the person who makes deploying safe — if the ops team is still the gate, nothing is shared, it is just delegated.",
+     "keyPoints": [
+      "Teams on call for what they ship; dashboards, alerts and runbooks ship with the change",
+      "A paved road that makes ownership cheap to accept",
+      "SLOs agreed with product, and an error budget policy decided in advance",
+      "Alerts owned by teams; an unactionable page is a bug against the alert",
+      "Blameless reviews with owned, tracked actions",
+      "DevOps builds the road rather than being the gate"
+     ],
+     "explanation": "The answer that does not land is 'developers should be on call', full stop — pushing the pager onto a team with no dashboards and no ability to deploy a fix creates resentment, not ownership. The paved road and the error budget are what make it fair, and noticing that the ops team must stop being the gate is the senior part."
+    }
+   ]
+  },
+  "content/skills/performance-testing.json": {
+   "skill": "performance-testing",
+   "label": "Performance & load testing",
+   "questions": [
+    {
+     "id": "performance-testing-01",
+     "stage": "hr",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A product manager stops by: 'People are saying the app feels slow. Can you load test it before Friday?' What do you do first?",
+     "options": [
+      "Start a JMeter run with 1,000 users on the main endpoints and report the average response time on Friday.",
+      "Ask which screens feel slow and for whom, get hold of the real traffic numbers, and agree what counts as acceptable before running anything — otherwise Friday produces a number nobody can act on.",
+      "Explain that load testing needs a production-like environment, which doesn't exist, so it can't be done by Friday.",
+      "Check the server CPU graphs; if they're low, the app isn't slow and no test is needed."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "'Slow' is a symptom report, and a load test without a target is a machine that produces numbers with no pass or fail. The 1,000-user run is the tempting answer because it looks decisive and you'll have something to show — but nobody can tell whether the result is good, and 'people say it's slow' often turns out to be one report on one screen that no amount of load simulation would ever have surfaced."
+    },
+    {
+     "id": "performance-testing-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "This is the whole load test a team ran before signing off a release. What's the main flaw?",
+     "subject": {
+      "kind": "code",
+      "language": "python",
+      "content": "class ShopUser(HttpUser):\n    wait_time = constant(0)\n\n    @task\n    def browse(self):\n        self.client.get(\"/api/products?page=1\")"
+     },
+     "options": [
+      "It doesn't ramp up gradually, so the server is hit by all users at once.",
+      "There's no think time and every user requests the identical cached page, so this measures how fast one endpoint can serve one cached response — not the load a real user population puts on the system.",
+      "It doesn't inspect the response body, so an error page would be counted as a successful request.",
+      "Locust is the wrong tool for this; JMeter would give more accurate numbers."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "A workload model is the actual product of load testing — the mix of journeys, the pacing between actions, and enough data variety that you're exercising the database rather than a cache. With zero think time, 500 simulated users generate the request rate of many thousands of real ones, so the result is unrelatable to anything; with one fixed URL, the expensive queries never run. Not checking the response is a real second flaw worth fixing, and the missing ramp is genuinely a gap too — but both would still leave you measuring the wrong workload."
+    },
+    {
+     "id": "performance-testing-03",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A load run against the checkout API gives: mean 220ms, p50 180ms, p95 1.9s, p99 6.2s, errors 0.2%. The SLA says 'under 500ms'. What do you report?",
+     "options": [
+      "It passes: the mean and the median are both comfortably inside 500ms.",
+      "It fails as reported, but only because p99 is an outlier that a longer run would smooth out.",
+      "It fails for roughly one request in twenty, which at checkout means real customers waiting two seconds and some waiting six — the tail is the finding, and the 0.2% errors need identifying before anything is signed off.",
+      "It can't be judged until the test is repeated with more users, since 220ms mean suggests the system was never under real pressure."
+     ],
+     "correct": 2,
+     "eliminate": 0,
+     "explanation": "Averages hide exactly the users you care about: a mean of 220ms is compatible with a meaningful fraction of customers having a bad time, and at checkout those seconds are abandoned carts. Option B is the tempting one because 'p99 is noise' is something people genuinely say — but a p99 thirty times the median is a shape, not noise, usually a lock, a connection pool limit or a cold cache, and the errors matter more than any of it since a failed checkout is not a slow one."
+    },
+    {
+     "id": "performance-testing-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "You're designing the load scenario for a major release. Where should the numbers in it come from?",
+     "options": [
+      "Take the current peak concurrent users from production analytics, model the journey mix and pacing on what those users actually do, and run against a dataset the size of production's.",
+      "Double last year's registered user count and drive that many virtual users at the busiest endpoint.",
+      "Use the number the business hopes to reach after the marketing campaign, since that's what the system must survive.",
+      "Use the framework's default thread count on a fresh staging database, and compare the result against the previous release's run."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "A load test is only as good as its resemblance to real traffic, and the two things teams get wrong are the journey mix and the data volume — a query that's instant against 500 staging rows is a table scan against ten million. The growth-target option is tempting and often demanded by stakeholders; it's worth running as a separate scenario, but if you skip today's real peak you won't know whether a failure means 'we can't grow' or 'we're already broken'."
+    },
+    {
+     "id": "performance-testing-05",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "order",
+     "prompt": "Response times climb steeply past about 200 concurrent users and you need to find out why.",
+     "instruction": "Put these in the order you'd actually do them.",
+     "items": [
+      {
+       "id": "a",
+       "text": "Look at where the system saturates — CPU, memory, database connections, thread pool, disk"
+      },
+      {
+       "id": "b",
+       "text": "Re-run the same scenario after the fix and compare against the original numbers"
+      },
+      {
+       "id": "c",
+       "text": "Check the load generator itself isn't the bottleneck — its own CPU, network and open file limits"
+      },
+      {
+       "id": "d",
+       "text": "Reproduce it with a controlled ramp so you can name the point where latency turns"
+      },
+      {
+       "id": "e",
+       "text": "Trace the slow requests in the APM to find which call inside them grew"
+      }
+     ],
+     "correctOrder": [
+      "d",
+      "c",
+      "a",
+      "e",
+      "b"
+     ],
+     "explanation": "Confirming the shape of the curve comes first, because 'gets slow under load' and 'falls off a cliff at 200' point at different causes. Clearing the load generator is the step people skip and then spend two days optimising a service that was never slow — a saturated test rig produces exactly the same graph. Only once you know which resource ran out is tracing worth the time, and re-running the identical scenario is what makes the fix a fact instead of a claim."
+    },
+    {
+     "id": "performance-testing-06",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A mobile financial services product sees roughly ten times normal traffic for about ninety minutes on salary day. What do you test?",
+     "options": [
+      "A stress test that keeps increasing load until the system breaks, so you know the ceiling.",
+      "A spike into ten times normal load, held for the full ninety minutes against production-scale data, plus a check that the system returns to normal afterwards — and that nothing was lost or double-processed on the way.",
+      "A 24-hour soak test at normal load, since salary day is really about sustained traffic.",
+      "A load test at ten times normal for five minutes, which is long enough to see whether the servers cope."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Match the test to the event: the arrival is sudden, the duration is long enough for queues and connection pools to fill, and it's money, so the correctness question — did anything get double-debited or dropped when it degraded — matters more than the latency chart. The stress test is a genuinely useful thing to run and the tempting answer here, but it tells you the breaking point, not whether you survive the event you actually know is coming; five minutes is too short for anything that leaks to show up."
+    },
+    {
+     "id": "performance-testing-07",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "How would you make performance testing part of how this team works, instead of something we panic about the week before launch?",
+     "modelAnswer": "The panic version exists because performance is nobody's acceptance criterion, so I'd start there: agree a budget per critical journey — login, search, checkout — as a p95 and a p99 number the product owner has actually signed, so a build can pass or fail rather than being discussed. Then make the cheap version routine: a short scenario, a few minutes, on a fixed environment with a fixed dataset, running on a schedule and after every release candidate, with the results tracked as a trend. The trend is the real value — a regression usually arrives as an unremarkable jump from 300 to 500ms in one build, which is invisible if you only test twice a year and obvious if you have the line. The heavy work stays occasional: full-scale load, soak and spike runs before major releases or known events like salary day, because they need a production-like environment and a day of someone's attention. I'd also close the loop from production — real latency percentiles and error rates from monitoring tell me whether my model is honest, and they're the reason to change the scenario. And I'd get the environment question settled early, since 'we can't test performance because staging is a quarter of the size' is the excuse that quietly kills the whole practice; a smaller environment with a documented ratio still catches regressions, it just can't tell you the absolute ceiling.",
+     "keyPoints": [
+      "Agreed performance budgets per critical journey, as percentiles someone signed off",
+      "A short automated scenario on a fixed environment and dataset, run regularly",
+      "Track the trend across builds — regressions arrive in small increments",
+      "Reserve full load, soak and spike runs for major releases and known events",
+      "Calibrate the model against real production latency and error rates",
+      "Settle the environment problem honestly rather than letting it block everything"
+     ],
+     "explanation": "The mark of experience here is separating the cheap repeatable check from the expensive full-scale run, and knowing a trend catches more regressions than any single pass. Answers that propose running the full load test in every pipeline sound rigorous but are ignored within a month, because nobody waits an hour for a merge."
     }
    ]
   },
@@ -2591,6 +6085,7 @@ window.CTI_CONTENT = {
      "id": "react-05",
      "stage": "deepdive",
      "levels": [
+      "junior",
       "mid",
       "senior"
      ],
@@ -2630,6 +6125,467 @@ window.CTI_CONTENT = {
      "correct": 2,
      "eliminate": 3,
      "explanation": "Memoization is a trade-off, not a default style. It pays when it avoids meaningful recalculation or downstream rendering, but indiscriminate use adds dependencies, allocations, and harder-to-read code without evidence of benefit."
+    },
+    {
+     "id": "react-07",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "A list of draft submissions is rendered with key={index}. Delete the second row and the inputs below it show the wrong text. Why?",
+     "options": [
+      "The rows should have been held in a ref rather than state.",
+      "Keys have to be strings, and index is a number.",
+      "After the delete the remaining rows shift up and inherit their neighbours' indexes, so React matches them to the wrong existing elements and the state sitting in those elements stays put.",
+      "The delete handler is mutating the array instead of replacing it."
+     ],
+     "correct": 2,
+     "eliminate": 1,
+     "explanation": "The key is how React decides which element is which between renders. Keyed by position, row three becomes row two and takes over row two's DOM node — along with whatever was typed into it. It only shows up in lists that reorder, delete, or hold their own state, which is why index keys survive so long before biting. A stable id from the data fixes it."
+    },
+    {
+     "id": "react-08",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "red-flag",
+     "prompt": "The tag is added to the array — a console.log proves it — and the screen does not change. What is wrong?",
+     "subject": {
+      "kind": "code",
+      "language": "javascript",
+      "content": "const addTag = (tag) => {\n  tags.push(tag);\n  setTags(tags);\n};"
+     },
+     "options": [
+      "The tag is pushed onto the same array and that array is handed straight back, so React compares it with itself, sees no change, and does not re-render. It needs a new array: setTags([...tags, tag]).",
+      "push should be unshift, so the newest tag appears first.",
+      "addTag should be wrapped in useCallback.",
+      "setTags should be called inside a useEffect."
+     ],
+     "correct": 0,
+     "eliminate": 1,
+     "explanation": "This is the bug where the data is right and the screen is wrong, and it sometimes half-fixes itself when something else causes a render — which is what makes it so confusing. React compares state by reference, so mutating in place is invisible to it. useCallback is the tempting answer because this is a callback and that is a hook; it changes nothing here."
+    },
+    {
+     "id": "react-09",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "An empty submissions list renders a stray 0 above the empty-state message. The JSX is {submissions.length && <List items={submissions} />}. What is happening?",
+     "options": [
+      "React cannot render an array of length zero.",
+      "&& returns the left-hand side when it is falsy, and 0 is falsy but also a perfectly renderable number — so React draws it.",
+      "The List component is returning 0 when it has nothing to show.",
+      "length should be length()."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The same guard works fine for undefined and null, because React renders nothing for those; 0 is the one falsy value it will happily paint on the screen. Use submissions.length > 0 && …, or a ternary. Blaming the child is the tempting move because that is where the 0 appears — the bug is in the guard, one line up."
+    },
+    {
+     "id": "react-10",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "red-flag",
+     "prompt": "This runs whenever the selected form changes. Clicking quickly through the list sometimes leaves the wrong form on screen.",
+     "subject": {
+      "kind": "code",
+      "language": "javascript",
+      "content": "useEffect(() => {\n  fetch(`/api/forms/${id}`)\n    .then(r => r.json())\n    .then(setForm);\n}, [id]);"
+     },
+     "options": [
+      "There is no cleanup, so a request that is still in flight when id changes still resolves and still sets state — and a slow earlier response can land after a newer one.",
+      "The dependency array should be empty.",
+      "fetch should be awaited inside an async function rather than chained with .then.",
+      "setForm should be wrapped in useCallback."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "Two requests are in the air and nothing promises they come back in order, so the slower first one wins and the UI shows a form nobody selected. The fix is a cleanup that ignores stale responses — a cancelled flag, or an AbortController on the request. Switching to async/await is a fair style preference that changes none of this: the earlier call still resolves."
+    },
+    {
+     "id": "react-11",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "red-flag",
+     "prompt": "Editing works. But pick a different person from the list and the input still shows the previous name.",
+     "subject": {
+      "kind": "code",
+      "language": "javascript",
+      "content": "function EditName({ user }) {\n  const [name, setName] = useState(user.name);\n  return (\n    <input value={name} onChange={e => setName(e.target.value)} />\n  );\n}"
+     },
+     "options": [
+      "useState's argument is only the initial value — it is read on the first render and ignored on every one after, so a new user prop never reaches the input.",
+      "The input is uncontrolled and should use defaultValue instead of value.",
+      "onChange should be onInput to catch every keystroke.",
+      "The component should be wrapped in React.memo."
+     ],
+     "correct": 0,
+     "eliminate": 2,
+     "explanation": "Copying a prop into state creates a second source of truth, and state survives the re-render that the new prop arrives on. Either stop copying and let the parent own the edit, or force a fresh component per person with key={user.id} so useState runs again. defaultValue is the tempting one because it sounds like the mirror image of the problem — it makes the input uncontrolled, which throws away the state you were keeping."
+    },
+    {
+     "id": "react-12",
+     "stage": "ask",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "You are asked to add one field to a 700-line component nobody currently on the team wrote. First move?",
+     "options": [
+      "Split it into smaller components first — the change will be much easier afterwards.",
+      "Make the smallest change that works, and say in the pull request which parts of the file you did not understand.",
+      "Copy the component, change the copy, and point the route at the new one.",
+      "Ask for the ticket to go to whoever knows that file best."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "The rewrite is tempting because the file genuinely is too big — and it turns a one-line change into a week of review nobody asked for, with regressions nobody can trace. Small change first. The honest note about what you did not follow is the part that pays: it points the reviewer at exactly where you are unsure, and it is how the refactor eventually gets agreed rather than smuggled in."
+    }
+   ]
+  },
+  "content/skills/rust-concurrency.json": {
+   "skill": "rust-concurrency",
+   "label": "Concurrency, async & thread safety in Rust",
+   "questions": [
+    {
+     "id": "rust-concurrency-01",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A worker pool needs shared access to a config cache. Rc<RefCell<Config>> was fine when this was single-threaded; inside thread::spawn the compiler refuses it.",
+     "options": [
+      "Rc's refcount and RefCell's borrow flag are both plain non-atomic counters, so neither type is Send or Sync. Across threads that means Arc plus a lock — the compiler is refusing the data race before it happens.",
+      "thread::spawn requires 'static, so cloning the Config into the closure is the fix.",
+      "Add an unsafe impl Send for the wrapper type — the config is only read after startup.",
+      "Use std::thread::scope instead; scoped threads allow Rc because the borrow cannot outlive the scope."
+     ],
+     "correct": 0,
+     "eliminate": 2,
+     "explanation": "Two different bounds get confused here and the last option is the good confusion: scoped threads do relax 'static, but Send and Sync are about whether the type is safe to touch from two threads at all, and no lifetime trick changes that. Cloning has the same problem — you would be cloning an Rc, and its refcount is exactly what races. Arc<RwLock<Config>>, or an immutable Arc<Config> swapped on reload."
+    },
+    {
+     "id": "rust-concurrency-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Your Tokio service stalls for hundreds of milliseconds at a time. The culprit is a synchronous driver call that reads from a device and takes ~200 ms.",
+     "options": [
+      "Raise the worker thread count until the stalls stop happening.",
+      "Wrap the call in an async block — that makes it non-blocking.",
+      "A blocking call occupies a runtime worker for its whole duration, and every task queued behind it waits. Move it to spawn_blocking, or to a dedicated thread that talks to the runtime through a channel, so the async workers stay free to poll.",
+      "Call futures::executor::block_on inside the task so the runtime knows to wait."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "async fn does not create a thread and an async block does not make anything non-blocking — it only wraps code in a future that, once polled, still runs to completion on the worker. More workers is the tempting answer because it genuinely does reduce the stalls, right up to the load where it doesn't; you have bought headroom, not fixed the design. The rule is simple: an async task must always be able to reach its next await point quickly."
+    },
+    {
+     "id": "rust-concurrency-03",
+     "stage": "deepdive",
+     "levels": [
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "This is on the write path of a device state service. Under load, updates for every device slow to a crawl together.",
+     "subject": {
+      "kind": "code",
+      "language": "rust",
+      "content": "async fn update(&self, id: DeviceId, value: f64) {\n    let mut map = self.state.lock().unwrap();   // std::sync::Mutex\n    map.insert(id, value);\n    self.telemetry.publish(id, value).await;\n}"
+     },
+     "options": [
+      "std::sync::Mutex should never be used in async code — tokio::sync::Mutex is the correct type here.",
+      "The lock is held across an .await, so the task can be parked mid-publish while still holding it and every other device's update queues behind a network call. Drop the guard before awaiting — insert, end the scope, then publish.",
+      "lock().unwrap() should be lock().expect(\"state poisoned\") so a poisoned mutex is diagnosable.",
+      "insert should be entry(id).or_insert(value) to avoid overwriting an existing reading."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The first option is the near-miss that gets waved through in review: switching to tokio's Mutex makes the guard hold across await legal, so the compile error goes away and the queue behind the lock stays exactly as long. The lock should cover the map mutation and nothing else. As written this often doesn't even compile on a multi-threaded runtime, because the std guard isn't Send — and that error is doing you a favour."
+    },
+    {
+     "id": "rust-concurrency-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Sensor frames arrive at a fixed 1 kHz. The consumer that files them usually keeps up but occasionally takes longer than a millisecond. The channel between them is bounded. What should the producer do when it finds the channel full?",
+     "platform": "systems",
+     "options": [
+      "Block until there is room — a sample must never be lost.",
+      "Switch to an unbounded channel so the situation cannot arise.",
+      "It depends what the data is for. For a live telemetry or control signal, drop or overwrite the oldest and count the drops: a stale sample has no value, and blocking makes the reader miss the next hardware deadline, which loses samples anyway and hides it. Block only when every sample is genuinely required, and then size the queue for the worst case and say so.",
+      "Retry the send in a tight loop until it succeeds."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "The first option sounds like the rigorous answer and is the one that quietly breaks the system: back-pressure travels upstream into a thread with a hardware deadline, so you lose samples at the card instead of at the queue, where nobody is counting. Unbounded is the same failure with extra steps — the memory grows until the process dies. Whichever you choose, the drop counter is not optional; a silent drop is an unexplainable gap in the data three months later."
+    },
+    {
+     "id": "rust-concurrency-05",
+     "stage": "deepdive",
+     "levels": [
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A task reads frames in a tokio::select! against a shutdown signal. After a shutdown that was started and then aborted, the device stream comes back permanently garbled.",
+     "options": [
+      "select! drops the losing future, so a read that was part-way through consuming bytes loses them and the stream is left out of frame sync. The read was not cancellation-safe. Keep the partial state outside the future — own the buffered reader, or move the read into its own task that feeds a channel.",
+      "The device needs a longer read timeout so the shutdown branch doesn't win the race.",
+      "Put a mutex around the stream so the two select branches cannot interleave their reads.",
+      "Use futures::join! instead of select! so neither branch is cancelled."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "The mutex is the tempting answer because the symptom smells like a race — but both branches are in one task, so nothing runs concurrently and nothing is corrupted concurrently. State was thrown away, not fought over. Cancellation safety is the thing to look up before putting any read in select!: some combinators guarantee it, most hand-rolled reads do not, and the bug surfaces only on the rare path where the other branch wins."
+    },
+    {
+     "id": "rust-concurrency-06",
+     "stage": "technical",
+     "levels": [
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A shutdown flag is an AtomicBool, polled in a hot loop. A colleague wants Ordering::Relaxed everywhere because it is faster.",
+     "options": [
+      "Relaxed is never acceptable in production code — use SeqCst and stop thinking about it.",
+      "With Relaxed the reader may never observe the store at all, so the loop can spin forever.",
+      "For a lone flag that guards nothing else, Relaxed is fine and the loop will see the store. It stops being fine the moment data is published alongside the flag: then the writer needs Release and the reader Acquire, or the reader can see the flag set and the data it refers to not yet written.",
+      "Wrap it in a Mutex<bool> — atomics are for counters, not for flags."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "The second option is the good misconception: memory orderings constrain the ordering of operations, not the timeliness of propagation, so a Relaxed store does become visible — it just carries no promise about what else is visible with it. SeqCst-everywhere is defensible as a default and is what most codebases should do, but 'never think about it' is the wrong reason; the moment you publish a pointer or a buffer next to the flag, Acquire/Release is the thing you actually need to have understood."
+    },
+    {
+     "id": "rust-concurrency-07",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "How do you decide between OS threads and async for a given piece of a system?",
+     "modelAnswer": "I start from what the work is waiting on. Async pays when there are many concurrent operations that spend their time waiting on I/O — thousands of sockets, a lot of device sessions — because a task at an await point costs a small allocation rather than a stack and a scheduler slot. Threads pay when the work is CPU-bound, when it must be blocking anyway because the library underneath is blocking, or when a piece of work needs its own predictable timing — a control loop I want pinned to a core with a real-time priority does not belong on a shared runtime at all. In practice a system is usually both: a threaded core doing the deterministic work, an async edge doing the networking, and a channel between them. The cost of async is that it is contagious and that every blocking call becomes a latent stall, so I keep the async surface at the boundary rather than letting it colour the whole codebase. I'd also weigh what the team can debug: a stuck thread shows up in a backtrace, a starved task usually doesn't.",
+     "keyPoints": [
+      "Decide by what the work waits on: I/O concurrency versus CPU or timing",
+      "Async for many waiting operations; threads for blocking, CPU-bound or timing-critical work",
+      "Deterministic control loops want their own pinned thread, not a shared runtime",
+      "A channel between a threaded core and an async edge is the common shape",
+      "Async is contagious and turns every blocking call into a latent stall",
+      "Debuggability matters — a stuck thread is visible, a starved task often isn't"
+     ],
+     "explanation": "The weak answer treats async as the modern default and threads as legacy. The senior signal is naming the boundary between the two and why it is where it is — plus admitting the operational cost, because a runtime that starves is much harder to diagnose at 3am than a thread that is simply blocked."
+    }
+   ]
+  },
+  "content/skills/rust.json": {
+   "skill": "rust",
+   "label": "Rust: ownership, lifetimes & error handling",
+   "questions": [
+    {
+     "id": "rust-01",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "You hold a reference to an element of a Vec and then push to that Vec. The borrow checker rejects it. A colleague says it's being pedantic — the vector has spare capacity, so nothing can move.",
+     "options": [
+      "Nothing is really at stake at runtime; it's a compile-time formality, so an unsafe block here is harmless.",
+      "push may reallocate the backing buffer and move every element, so the reference would dangle. Spare capacity today is a property of one run, not of the type — take an index, or split the borrow.",
+      "The Vec needs to be behind a Mutex before two borrows of it can coexist.",
+      "Clone the element into an Rc so the reference and the push can both hold it."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "The checker rejects the possibility, not the observed run — and it is right to, because capacity is not part of anyone's contract. The tempting move is to reach for unsafe and 'prove' the capacity by hand; that proof breaks the first time someone changes the growth policy or the caller. An index is free and keeps the compiler in the loop."
+    },
+    {
+     "id": "rust-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "This is the public surface of a reusable crate that talks to plant hardware. Callers include a control loop that must retry some failures and give up on others.",
+     "subject": {
+      "kind": "code",
+      "language": "rust",
+      "content": "pub fn read_setpoint(dev: &Device) -> Result<f64, Box<dyn Error>> {\n    let raw = dev.read_register(0x1F)?;\n    let text = std::str::from_utf8(&raw)?;\n    Ok(text.trim().parse::<f64>()? * SCALE)\n}"
+     },
+     "options": [
+      "Nothing serious — Box<dyn Error> is the idiomatic error type and callers can downcast if they need detail.",
+      "Three different failure modes collapse into one opaque type, so the caller cannot tell a timed-out bus from a malformed reading and cannot retry only the one worth retrying. A library should return a concrete error enum; Box<dyn Error> and anyhow belong in the binary at the top.",
+      "The function should panic on bad input instead, so failures are impossible to ignore.",
+      "It should return Option<f64> so the caller isn't forced to deal with an error type at all."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "Erasing the error type is convenient for the author and expensive for every caller — matching becomes downcasting against types you didn't document. Option is the quieter version of the same mistake: it throws away why. Box<dyn Error> is genuinely idiomatic, which is what makes the first option tempting — just not at a library boundary, where the caller's whole job is deciding what to do about each failure."
+    },
+    {
+     "id": "rust-03",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "This thread polls a sensor on a serial bus and feeds the control loop. It has been running in the plant for a week.",
+     "subject": {
+      "kind": "code",
+      "language": "rust",
+      "content": "pub fn poll_loop(port: &mut Port, tx: Sender<Reading>) {\n    loop {\n        let frame = port.read_frame().unwrap();\n        let reading = decode(&frame).unwrap();\n        tx.send(reading).unwrap();\n    }\n}"
+     },
+     "options": [
+      "Every recoverable fault — a short read, one corrupt frame, a receiver that has gone away — panics the polling thread, and a control loop that has silently stopped reading is far worse than one that logs a bad frame and carries on.",
+      "read_frame should be async so the thread isn't blocked while it waits.",
+      "Sender should be wrapped in an Arc<Mutex<..>> before it is moved into the thread.",
+      "The loop needs a sleep so it doesn't spin a core at 100%."
+     ],
+     "correct": 0,
+     "eliminate": 2,
+     "explanation": "unwrap is a claim that the failure is impossible, and on a physical bus none of these are. The sleep is the tempting answer because busy loops usually are the bug — here read_frame blocks on the port, so the loop is already paced. The nastiest unwrap is the send: when the consumer dies, the producer dies too, and the only symptom anyone sees on the floor is a value that stopped changing."
+    },
+    {
+     "id": "rust-04",
+     "stage": "deepdive",
+     "levels": [
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Your protocol decoder returns Frame<'a>, borrowing straight out of the read buffer — zero copies, and it shows in the numbers. Now those frames also need to go down a channel to a logging thread.",
+     "options": [
+      "Give the frame type a 'static lifetime so it is allowed to cross the thread boundary.",
+      "The borrow ties each frame to a buffer you are about to overwrite on the next read, so anything that outlives the read has to own its data. Convert to an owned frame at the channel boundary and keep the borrowed path for what you decode in place.",
+      "Wrap the frame in an Arc so the buffer is kept alive for as long as any frame refers to it.",
+      "Add an unsafe impl Send for Frame<'a> — the data is only read, so it is safe in practice."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "'static is not a switch you flip; it is a promise about how long the data lives, and this data lives until the next read overwrites it. Arc is the near-miss worth naming: Arc<Frame<'a>> still carries 'a, so it extends nothing. The real design question is where the zero-copy region ends, and the answer is almost always 'at the point the data escapes the loop that owns the buffer'."
+    },
+    {
+     "id": "rust-05",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "This runs on every batch of samples arriving from a 50 kHz acquisition card.",
+     "subject": {
+      "kind": "code",
+      "language": "rust",
+      "content": "fn apply(&mut self, samples: &Vec<Sample>) {\n    for s in samples.clone() {\n        self.buffer.push(s.clone());\n    }\n    self.recompute(self.buffer.clone());\n}"
+     },
+     "options": [
+      "The parameter should be &[Sample] rather than &Vec<Sample>; the clones themselves cost nothing because the compiler elides them.",
+      "Three copies of data that never needed copying — a whole vector cloned to iterate it, an element cloned to push it, and the accumulated buffer cloned to pass it. Take &[Sample], iterate by reference, and let recompute borrow the buffer.",
+      "Derive Copy on Sample so that the clones become free.",
+      "apply should take self by value so the borrow checker stops complaining about the last line."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The first option is true and is the finding most reviewers stop at — &[Sample] is the better signature — but it fixes the signature and leaves the allocations. Copy does not make copying free either; it makes it implicit, which on a 50 kHz stream is worse, because now the cost does not even show up as a call. Cloning to satisfy the borrow checker is the habit to catch here; the fix is almost always to restructure the borrow."
+    },
+    {
+     "id": "rust-06",
+     "stage": "deepdive",
+     "levels": [
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "You're wrapping a vendor's C driver library in Rust. Where does unsafe belong, and what does your wrapper owe the rest of the codebase?",
+     "options": [
+      "Mark every function that reaches the driver as unsafe fn, so callers can see what they are dealing with.",
+      "unsafe is only needed around raw pointer dereferences — calls into extern \"C\" functions are ordinary safe calls.",
+      "Keep the unsafe blocks as small as you can inside a safe API that upholds the library's invariants for the caller — handle lifetime, thread affinity, buffer sizes, initialisation order — and document each invariant next to the block that relies on it.",
+      "Put #![allow(unsafe_code)] at the top of the module and rely on code review to catch misuse."
+     ],
+     "correct": 2,
+     "eliminate": 1,
+     "explanation": "A wrapper exists so that misuse becomes impossible from safe code; pushing unsafe up to every caller is the abdication version of the same work. The first option is the honest answer only when you genuinely cannot uphold an invariant — if the caller must guarantee the device is initialised and you cannot check it, unsafe fn is the correct signature and the docs must say why. That distinction is the whole question."
+    },
+    {
+     "id": "rust-07",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "order",
+     "prompt": "A C module inside a plant controller is being replaced with Rust, one piece at a time. There is no big-bang cutover and the line cannot stop.",
+     "instruction": "Order the steps you'd actually take.",
+     "items": [
+      {
+       "id": "a",
+       "text": "Port the module's logic to safe Rust behind the same interface"
+      },
+      {
+       "id": "b",
+       "text": "Capture the module's real inputs and outputs from the running plant as a replayable test corpus"
+      },
+      {
+       "id": "c",
+       "text": "Expose the Rust implementation as extern \"C\" so existing callers link against it unchanged"
+      },
+      {
+       "id": "d",
+       "text": "Run both implementations on recorded traffic and compare outputs before anything is switched over"
+      }
+     ],
+     "correctOrder": [
+      "b",
+      "a",
+      "c",
+      "d"
+     ],
+     "explanation": "The corpus comes first because it is the only definition of 'correct' you will get — the C module's behaviour, bugs included, is what the plant is tuned around. Keeping the C ABI means the rewrite is a link-time change rather than a rearchitecture, and shadow-running against recorded traffic turns 'we think it matches' into evidence you can show the plant manager."
+    },
+    {
+     "id": "rust-08",
+     "stage": "ask",
+     "levels": [
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "What does Rust actually buy an industrial control system, and where does it not help at all?",
+     "modelAnswer": "It removes a whole class of failures that are expensive to debug on a factory floor: use-after-free, data races, buffer overruns, iterator invalidation. On hardware you cannot attach a debugger to at 3am, moving those from runtime to compile time is worth a lot. No garbage collector means no collection pause, so latency is a function of what my code does rather than what a runtime decides — which matters when a deadline is a millisecond, not a service-level objective. Result forces the error paths to be written rather than discovered, and that is most of what production-grade means here. What it does not buy: logical correctness, so a control algorithm can be perfectly memory-safe and still drive the valve the wrong way. It does not make code real-time on its own — allocation, page faults, lock contention and the scheduler still produce jitter, and safe Rust will happily do all four. It does not fix deadlocks, unbounded queues or resource exhaustion. And it does not make the hardware honest: a sensor still lies, a bus still drops frames, and that is application logic either way.",
+     "keyPoints": [
+      "Removes memory-safety and data-race classes at compile time",
+      "No GC pause — latency comes from your code, not a runtime",
+      "Result and the type system force error paths to be written",
+      "Does not give you real-time behaviour: allocation, faults, locks and the scheduler still cause jitter",
+      "Does not prevent deadlock, unbounded queues or logic errors",
+      "Hardware faults and bad data are still application concerns"
+     ],
+     "explanation": "The answer that only lists what Rust prevents is the one every candidate gives. Naming where it does not help — jitter, deadlock, logic — is what shows you have shipped something in it rather than read about it, and it is also how you avoid selling the rewrite to a plant manager on a promise you cannot keep."
     }
    ]
   },
@@ -2938,6 +6894,169 @@ window.CTI_CONTENT = {
     }
    ]
   },
+  "content/skills/systems-programming.json": {
+   "skill": "systems-programming",
+   "label": "Systems, memory & Linux performance",
+   "questions": [
+    {
+     "id": "systems-programming-01",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "platform": "systems",
+     "prompt": "A 1 ms control loop hits its deadline almost every time, but once every few seconds one iteration takes 8 ms. The box is 30% idle and the mean iteration time hasn't moved.",
+     "options": [
+      "Spread the work across more threads so no single iteration has as much to do.",
+      "The loop body is too slow — profile it and optimise the hottest function.",
+      "Chase the tail, not the mean: an allocation that had to grow the heap, a page fault on first touch, a lock shared with a slow path, or the scheduler moving the thread off its core. Pre-allocate and lock the loop's memory, keep the hot path allocation-free, pin the thread, and measure the distribution rather than the average.",
+      "Raise the loop period to 8 ms so every iteration fits comfortably."
+     ],
+     "correct": 2,
+     "eliminate": 0,
+     "explanation": "Reaching for the profiler is the reflex and it is the wrong tool here: a sampling profiler reports where the time mostly goes, and the time mostly goes exactly where it should — the problem is the one iteration in five thousand. Rare stalls in a loop that is otherwise fast are nearly always the loop being interrupted rather than the loop being slow. Widening the period is worth saying out loud as an option, because sometimes the deadline really was arbitrary, but it is a negotiation with the process engineer, not a fix."
+    },
+    {
+     "id": "systems-programming-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "After a traffic burst, a long-running gateway's RSS climbs to 3 GB and never comes back down. The heap profiler insists the live set is about 200 MB.",
+     "options": [
+      "There is a leak the profiler is missing — look for reference cycles keeping objects alive.",
+      "Freed memory went back to the allocator, not to the kernel: RSS is roughly the high-water mark plus fragmentation. Cap the peak by bounding how many buffers can be in flight, reuse pooled buffers, or use an allocator you can ask to trim. If the live set really is 200 MB, this is allocator behaviour, not a leak.",
+      "Without a garbage collector, freed memory is returned to the OS immediately, so the profiler must be misreporting.",
+      "Schedule a nightly restart and move on."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The cycle hunt is the tempting one because reference cycles are a real way to leak in a language without a collector, and it will burn a day finding nothing — the profiler already told you the live set is small, and that is the number that rules a leak out. The question this reframes is 'what was the peak, and why was it allowed to be that big', which is a concurrency-limit problem rather than a memory one."
+    },
+    {
+     "id": "systems-programming-03",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "order",
+     "prompt": "A release doubles the p99 latency of a data-acquisition service. You have the box, both binaries and about thirty minutes before someone asks whether to roll back.",
+     "instruction": "Order the steps you'd actually take.",
+     "items": [
+      {
+       "id": "a",
+       "text": "Reproduce it: run both builds against the same load on the same hardware and confirm the difference is real"
+      },
+      {
+       "id": "b",
+       "text": "Look at what the process is waiting on — run queue, syscalls, I/O, page faults — before assuming the cost is in your code"
+      },
+      {
+       "id": "c",
+       "text": "Sample both builds with a profiler and diff the two flame graphs"
+      },
+      {
+       "id": "d",
+       "text": "Change the one thing you suspect, rebuild, and measure it the same way to prove causation"
+      }
+     ],
+     "correctOrder": [
+      "a",
+      "b",
+      "c",
+      "d"
+     ],
+     "explanation": "Reproducing first is what stops you optimising a difference in the load generator. System-level before code-level matters more than people expect: a CPU profiler shows you almost nothing when the answer is that the process is now blocked in a syscall or faulting on memory it used to have resident. And the last step is the one that gets skipped — without it you have a correlation and a story, not a cause."
+    },
+    {
+     "id": "systems-programming-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "This reads telemetry frames off a TCP socket from a line controller. It works on the bench and misbehaves in the plant.",
+     "subject": {
+      "kind": "code",
+      "language": "rust",
+      "content": "let mut buf = [0u8; 1024];\nloop {\n    let n = stream.read(&mut buf)?;\n    let frame = Frame::parse(&buf[..n])?;\n    handle(frame);\n}"
+     },
+     "options": [
+      "read returns whatever bytes have arrived, not a message: a frame can be split across two reads and two frames can arrive in one. This parses garbage the moment the network delivers a partial frame — it needs a buffer that persists across reads and a loop that pulls out whole frames. n == 0 also means the peer closed, and here it parses an empty slice forever.",
+      "The buffer should be heap-allocated; 1024 bytes on the stack risks overflow.",
+      "read should be read_exact so short reads cannot happen.",
+      "The ? should be an unwrap so that errors are not silently swallowed."
+     ],
+     "correct": 0,
+     "eliminate": 1,
+     "explanation": "read_exact is the near-right answer and it is why the bug survives review: it fixes short reads only when you already know how many bytes to expect, which for variable-length framing is exactly what you are trying to find out. You still need the accumulate-and-drain loop; read_exact just becomes how you fill the header and then the body. Working on the bench is the tell — on a local link frames usually arrive whole, which is why this class of bug ships."
+    },
+    {
+     "id": "systems-programming-05",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A containerised service restarts every few hours with exit code 137 and nothing at all in its own log — no panic, no shutdown message.",
+     "options": [
+      "The health check is failing and the runtime is restarting the container.",
+      "The process panicked; that maps to exit code 137.",
+      "137 is 128 + 9, so it was SIGKILL — nearly always the kernel OOM killer enforcing the container's memory limit. The silence is the evidence: SIGKILL cannot be handled, so no shutdown path runs. Check the kernel log and the cgroup memory events, then decide whether the limit is wrong or the peak is.",
+      "The entrypoint process is exiting normally and taking the container with it."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "The health-check answer is the plausible one, because restarts do usually mean liveness — but that path sends SIGTERM first, and a service with any shutdown logging would have said goodbye. An empty log is not the absence of a clue; it narrows things to the signals a process cannot catch. Whether the fix is a higher limit or a lower peak is a separate argument, and worth having before you just raise the limit."
+    },
+    {
+     "id": "systems-programming-06",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A logger writes one line per sample at 10 kHz, straight to a file. The process now spends most of its time in the kernel and the acquisition loop is missing deadlines.",
+     "options": [
+      "Every line is a write syscall, and the transition costs more than the work. Buffer the writes and flush on a size or time threshold, accepting the bounded loss window that creates — or, better on a deadline-bound thread, hand lines to a bounded channel and let a separate thread do the writing.",
+      "Open the file with O_SYNC so that writes become cheaper.",
+      "Lower the log level so that fewer lines are produced.",
+      "Use a faster formatting crate — the cost is in formatting, not in writing."
+     ],
+     "correct": 0,
+     "eliminate": 1,
+     "explanation": "Turning the log level down is the tempting answer because it works, immediately, and it also throws away the data you built the acquisition system to collect. Formatting cost is a real thing and a good instinct in general, but 'most of its time in the kernel' has already told you where the time went. The part people forget to say out loud is the trade they just made: a buffer means the last few milliseconds of log are lost in a hard crash, which is fine here and is not fine for an audit trail."
+    },
+    {
+     "id": "systems-programming-07",
+     "stage": "ask",
+     "levels": [
+      "senior"
+     ],
+     "type": "open",
+     "platform": "systems",
+     "prompt": "What does 'production-grade' mean for software running a production line that it doesn't mean for a web service?",
+     "modelAnswer": "The blast radius is physical, so the first difference is what failure means: not a bad request but a stopped line, scrapped material, or a machine in an unsafe state. That pushes failure behaviour to the front of the design — what the system does when a sensor goes quiet, what the safe state is, and whether it degrades to manual rather than stopping dead. The second difference is that I cannot deploy at will. There is a maintenance window, possibly monthly, so the change has to be right and reversible, and the version running is one I may be supporting for years while the hardware around it stays exactly as old as it is. Third, latency is a correctness property rather than a quality-of-service one: missing a deadline is a defect even if the answer would have been correct. Fourth, observability has to work without assuming the network — local buffered logs and counters that survive a restart, because the plant's link to the office is not something I control. And uptime is measured in months, so slow leaks, counter wraparound, log growth and clock changes all become real rather than theoretical.",
+     "keyPoints": [
+      "Failure is physical — define the safe state and the degraded mode",
+      "Deploys happen in maintenance windows: reversible changes, long-lived versions",
+      "Deadlines are correctness, not quality of service",
+      "Observability that survives a lost network link and a restart",
+      "Uptime in months makes slow leaks, wraparound and clock changes real",
+      "Backwards compatibility with hardware that cannot be upgraded"
+     ],
+     "explanation": "Most candidates answer this with testing and code review, which are table stakes and true of any job. The distinguishing answers are the ones about constraints you cannot engineer away — the maintenance window, the safe state, the hardware that will not change — because those are what actually reshape how the software gets built."
+    }
+   ]
+  },
   "content/skills/tech-leadership.json": {
    "skill": "tech-leadership",
    "label": "Code review, mentoring & technical communication",
@@ -3056,6 +7175,536 @@ window.CTI_CONTENT = {
     }
    ]
   },
+  "content/skills/terraform.json": {
+   "skill": "terraform",
+   "label": "Terraform & infrastructure as code",
+   "questions": [
+    {
+     "id": "terraform-01",
+     "stage": "hr",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "The candidate is describing how their last team worked with Terraform.",
+     "subject": {
+      "kind": "quote",
+      "content": "\"We kept hitting state lock errors when two people applied at once, so I kept a local copy of the state file. If someone else was applying I'd just work from mine and push it up afterwards.\""
+     },
+     "options": [
+      "They should have used a separate Terraform workspace for their work.",
+      "State should have been committed to git so everyone has the same copy.",
+      "The lock is the safety feature they routed around — two applies against divergent state overwrite each other's resources, and 'push it up afterwards' means the last writer silently deletes whatever the other person created.",
+      "They should have run apply with -refresh=false to avoid the contention."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "Lock contention is a real, daily annoyance, and that is exactly why this answer is dangerous: the person is competent enough to be blocked and impatient enough to disable the guard rail. The git answer is the strong distractor — it does give everyone one copy — but state holds secrets in plain text and git has no locking, so it swaps a collision problem for a leak."
+    },
+    {
+     "id": "terraform-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Security groups are created with `count` over a list of environments. Someone removes the second entry, and the plan now wants to destroy and recreate six unrelated security groups.",
+     "options": [
+      "Run a series of `terraform state mv` commands to shift each resource down an index before applying.",
+      "Key the resources with `for_each` over a map, so each one's identity in state is its name rather than its position in a list.",
+      "Add `-target` to the apply so only the intended resource changes.",
+      "Add `lifecycle { prevent_destroy = true }` to the resource."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "`count` addresses resources by index, so removing an element renumbers everything after it and Terraform reads that as 'destroy and recreate'. `for_each` gives each resource a stable key and the problem disappears permanently. The state-mv answer is genuinely tempting because it is the correct emergency fix for the plan in front of you — it just guarantees you do the same dance every time the list changes. prevent_destroy would block the apply and leave you stuck, not fixed."
+    },
+    {
+     "id": "terraform-03",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "This is in a pull request against the production infrastructure repo.",
+     "subject": {
+      "kind": "code",
+      "language": "hcl",
+      "content": "resource \"aws_db_instance\" \"cards\" {\n  identifier          = \"cards-prod\"\n  engine              = \"postgres\"\n  instance_class      = \"db.r6g.xlarge\"\n  username            = \"admin\"\n  password            = \"Pa55word-cards-prod\"\n  publicly_accessible = true\n  skip_final_snapshot = true\n}"
+     },
+     "options": [
+      "`instance_class` is hard-coded rather than taken from a variable, so the same module cannot be reused for staging.",
+      "`skip_final_snapshot = true` means a destroy leaves you with no snapshot to recover from.",
+      "`publicly_accessible = true` puts the cardholder database on the public internet, and the password is committed to the repository — where it also lands in state and in every plan output.",
+      "`engine_version` is not pinned, so a future apply could upgrade the engine."
+     ],
+     "correct": 2,
+     "eliminate": 0,
+     "explanation": "Two of these are real findings and you would raise both, but only one is an open door: a routable database plus a credential in version control is a breach waiting for someone to grep GitHub. The final-snapshot answer is the best distractor because it is true, serious and the kind of thing reviewers do catch — it just costs you during a destroy you control, not during an attack you do not."
+    },
+    {
+     "id": "terraform-04",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Every team's stack references your shared modules as `source = \"git::ssh://.../modules//vpc\"` with no ref. What goes wrong?",
+     "options": [
+      "Nothing, as long as `terraform init -upgrade` is run before every plan.",
+      "There is no such thing as a stable plan: a merge to the module repo's default branch changes what everyone's next apply does, and nobody's change and the module's change can be told apart in the diff.",
+      "Module lookups will be slow because Terraform clones the repository on every init.",
+      "Terraform will refuse to init without a version constraint."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "An unpinned module means the blast radius of a module change is 'everyone, at a time of their choosing, without reading it'. Pin to a tag or a registry version and let teams upgrade deliberately. The `-upgrade` answer is the tempting one — it sounds like taking control — but it does the opposite: it forces the latest module in, every time."
+    },
+    {
+     "id": "terraform-05",
+     "stage": "deepdive",
+     "levels": [
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "One root module holds the VPC, the EKS cluster, the databases and every application resource. A plan takes twenty minutes and everyone is nervous about applying anything.",
+     "options": [
+      "Split it into layered states — network, platform, applications — each with its own lifecycle, its own permissions, and data lookups or remote state between the layers.",
+      "Keep the single configuration but use a Terraform workspace per environment so state is separated.",
+      "Raise `-parallelism` and set up a faster runner so plans finish sooner.",
+      "Adopt `-target` as the normal way to apply changes to a specific resource."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "The problem is not speed, it is blast radius: one apply can currently take out the VPC on the way to changing a tag. Splitting by rate of change also splits who is allowed to apply what. Workspaces are the seductive answer because people conflate them with environments — but every workspace shares the same configuration and the same all-or-nothing apply, so the twenty-minute plan and the blast radius both survive."
+    },
+    {
+     "id": "terraform-06",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "order",
+     "prompt": "Terraform changes reach production through the pipeline, never from a laptop.",
+     "instruction": "Order the stages of that pipeline.",
+     "items": [
+      {
+       "id": "a",
+       "text": "Run plan against the real state and publish the output on the pull request"
+      },
+      {
+       "id": "b",
+       "text": "Merge, once someone who can read a plan has approved it"
+      },
+      {
+       "id": "c",
+       "text": "Run fmt, validate and policy checks on the change itself"
+      },
+      {
+       "id": "d",
+       "text": "Apply the saved plan file from the merge commit, holding the state lock"
+      }
+     ],
+     "correctOrder": [
+      "c",
+      "a",
+      "b",
+      "d"
+     ],
+     "explanation": "Cheap static checks run first so a formatting error never costs a state lock. The reviewed artefact is the plan, not the diff — and applying that saved plan rather than re-planning at apply time is what stops the infrastructure drifting between the thing approved and the thing executed."
+    },
+    {
+     "id": "terraform-07",
+     "stage": "ask",
+     "levels": [
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "Roughly half our infrastructure is in Terraform. The rest was clicked into the console years ago by people who have left. How would you close that gap?",
+     "modelAnswer": "First stop it getting worse: take console write access away from humans in production, leave a break-glass role that alarms when it is used, and alert on any CloudTrail write that did not come from the pipeline. Then inventory what exists — the bill and Config or a resource explorer are more honest than any wiki — and rank by risk rather than by how easy it is to import, because the resources nobody dares touch are exactly the ones that need to be reproducible. Import in slices, smallest blast radius first, and treat 'plan is a clean no-op' as the definition of done for each slice; if the plan wants to change something, the code is wrong, not the infrastructure. Along the way I would put the layering in — network, platform, apps — rather than importing everything into one root module, because that is a mistake you only get to make once. And I would not do a big bang or a freeze: this runs alongside normal work for months, with the new-things-must-be-in-code rule from day one, so the untracked half shrinks from both ends.",
+     "keyPoints": [
+      "Stop the bleeding first: no console writes, break-glass alarms, CloudTrail alerts on out-of-band changes",
+      "Inventory from the bill and resource inventory rather than documentation",
+      "Prioritise by risk, not by ease of import",
+      "Import in slices; done means the plan is a clean no-op",
+      "Layer the state as you go rather than one giant root module",
+      "New things must be in code from day one, so the gap closes from both ends",
+      "Incremental — no freeze, no big bang"
+     ],
+     "explanation": "The instinct is to start importing on day one, and that is the answer that quietly fails: import without first closing the console lets someone re-drift what you just captured. Naming the anti-drift controls before the import work is the tell that someone has actually finished one of these."
+    }
+   ]
+  },
+  "content/skills/test-automation.json": {
+   "skill": "test-automation",
+   "label": "UI test automation & framework design",
+   "questions": [
+    {
+     "id": "test-automation-01",
+     "stage": "hr",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "A candidate describes their automation record at their last company. What's the red flag?",
+     "subject": {
+      "kind": "quote",
+      "content": "We automated one hundred percent of our test cases — every manual case became a Selenium script. It took a year, and by the end nobody had to test anything by hand."
+     },
+     "options": [
+      "Selenium is outdated; a modern team would have used Playwright or Cypress.",
+      "A year of engineering went into scripting cases regardless of whether they were worth automating, and 'nobody tests by hand' means exploratory testing stopped — the suite now only ever asks the questions someone thought of a year ago.",
+      "One hundred percent coverage is impossible, so the candidate is exaggerating.",
+      "They didn't say how long the suite takes to run."
+     ],
+     "correct": 1,
+     "eliminate": 0,
+     "explanation": "Automation is regression protection — it re-asks known questions cheaply. It has never found a bug nobody anticipated, which is what exploratory testing is for, so a team that stops doing it by hand has traded away its only source of new findings. The runtime point is a genuine second concern and worth raising, but the deeper problem is treating a coverage percentage as the goal rather than the maintenance cost of every script that will now need updating forever."
+    },
+    {
+     "id": "test-automation-02",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "red-flag",
+     "prompt": "This test passes on your machine and fails about a third of the time in CI. What's the main problem?",
+     "subject": {
+      "kind": "code",
+      "language": "java",
+      "content": "driver.findElement(\n    By.xpath(\"/html/body/div[3]/div/div[2]/form/div[4]/button\")\n).click();\n\nThread.sleep(5000);\n\nassertTrue(driver.getPageSource().contains(\"Success\"));"
+     },
+     "options": [
+      "The sleep is too short — five seconds isn't enough for a CI machine, so it should be raised to fifteen.",
+      "The absolute XPath breaks the moment anyone adds a wrapper div, and the fixed sleep is both slower than necessary on a good run and still a race on a slow one — it should be a stable test id plus an explicit wait on the condition being asserted.",
+      "The assertion is too broad: matching anywhere in the page source would pass on an unrelated 'Success' string elsewhere on the page.",
+      "Selenium can't assert on page content directly; this needs a page object."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "A fixed sleep encodes a guess about someone else's machine, so it makes the suite slow when things are fast and flaky when things are slow — an explicit wait for the element or text is faster and more reliable at the same time. The broad assertion is a real second finding worth fixing in the same pass; it's tempting as the answer because it's true, but it explains a false pass, not the intermittent failure you were asked about."
+    },
+    {
+     "id": "test-automation-03",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Your suite is green when run one test at a time, but once CI runs it with four parallel workers, a handful of tests fail differently on every run. Most likely cause?",
+     "options": [
+      "The CI machines are underpowered, so the timeouts need raising.",
+      "The tests share mutable state — the same login account, the same seeded records, the same coupon — so parallel workers overwrite each other's data.",
+      "Parallel execution isn't supported by most browser drivers and the suite should be run serially.",
+      "The browser version in CI differs from the local one."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "'Different tests fail each run' is the signature of tests racing over shared data rather than any single test being wrong — the fix is that each test creates its own user and its own records, usually through the API, and doesn't care what else is running. Raising timeouts is the tempting first move because it sometimes turns the build green for a week, which is the worst possible outcome: the race is still there and now it's slower to notice."
+    },
+    {
+     "id": "test-automation-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "The end-to-end suite has grown to 300 browser tests, takes two hours, and a different ten fail every night. What's the right structural fix?",
+     "options": [
+      "Add automatic retries and shard across more CI machines so the suite is fast and green again.",
+      "Move the business-rule, validation and error-handling cases down to API and unit tests where they run in seconds and fail unambiguously, and keep a small end-to-end set on the journeys that actually earn money.",
+      "Rewrite the suite in a faster framework, since the tool is what makes browser tests slow.",
+      "Run the full suite weekly instead of nightly, so failures get investigated properly."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Most of a 300-test browser suite is checking rules that never needed a browser — a field validation driven through the UI is the same assertion, a hundred times slower and with a hundred more ways to fail for reasons that aren't the bug. Retries and sharding are the tempting answer because they work immediately and the metrics improve, but retrying a flaky test hides the class of failure that also happens to real users; sharding just pays more to run the wrong tests."
+    },
+    {
+     "id": "test-automation-05",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "This test has been in the suite for months and fails roughly once a week for reasons nobody can explain. What's the core design flaw?",
+     "subject": {
+      "kind": "code",
+      "language": "javascript",
+      "content": "it('checkout works', () => {\n  cy.visit('/login');\n  cy.get('#email').type('qa.tester@example.com');\n  cy.get('#password').type('Passw0rd!');\n  cy.get('.btn').click();\n\n  cy.visit('/cart');\n  cy.get('.cart-item').should('have.length', 3);\n  cy.get('.btn-primary').click();\n});"
+     },
+     "options": [
+      "The password is hardcoded in the repository instead of coming from an environment variable.",
+      "It depends on a shared account whose cart someone set up by hand — any other test, tester or nightly data reset changes that count of three, and the failure looks like a product bug rather than a test-data problem.",
+      "It logs in through the UI instead of seeding the session, which makes every test slower.",
+      "`.btn` and `.btn-primary` are styling classes, so a CSS refactor silently retargets the click."
+     ],
+     "correct": 1,
+     "eliminate": 0,
+     "explanation": "A test that asserts on state it didn't create is not testing checkout, it's testing that nobody touched that account this week — which is why the failure is weekly and unexplainable. The class-selector point is the strongest runner-up and worth fixing in the same pass, since a styling class is not a contract; logging in through the UI is a real speed cost but an honest one. The secret hardcoded in a repo is a genuine finding, just not the cause of the flakiness."
+    },
+    {
+     "id": "test-automation-06",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "order",
+     "prompt": "You're adding automation coverage for a feature that until now was only tested by hand.",
+     "instruction": "Put these in the order that gets you a suite people trust.",
+     "items": [
+      {
+       "id": "a",
+       "text": "Run it on every pull request, publishing screenshots, video or a trace on failure"
+      },
+      {
+       "id": "b",
+       "text": "Pick the two or three flows where a regression would actually hurt, and leave the rest manual for now"
+      },
+      {
+       "id": "c",
+       "text": "Make each test create its own data and account through the API, and clean up after itself"
+      },
+      {
+       "id": "d",
+       "text": "Make the merge conditional on the suite, once it has been green for its own reasons for a couple of weeks"
+      },
+      {
+       "id": "e",
+       "text": "Replace every fixed wait with an explicit wait on the application state the test is about to assert"
+      }
+     ],
+     "correctOrder": [
+      "b",
+      "c",
+      "e",
+      "a",
+      "d"
+     ],
+     "explanation": "Choosing what not to automate is the first and most valuable decision. Independent data comes before stability work because most flakiness is a data collision wearing a timing costume. And gating the merge is last on purpose: a blocking gate that fails for its own reasons trains the whole team to click through it, and you never get that trust back."
+    },
+    {
+     "id": "test-automation-07",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "You'd be the first person here to automate anything. There's no framework, no CI integration, nothing. What do you do in the first month?",
+     "modelAnswer": "The first week I wouldn't write a test at all — I'd find out where the escaped defects came from over the last few releases and which flows the business can't afford to have broken, because that list is what deserves automating and everything else is enthusiasm. Then I'd pick five to eight critical journeys, web and mobile, and automate those first: login, the core transaction, payment, and whatever the support inbox complains about. Structurally, tests set up their own data through the API rather than clicking through prerequisite screens, elements are found by stable test ids I'd ask the developers to add as part of the definition of done, and there are no fixed sleeps anywhere. It runs in CI on every pull request from about week two, reporting into the team's channel with a trace or video on failure, but it does not block merges until it has earned that — a gate that cries wolf gets ignored forever. I'd write the framework so a manual tester on the team can read a test and add a case without me, because a suite only one person maintains dies when that person is on leave. And I'd report progress as escaped defects and regression hours saved, not as number of scripts written, so the investment can be judged honestly — including the parts I decide are not worth automating.",
+     "keyPoints": [
+      "Start from escaped defects and business-critical flows, not from the existing manual case list",
+      "Five to eight critical journeys across web and mobile first",
+      "Test data created via API; stable test ids agreed with developers; no fixed sleeps",
+      "Runs in CI on every PR with useful failure artifacts, before it gates anything",
+      "Readable enough that a manual tester can extend it",
+      "Measured by escaped defects and time saved, not script count"
+     ],
+     "explanation": "The revealing part of this answer is what the candidate refuses to automate and how they earn the right to block a merge. Answers that jump straight to tool choice — Cypress versus Playwright — are answering an easier question; the tool matters far less than the data strategy and whether anyone trusts the result."
+    },
+    {
+     "id": "test-automation-08",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "The nightly automation report has been going out for six months. Nobody reads it and failures sit unlooked-at for days. What actually fixes this?",
+     "options": [
+      "Send the report to the engineering manager as well, so there's accountability for ignoring it.",
+      "Move the suite onto every pull request so a failure belongs to a change someone just made, make each failure ship its trace and the owning test, and delete or fix the tests nobody trusts.",
+      "Add a dashboard showing pass rate over time so the trend is visible to everyone.",
+      "Run the suite twice nightly to confirm which failures are real before reporting them."
+     ],
+     "correct": 1,
+     "eliminate": 0,
+     "explanation": "Feedback gets acted on when it arrives attached to a specific change and a specific person, which nightly runs destroy by batching a day of commits into one red report nobody owns. The dashboard is the tempting answer because visibility feels like the missing ingredient — but a chart of a number people already distrust changes nothing; the trust problem is that a share of those failures are the suite's own fault, and until those are gone every report is noise."
+    }
+   ]
+  },
+  "content/skills/test-design.json": {
+   "skill": "test-design",
+   "label": "Test planning, test design & QA strategy",
+   "questions": [
+    {
+     "id": "test-design-01",
+     "stage": "hr",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "A candidate describes how they work. What should worry the interviewer?",
+     "subject": {
+      "kind": "quote",
+      "content": "I don't really write test cases up front. I just get the build, click through everything, and I find the bugs — I'm good at it. Writing it all down first would only slow me down."
+     },
+     "options": [
+      "Exploratory testing is not real testing, so this person has never actually tested anything.",
+      "Nothing is written down, so nobody can tell what was covered, the same coverage can't be repeated next release, and the work disappears the day they're on leave.",
+      "They should be automating instead of clicking through anything by hand.",
+      "They didn't mention which test management tool they use."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Exploratory testing is genuinely valuable and good testers do find bugs by feel — the problem is that unrecorded testing can't be repeated, handed over, or reported on, so no one can answer 'was this area covered last release?'. The tempting wrong answer is to dismiss exploratory work; the actual fix is a charter and notes around it, not replacing it."
+    },
+    {
+     "id": "test-design-02",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "A transfer amount field accepts whole numbers from 1 to 50,000. You have time for about six cases. Which six?",
+     "options": [
+      "1, 10,000, 20,000, 30,000, 40,000, 50,000 — spread evenly across the range.",
+      "0, 1, 50,000, 50,001, one valid mid-range value, and one non-numeric input such as '1,000' or '-5'.",
+      "Six random values generated inside the valid range.",
+      "50,000 six times, since the maximum is where it will break."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Bugs cluster at boundaries and at the edges of the valid class, not in the middle — 10,000 and 30,000 are the same equivalence class and the second one tells you nothing new. The evenly-spread option is tempting because it looks thorough and covers more of the range; it just covers the same class six times while never touching off-by-one or bad input."
+    },
+    {
+     "id": "test-design-03",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A one-line hotfix for a login bug goes out in 40 minutes. The full regression pack takes six hours. What do you run?",
+     "options": [
+      "The full regression pack — cutting it is how bugs escape.",
+      "Retest the reported bug on the fix build and sign off; the change was one line.",
+      "Verify the fix, run the smoke set over the critical journeys, then a targeted regression around authentication and anything sharing that code path — and state in writing what wasn't covered.",
+      "Skip testing and rely on the ability to roll back if something breaks."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "Risk-based selection is what regression testing is for when the clock is real: cover the blast radius of the change plus the paths that must never be broken, and make the uncovered part visible so the business owns the decision. Running the full pack is the tempting answer because it feels responsible, but a suite you can't finish before the deploy just means you ship untested and late."
+    },
+    {
+     "id": "test-design-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "order",
+     "prompt": "A new user story lands in the sprint and the build is three days away.",
+     "instruction": "Put these in the order you'd actually do them.",
+     "items": [
+      {
+       "id": "a",
+       "text": "Write the test cases with concrete data and expected results"
+      },
+      {
+       "id": "b",
+       "text": "Read the story, spec and designs, and take the ambiguities back to the PM and the developer"
+      },
+      {
+       "id": "c",
+       "text": "List the scenarios — happy path, negative, boundary, permissions, and what happens on failure"
+      },
+      {
+       "id": "d",
+       "text": "Walk the case list past the developer and PM so gaps are found before the build arrives"
+      },
+      {
+       "id": "e",
+       "text": "Rank the scenarios by risk and decide which are in scope for this sprint"
+      }
+     ],
+     "correctOrder": [
+      "b",
+      "c",
+      "e",
+      "a",
+      "d"
+     ],
+     "explanation": "Ambiguity is cheapest to kill before anything is written — half the 'bugs' in a young feature are two people reading the same sentence differently. Scenarios come before cases because you prioritise ideas, not paragraphs, and the review comes last so the developer is reading a finished, ranked list rather than helping you draft it."
+    },
+    {
+     "id": "test-design-05",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "The whole spec for a feature reads: 'The user should be able to apply a discount code at checkout.' Before you write a single test case, what do you ask?",
+     "modelAnswer": "I'd go back with the questions that decide the expected results, because without them I can only test that something happens, not that the right thing happened. What makes a code valid — expiry, usage limit per customer, minimum basket, product or category restrictions? What happens with two codes: replace, stack, or reject? Is the discount applied before or after tax and delivery, and can it take the total below zero? Is the code case-sensitive, and is it trimmed of spaces when pasted? Where is it validated — client, server, or both — because that decides whether I can bypass it with a direct API call. What does the user see for each failure reason, and is that message the same on web and mobile? Does the discount survive going back to the basket, session timeout, or paying with a saved card? And who owns the answer when the PM and the developer disagree? Anything still unanswered when the build lands, I record as an assumption in the test plan rather than quietly deciding it myself.",
+     "keyPoints": [
+      "Validity rules: expiry, usage limits, minimum basket, product restrictions",
+      "Interaction rules: two codes at once, stacking, replacing, refunds",
+      "Calculation order against tax, delivery and totals; can it go below zero",
+      "Negative cases and the exact message for each failure reason",
+      "Server-side enforcement, not just the UI — can it be bypassed via the API",
+      "Consistency across web and mobile clients",
+      "Persistence across session timeout, back navigation and payment retry",
+      "Record unanswered questions as written assumptions rather than guessing"
+     ],
+     "explanation": "The strongest answers turn a vague sentence into the specific expected results a test case needs, and notice that a discount rule enforced only in the UI is not enforced at all. Listing question areas is fine; the candidates who stand out say what they do with the questions nobody answers in time."
+    },
+    {
+     "id": "test-design-06",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "The business team is busy and asks you to run UAT on their behalf and sign it off. What's the right response?",
+     "options": [
+      "Agree — you know the product better than they do, so your sign-off is worth more.",
+      "Refuse; UAT is not QA's job and the release should wait until they have time.",
+      "Offer to prepare the scenarios, data and environment and sit with them while they run it, but keep the acceptance with the business owner.",
+      "Convert the UAT scripts into automated tests and report the pass rate as the sign-off."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "UAT answers a different question from system testing — not 'does it behave as specified' but 'does this do the job we asked for' — and only the person accountable for that outcome can answer it. Running it yourself is tempting because it unblocks the release today; it just means the same team tested against the same understanding twice, and the gap between spec and intent goes to production untested. Facilitating hard is the useful middle: you remove every obstacle except the judgement."
+    },
+    {
+     "id": "test-design-07",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Two weeks before release, a feature that was never in the test plan is added. The regression window doesn't move. What do you do?",
+     "options": [
+      "Spread the existing time thinner so everything still gets some coverage.",
+      "Re-plan against risk: cover the new feature and what it touches, name in writing the areas that will now get reduced or no coverage, and have the release owner accept that trade.",
+      "Refuse to test the new feature since it wasn't in the agreed scope.",
+      "Ask the team to work the weekend so the original plan survives."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "You can't create test time, so the only real decision is which risk to accept — and that decision belongs to whoever owns the release, in writing, before the fact. Thinning everything is the popular answer because nobody has to say no, but uniformly shallow coverage means the critical journeys are now as weakly tested as the cosmetic ones, and nobody knows it."
+    }
+   ]
+  },
   "content/skills/testing.json": {
    "skill": "testing",
    "label": "Testing, TDD & quality",
@@ -3144,6 +7793,438 @@ window.CTI_CONTENT = {
      "correct": 1,
      "eliminate": 3,
      "explanation": "A vague truthiness assertion can stay green through serious regressions. A valuable test states the observable contract: which order was created, with what values, and which externally meaningful side effects occurred."
+    },
+    {
+     "id": "testing-05",
+     "stage": "hr",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "In a retro after a bad release, someone says this. What's wrong with it?",
+     "subject": {
+      "kind": "quote",
+      "content": "Look, if a bug reaches production, that's a QA failure. Testing is the gate — if something got through, the gate didn't do its job."
+     },
+     "options": [
+      "It's the wrong target: the developer wrote the bug, so it's a development failure.",
+      "It treats quality as something inspected in at the end rather than built in, so the only lever anyone ever pulls is 'test harder' — and a team that punishes escaped defects gets fewer defects reported, not fewer defects.",
+      "Nothing is wrong with it — QA's whole purpose is to be the last line of defence before production.",
+      "It ignores that some bugs only appear under production load and could never have been caught."
+     ],
+     "correct": 1,
+     "eliminate": 0,
+     "explanation": "Every escaped defect had a cheaper place it could have been caught — an ambiguous requirement, a missing unit test, a review nobody did — and blaming the last checkpoint guarantees none of those get looked at. The last option is true and worth saying, but it's a defence of one particular bug rather than the reason the framing itself is corrosive; passing the blame to developers is the same mistake pointed the other way."
+    },
+    {
+     "id": "testing-06",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A web app and a mobile app share one backend API. How should the functional test effort be split?",
+     "options": [
+      "Run the same full functional matrix through both user interfaces, so each platform is equally covered.",
+      "Test the business rules and error handling once at the API level, then test each client for what only it can get wrong — rendering, navigation, offline and background behaviour, permissions, and how it handles the API's error responses.",
+      "Test through the web UI only; anything found there will be the same on mobile since the backend is shared.",
+      "Test through the mobile app only, since it's the more constrained environment and covers the harder cases."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Running the same matrix twice pays double for the same finding and still misses the client-specific failures, which is where the interesting mobile bugs live — a request retried after the app was backgrounded, a partial state after connectivity dropped. The web-only option is tempting when time is short, and it's the right compromise for a shared rule; it just can't tell you what the mobile client does with a 500 response."
+    },
+    {
+     "id": "testing-07",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "The same regression has now reached production three times in six months. Walk us through how you'd handle the third occurrence.",
+     "modelAnswer": "Fixing it a third time is the least interesting part, so I'd spend the effort on why it keeps coming back. First, is it actually the same bug, or three different causes with the same symptom? That changes everything — one is a coverage gap, the other is a design weakness in that area. Then I'd look at the mechanism: was the earlier fix reverted by a merge or a hotfix branch that never made it back to main, which is common and looks exactly like a recurring bug? Was there a test added for the first fix, and if so, why is it green — was it asserting on something the third variant sidesteps? Whatever the answer, the fix doesn't ship until there's an automated test at the lowest level that reproduces the failure and fails before the fix, so the same regression can't return silently. Then I'd widen it: if this is a class of bug — a rounding rule, a timezone, a null path — I'd test the siblings rather than just this instance, because the third occurrence is evidence that the area is fragile, not that we were unlucky. And I'd raise it as a process item, since three escapes in six months usually says something about branch hygiene or about a review step people are skipping under pressure.",
+     "keyPoints": [
+      "Establish whether it's one recurring bug or a fragile area producing several",
+      "Check the process cause — a fix lost to a merge or a hotfix branch is a common culprit",
+      "If a test was added, work out why it stayed green",
+      "Fix doesn't ship without a low-level automated test that fails first",
+      "Test the class of bug, not just the instance",
+      "Raise the pattern at the process level — three escapes is a system signal"
+     ],
+     "explanation": "The distinguishing move is checking whether the earlier fix was lost in version control before assuming a testing gap — teams burn weeks re-fixing bugs that a branch merge quietly reverted. An answer that only says 'add a regression test' is right but shallow; it doesn't explain why the first regression test didn't already catch it."
+    },
+    {
+     "id": "testing-08",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Release is tomorrow morning. Three medium-severity defects are open and there's no time to fix them. You're asked for QA sign-off. What do you do?",
+     "options": [
+      "Withhold sign-off and block the release — quality isn't negotiable, and signing off on known defects makes the sign-off meaningless.",
+      "Sign off; they're only medium severity, and every release ships with some known issues.",
+      "Write up each one as who is affected, how often, and what the workaround is, state clearly that they are unfixed, and put the go/no-go decision to the release owner with that in front of them.",
+      "Sign off on the condition that the three defects are committed to the next sprint."
+     ],
+     "correct": 2,
+     "eliminate": 1,
+     "explanation": "QA's job is to make the risk visible and legible, not to make the business decision — a tester who can veto releases stops being consulted honestly, and one who waves things through stops being useful at all. Blocking is the tempting answer because it sounds principled, and it's exactly right for data loss or a security hole; for three mediums it substitutes your risk appetite for the person accountable for the release. Option D is close and often what actually happens, but a promise about next sprint doesn't change tomorrow's risk."
+    }
+   ]
+  },
+  "content/skills/web-performance.json": {
+   "skill": "web-performance",
+   "label": "Browser rendering & web performance",
+   "questions": [
+    {
+     "id": "web-performance-01",
+     "stage": "hr",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A director tells you in a corridor that the site 'feels slow'. There is no ticket and no data. What do you do first?",
+     "options": [
+      "Start on the biggest JavaScript bundle — that is usually what it turns out to be.",
+      "Ask which page, on what device and where, then measure that journey on a throttled mid-range phone before changing anything.",
+      "Explain that the Lighthouse score is 92, so the site is not actually slow.",
+      "Add a loading skeleton so the wait feels shorter while you look into it."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The Lighthouse answer is the one that ends careers quietly: it is technically true, it contradicts a real experience, and it teaches the business not to tell engineering when something is wrong. 'Slow' is a symptom with half a dozen causes, and the two questions that separate them take thirty seconds to ask."
+    },
+    {
+     "id": "web-performance-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "Largest Contentful Paint on the product page is 4.5 seconds on 4G. The hero image is a 2.5MB PNG straight from the client's CMS. What is the fix?",
+     "options": [
+      "Lazy-load every image on the page, the hero included.",
+      "Serve the hero at the size it is actually displayed, in a modern format, loading eagerly and at high priority — and lazy-load only what is below the fold.",
+      "Put a CDN in front of the images so they are served from closer to the user.",
+      "Show a skeleton placeholder while the image loads."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Lazy-loading everything is the trap, and it is worse than doing nothing: the LCP element is by definition the thing you want fetched first, and deferring it pushes the metric out. A CDN is a genuine improvement to latency and does nothing about 2.5 megabytes — you would still be shipping a print-resolution photo to a phone."
+    },
+    {
+     "id": "web-performance-03",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "mcq",
+     "prompt": "Users report tapping the wrong button because the page jumps around while it loads. What actually fixes it?",
+     "options": [
+      "Reserve the space: dimensions or aspect-ratio on images and embeds, a fixed slot for anything injected late, and a font fallback whose metrics are close to the real face.",
+      "Hold the page hidden until everything has finished loading, then reveal it in one go.",
+      "Add a CSS transition so elements move smoothly into their final position.",
+      "Preload the web font so it arrives sooner."
+     ],
+     "correct": 0,
+     "eliminate": 2,
+     "explanation": "Hiding the page until it is ready is the near-miss — it does remove the shifting, and it replaces it with a longer blank screen, which is the worse trade on a slow connection. Preloading the font helps and is worth doing, but a font that arrives sooner still reflows the text unless the fallback is metric-matched."
+    },
+    {
+     "id": "web-performance-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "platform": "web",
+     "type": "red-flag",
+     "prompt": "This loop is over about two hundred elements and takes 900ms. What is wrong with it?",
+     "subject": {
+      "kind": "code",
+      "language": "javascript",
+      "content": "items.forEach(el => {\n  const h = el.offsetHeight;\n  el.style.height = (h + 8) + 'px';\n});"
+     },
+     "options": [
+      "offsetHeight should be read once before the loop and cached in a variable.",
+      "Every read follows a write, so the browser has to lay the page out again before it can answer — the loop forces a synchronous layout per element. Batch the reads, then apply the writes.",
+      "Setting style.height inline should be a class change so the styles stay in the stylesheet.",
+      "forEach is slower than a plain for loop over an array of this size."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Layout thrash is invisible in the code and obvious in a performance trace, which is why it survives review. The first option is the right instinct with the wrong mechanism — the cost is not the property access, it is that a pending style change makes the answer unknowable until the browser recomputes. Moving to a class is good practice and would also happen to fix it."
+    },
+    {
+     "id": "web-performance-05",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "The main bundle is 1.8MB. 700KB of it is a charting library used on one admin page, plus every locale of a date library. Best first move?",
+     "options": [
+      "Turn on Brotli compression — that kind of code compresses extremely well.",
+      "Split the chart page behind a route-level dynamic import and replace the date library with one that ships only what is used; compression shrinks the download, not the parse and execute.",
+      "Raise the cache headers so returning visitors do not download it again.",
+      "Accept it — most of the traffic is on Wi-Fi anyway."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Compression is the tempting answer because the number moves a lot and the change takes an afternoon — but the browser still parses and executes the full 1.8MB, and on a mid-range phone that is where the seconds are. Caching has the same shape of flaw: it does nothing for the first visit, which is the one you are being judged on."
+    },
+    {
+     "id": "web-performance-06",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "order",
+     "prompt": "A page that used to load in two seconds takes six after this morning's release.",
+     "instruction": "Order your response.",
+     "items": [
+      {
+       "id": "a",
+       "text": "Diff the release's asset sizes and request count against the previous build"
+      },
+      {
+       "id": "b",
+       "text": "Reproduce on a throttled mid-range device and capture a performance trace"
+      },
+      {
+       "id": "c",
+       "text": "Turn off or revert the change once you can name it"
+      },
+      {
+       "id": "d",
+       "text": "Match the trace's biggest block against the commits in the release"
+      }
+     ],
+     "correctOrder": [
+      "b",
+      "a",
+      "d",
+      "c"
+     ],
+     "explanation": "This is where a performance regression differs from an outage: nothing is down, so you get to diagnose before you revert, and a revert without a cause just moves the problem to the next release. Reproduce, then compare against the last known-good build, and let the trace point at the commit rather than reading the diff hoping to spot it."
+    },
+    {
+     "id": "web-performance-07",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "Say we spend a quarter making the app fast. How do we keep it fast?",
+     "modelAnswer": "By making regressions visible before they ship and after. Before: a budget in CI — bundle size per route and a synthetic run of the key journeys — that fails the build rather than posting a warning nobody reads, plus a review habit of asking what a new dependency costs at install rather than at incident time. After: real-user monitoring segmented by device class and network, because our phones are not our customers' phones, with alerting on the 75th percentile rather than the average. Then someone has to own the number and be able to see it — a dashboard the team looks at, and a small budget of time each cycle to spend on what it shows.",
+     "keyPoints": [
+      "A budget in CI that fails the build, not a warning",
+      "Ask what a new dependency costs before it is merged",
+      "Real-user monitoring segmented by device and network",
+      "Alert on the 75th percentile, not the mean",
+      "Someone owns the number and has time to act on it"
+     ],
+     "explanation": "Performance work decays by default, one reasonable-looking dependency at a time. The answer worth hiring describes a ratchet — something that makes the number hard to move in the wrong direction — rather than a promise that the team will be careful."
+    }
+   ]
+  },
+  "content/skills/websockets.json": {
+   "skill": "websockets",
+   "label": "WebSockets & realtime updates",
+   "questions": [
+    {
+     "id": "websockets-01",
+     "stage": "hr",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "red-flag",
+     "prompt": "A candidate is describing the live-updates feature they built. What will worry the interviewer?",
+     "subject": {
+      "kind": "quote",
+      "content": "The socket dropped sometimes on mobile, so I put the connect call in a setInterval that runs every five seconds. If it's already connected it just opens another one — the server didn't seem to mind."
+     },
+     "options": [
+      "Using WebSockets at all instead of polling the API.",
+      "Reconnecting on a timer without checking whether a connection is already open — duplicate sockets stack up, so every message arrives several times and the server pays for all of them.",
+      "Not using a library like Socket.IO instead of the raw WebSocket API.",
+      "Not saying how many users the feature had."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The phrase that costs them is 'the server didn't seem to mind' — it did, they just had no way to see it. What an interviewer is listening for is whether someone reconnects deliberately, on close, or blindly on a clock. Choosing WebSockets over polling was fine; the reconnect around it was not."
+    },
+    {
+     "id": "websockets-02",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "A dashboard needs to show new form submissions as they land. They arrive less than once a minute, and the browser never sends anything back up the same channel. What fits best?",
+     "options": [
+      "A WebSocket, because anything live means a WebSocket.",
+      "Polling the list endpoint every thirty seconds.",
+      "Server-Sent Events — one long-lived HTTP response, server to browser only, with reconnection already handled by the browser.",
+      "A WebSocket per browser tab, kept awake with a ping every second."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "WebSockets earn their extra machinery when the browser also sends — chat, cursors, collaborative editing. One-way and infrequent is what SSE is for, and EventSource reconnects on its own. Polling is the honest second-best: it works, it is simpler than either, and it costs a request per client per interval to say 'nothing new' most of the time."
+    },
+    {
+     "id": "websockets-03",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "red-flag",
+     "prompt": "This shipped on Friday. By Monday the realtime server was out of file descriptors. Why?",
+     "subject": {
+      "kind": "code",
+      "language": "javascript",
+      "content": "function Submissions() {\n  const [rows, setRows] = useState([]);\n  const socket = new WebSocket('wss://api.example.com/feed');\n  socket.onmessage = (e) => setRows(r => [...r, JSON.parse(e.data)]);\n  return <List rows={rows} />;\n}"
+     },
+     "options": [
+      "JSON.parse is not wrapped in a try/catch, so one malformed message kills the handler.",
+      "The socket is opened in the component body, so every render opens another one — and each message sets state, which renders, which opens another. Nothing ever closes them.",
+      "The handler should be assigned with addEventListener rather than onmessage.",
+      "rows should be held in a ref, because a socket handler cannot see state."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "Anything with a lifetime — a socket, a timer, a subscription — belongs in a useEffect with a cleanup that closes it, keyed on what it depends on. Locally you open a handful and never notice; in production it is one new connection per render per user. The missing try/catch is a real bug and would have been the answer on a quieter day."
+    },
+    {
+     "id": "websockets-04",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "The live feed dies on hotel wifi and does not come back until the user reloads the page. What is the right fix?",
+     "options": [
+      "Reconnect immediately in the onclose handler and keep retrying in a tight loop until it succeeds.",
+      "Reconnect on close, but wait longer after each failed attempt — with a little randomness — and only tell the user once several attempts have failed.",
+      "Show a 'connection lost, please refresh' banner and leave it to the user.",
+      "Raise the connection timeout on the server."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "The immediate loop is tempting because it feels responsive, and it is the same code running in every browser at once: when the outage is the server's, thousands of clients retrying every 50ms is what turns a restart into an outage. Backoff spreads the load, the randomness stops everyone retrying on the same tick, and the banner is what you show after backoff gives up — not instead of it."
+    },
+    {
+     "id": "websockets-05",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "After a brief network drop, a few submissions appear twice in the live list. What is the most likely explanation?",
+     "options": [
+      "The server is sending every message twice.",
+      "On reconnect the client resubscribes and the server replays the recent messages it thinks were missed, and the client appends whatever arrives without checking whether it already holds that id.",
+      "The list component is rendering twice.",
+      "The list is missing a key prop on its rows."
+     ],
+     "correct": 1,
+     "eliminate": 3,
+     "explanation": "Realtime delivery is at-least-once in practice: a reconnect cannot know exactly what you received, so the safe thing for a server to do is send a little too much. That makes deduplication the client's job — key the list by the server's message id and a repeat replaces rather than appends. Double rendering is the tempting one because React does double-invoke in development; this survives into production, which rules it out."
+    },
+    {
+     "id": "websockets-06",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "order",
+     "prompt": "The live feed silently stops updating after a few minutes, but only on the client's office network. You have the page open in front of you.",
+     "instruction": "Order these by what you would do first.",
+     "items": [
+      {
+       "id": "a",
+       "text": "Watch the browser's network panel to see whether the socket closed, and with what close code"
+      },
+      {
+       "id": "b",
+       "text": "Check whether it also happens on a phone off that network"
+      },
+      {
+       "id": "c",
+       "text": "Add a heartbeat ping so an idle connection is not dropped by whatever sits in the middle"
+      },
+      {
+       "id": "d",
+       "text": "Look in the server logs for a disconnect at the same timestamp"
+      }
+     ],
+     "correctOrder": [
+      "a",
+      "d",
+      "b",
+      "c"
+     ],
+     "explanation": "The close code and the server log together tell you who hung up — your code, the server, or something in between that neither end knows about. Only then does the network comparison mean anything. The heartbeat is last on purpose: it is very likely the fix, and shipping it first means you never learn what you fixed, so you cannot tell whether it worked or the problem simply moved."
+    },
+    {
+     "id": "websockets-07",
+     "stage": "deepdive",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "The realtime feed works perfectly for you and dies after about a minute for the one client whose office sits behind a corporate proxy. Most likely cause?",
+     "options": [
+      "The proxy is closing the connection because nothing has travelled over it — many proxies and load balancers cut idle connections after a fixed timeout.",
+      "That client's browser does not support WebSockets.",
+      "The messages are larger than the proxy will forward.",
+      "The proxy blocks wss:// traffic on port 443."
+     ],
+     "correct": 0,
+     "eliminate": 1,
+     "explanation": "'Works, then dies' is the clue. Anything that blocks WebSockets outright fails at the handshake — the connection would never open, not open and then go quiet. A connection with no traffic on it looks abandoned to every box between you and the server, so a ping every 30 seconds or so keeps it alive and, as a bonus, tells you within one interval when it has genuinely gone."
+    },
+    {
+     "id": "websockets-08",
+     "stage": "ask",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "open",
+     "prompt": "We use WebSockets across the product and you have never built anything realtime. How would your first month go?",
+     "modelAnswer": "I would say plainly that I have not done it, and then spend the answer on how I would close the gap rather than on apologising for it. I would read the client code we already have first — where the connection is opened, where reconnects live, what the message shapes are — and get one small change through review early, so someone senior sees how I work while the stakes are low. I would sit with the network panel and watch a real connection drop and come back, because reading about reconnects and watching one are different things. And I would ask the team which realtime failures have already bitten them — duplicate messages, state that is stale after a reconnect, the feed that dies behind a proxy — since that list is much faster than rediscovering them one at a time in production.",
+     "keyPoints": [
+      "Say the gap out loud rather than implying experience you do not have",
+      "Read the realtime code that already exists before writing new code",
+      "Get a small change reviewed early instead of a large one late",
+      "Watch a real connection fail and recover, not only the happy path",
+      "Ask which realtime failures the team has already hit"
+     ],
+     "explanation": "They can see from your CV that you have not done this — the question is whether you have a method for learning something with people and a codebase around you. The answer that quietly overclaims loses; so does 'I would do a course at the weekend', which learns the topic and not the system."
     }
    ]
   }
