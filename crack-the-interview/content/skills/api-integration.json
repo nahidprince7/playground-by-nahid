@@ -107,6 +107,111 @@
       "correct": 2,
       "eliminate": 3,
       "explanation": "A timeout means the outcome is unknown, not necessarily failed. An idempotency key lets the server recognize the same logical operation and return the original result instead of charging, creating, or submitting twice."
+    },
+    {
+      "id": "api-integration-06",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "red-flag",
+      "prompt": "Users report a toast reading 'Created undefined' when a form fails validation. What is wrong here?",
+      "subject": {
+        "kind": "code",
+        "language": "javascript",
+        "content": "const res = await fetch('/api/forms', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify(values),\n});\nconst form = await res.json();\nshowSuccess(`Created ${form.name}`);"
+      },
+      "options": [
+        "fetch only rejects when the network fails — a 422 or a 500 arrives here as an ordinary response, so a rejected submission is announced as a success. res.ok has to be checked before the body is treated as a result.",
+        "The response should be read with res.text() and parsed, in case the body is not JSON.",
+        "The request needs a timeout.",
+        "The whole thing should be wrapped in try/catch."
+      ],
+      "correct": 0,
+      "eliminate": 1,
+      "explanation": "This is the single most common integration bug in a browser app: fetch resolves happily for 404 and 500 alike, and only a dropped connection rejects. The try/catch is worth adding and catches none of this — the request succeeded, the operation did not, and the difference between those two is the whole job of the status code."
+    },
+    {
+      "id": "api-integration-07",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "The API answers an invalid submission with 422 and a body naming the fields that failed. The UI shows 'Something went wrong. Please try again.' What should change?",
+      "options": [
+        "Retry the request a few times automatically before showing the message.",
+        "Show the server's per-field messages against the fields they belong to, and keep the generic message for failures you genuinely cannot explain.",
+        "Log the response to the console so support can ask the user to read it out.",
+        "Change the API to return 200 with an error flag, so the client can read the body."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "'Try again' is advice that cannot work — nothing changes on a retry when the input is the reason, and the automatic retry spends the server's time proving it. The status code tells you whose problem it is: 4xx means the request has to change, 5xx means retrying might genuinely help. Rendering the body is the difference between a user fixing their own typo and a support ticket."
+    },
+    {
+      "id": "api-integration-08",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "A search box fires a request per keystroke. Users say the results sometimes belong to a shorter, earlier query. Best fix?",
+      "options": [
+        "Debounce the input so far fewer requests go out.",
+        "Debounce, and also ignore any response that is not for the query currently in the box — fewer requests makes this rarer, not impossible, because responses can still come back out of order.",
+        "Send the requests strictly one at a time, waiting for each before firing the next.",
+        "Cache responses by query string."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Debouncing alone is the answer most people give, and it is half of one: it cuts the number of racing requests without ordering them, so the bug survives, becomes rare, and turns into something QA cannot reproduce. Tracking the latest query — or aborting the previous request — is what actually makes the newest response the one that wins."
+    },
+    {
+      "id": "api-integration-09",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "red-flag",
+      "prompt": "The page sometimes sits on its spinner forever and nobody can say why. What is wrong with this?",
+      "subject": {
+        "kind": "code",
+        "language": "javascript",
+        "content": "setLoading(true);\ntry {\n  const res = await fetch(url);\n  const data = await res.json();\n  setRows(data.rows);\n  setLoading(false);\n} catch (e) {\n  console.log(e);\n}"
+      },
+      "options": [
+        "The catch swallows the failure — nothing tells the user, nothing reaches error tracking, and loading is never turned off, so a failed request is indistinguishable from a slow one for as long as the tab stays open.",
+        "console.log should be console.error.",
+        "The fetch should be retried inside the catch.",
+        "setRows should be called after setLoading, not before."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "A catch that only logs is worse than no catch at all, because an unhandled rejection would at least surface somewhere. Turning loading off belongs in a finally so it happens on both paths, and the user needs a state that says what failed and offers a way to try again. console.error instead of log is a fair nit that leaves the spinner spinning."
+    },
+    {
+      "id": "api-integration-10",
+      "stage": "ask",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "open",
+      "prompt": "The endpoint you need does not behave the way its documentation says. What do you do?",
+      "modelAnswer": "First I would check it is really the API and not me — call it outside the app, with a plain request, and look at the exact status and body coming back rather than what my code did with them. Then I would write down the smallest reproduction: this request, this response, the line of the docs that says otherwise. That turns 'the API is broken' into something a backend engineer can confirm in a minute. I would take it to them rather than quietly working around it, because a client-side workaround for a server bug outlives the bug and nobody remembers why it is there. If the behaviour turns out to be intended and the docs are simply stale, I would offer the doc fix while it is fresh. And I would keep moving on the parts that do not depend on it, and say in standup what I am waiting on.",
+      "keyPoints": [
+        "Verify outside your own code before blaming the API",
+        "Reduce it to one request, one response, one line of documentation",
+        "Take it to the owner rather than silently working around it",
+        "Fix or flag the docs if the behaviour was intended",
+        "Say early what you are blocked on, and work on something else meanwhile"
+      ],
+      "explanation": "The question is really about how you behave when blocked, and the two weak answers are the extremes — sitting on it quietly for two days, or announcing in the channel that the API is broken before checking. What a team wants is a small checkable report from someone who is not idle while they wait for the answer."
     }
   ]
 }

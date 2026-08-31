@@ -90,6 +90,7 @@
       "id": "behavioral-05",
       "stage": "hr",
       "levels": [
+        "junior",
         "mid",
         "senior"
       ],
@@ -109,6 +110,7 @@
       "id": "behavioral-06",
       "stage": "ask",
       "levels": [
+        "junior",
         "mid",
         "senior"
       ],
@@ -259,6 +261,105 @@
         "Treat existing choices as context to investigate, not incompetence to erase"
       ],
       "explanation": "A strong answer balances initiative with humility. The first month is for acquiring the context that makes later technical judgment trustworthy, not announcing a rewrite before understanding the system."
+    },
+    {
+      "id": "behavioral-14",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "You have been stuck on the same bug for two hours. What is the right move?",
+      "options": [
+        "Keep going — asking this early makes it look like you cannot work on your own.",
+        "Ask in the team channel: what you are trying to do, what you have already tried, and where it stops.",
+        "Ask a senior to drop what they are doing and screen-share until it is solved.",
+        "Rewrite the whole section from scratch and hope it does not come back."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Teams do not mind being asked; they mind being asked with nothing attached. The version with what-you-tried costs a minute of someone's time rather than twenty, and writing it out solves the problem before you press send often enough to be worth doing anyway. Two hours is a sensible ceiling to agree with your lead — what juniors regret is the two days, not the two hours."
+    },
+    {
+      "id": "behavioral-15",
+      "stage": "ask",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "open",
+      "prompt": "First day, and you have the codebase in front of you. What do you want to find out before you write anything?",
+      "modelAnswer": "How to run it and how to ship it, first — the app running locally, and what happens between a merged pull request and production, because that tells me what a mistake costs here and how carefully to move. Then the shape of it: where the code for the screen I will be working on lives, how the data reaches it, and what the team's conventions actually are — which I would learn from two or three recently merged pull requests rather than a document, because those show the real standard rather than the aspirational one. I would work out who to ask about what, and whether asking in a channel is normal here or people prefer a direct message. And I would want a first task small enough to get through review in a day or two, so I have been through the whole pipeline once on something that does not matter much.",
+      "keyPoints": [
+        "Get it running locally and learn how code reaches production",
+        "Read recent merged pull requests to learn the real conventions",
+        "Trace the path from the screen you will work on to the data behind it",
+        "Find out who to ask, and where asking is normal",
+        "Ship something small end to end early"
+      ],
+      "explanation": "The interviewer is checking whether you have a plan for being new, since that is most of your first month. The weak answer is a request to be taught — 'I would want a walkthrough of the architecture' — which hands the work to the team. The strong one is mostly things you can do by yourself, with the questions saved for what reading cannot tell you."
+    },
+    {
+      "id": "behavioral-16",
+      "stage": "ask",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "You estimated two days. It is the end of day two and you are about halfway. What do you do?",
+      "options": [
+        "Say nothing yet — you might still catch up tomorrow.",
+        "Tell your lead now: where you are, what turned out bigger than you expected, and your new estimate.",
+        "Work the evening and the weekend and land it on time.",
+        "Ship the half that works on time and finish the rest quietly afterwards."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Estimates slip constantly and nobody senior is surprised by that; the damage is entirely in when the news arrives. A day late told on day two is a scheduling adjustment, and the same day late discovered on day four is a broken promise to whoever was told it would be ready. Working the weekend is the tempting one because it looks like ownership — it hides exactly the same information, and it teaches everyone that your estimates are fine."
+    },
+    {
+      "id": "behavioral-17",
+      "stage": "ask",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "An interviewer asks about a tool on the job description that you have never used. Best answer?",
+      "options": [
+        "Describe roughly what you have read about it and hope the follow-up does not come.",
+        "Say you have not used it, name the nearest thing you have used and what you would expect to carry over, and ask how it is used here.",
+        "Say you are a fast learner and can pick anything up in a week.",
+        "Move the conversation to something you do know well."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Everyone knows a short CV has gaps; what the interview is finding out is how you behave at the edge of what you know. 'I learn fast' is not wrong so much as empty — it is what everyone says and gives them nothing to assess. Naming the nearest neighbour shows you can map a new thing onto an old one, which is the skill actually being tested, and the question at the end turns it into a conversation."
+    },
+    {
+      "id": "behavioral-18",
+      "stage": "ask",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "red-flag",
+      "prompt": "A candidate is asked what they do when they do not know something. What worries the interviewer?",
+      "subject": {
+        "kind": "quote",
+        "content": "I don't really like asking — it makes it look like I can't do the job. I'd rather spend the weekend on it and come in Monday with it working, even if the code ends up a bit odd."
+      },
+      "options": [
+        "Working weekends, which suggests poor time management.",
+        "Waiting until Monday: the team loses two days it did not know it was losing, and the odd code arrives with nobody having seen the reasoning that produced it.",
+        "Not naming the resources they would use to learn.",
+        "Admitting in an interview that there are things they do not know."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The instinct is sympathetic and the cost lands on other people: the work is invisible until it is finished, and by then the wrong approach is already written and defended. Interviewers are not listening for someone who knows everything — they are listening for someone whose progress they can see. The weekend is not the red flag on its own; the silence is."
     }
   ]
 }

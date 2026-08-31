@@ -89,6 +89,7 @@
       "id": "react-05",
       "stage": "deepdive",
       "levels": [
+        "junior",
         "mid",
         "senior"
       ],
@@ -128,6 +129,135 @@
       "correct": 2,
       "eliminate": 3,
       "explanation": "Memoization is a trade-off, not a default style. It pays when it avoids meaningful recalculation or downstream rendering, but indiscriminate use adds dependencies, allocations, and harder-to-read code without evidence of benefit."
+    },
+    {
+      "id": "react-07",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "A list of draft submissions is rendered with key={index}. Delete the second row and the inputs below it show the wrong text. Why?",
+      "options": [
+        "The rows should have been held in a ref rather than state.",
+        "Keys have to be strings, and index is a number.",
+        "After the delete the remaining rows shift up and inherit their neighbours' indexes, so React matches them to the wrong existing elements and the state sitting in those elements stays put.",
+        "The delete handler is mutating the array instead of replacing it."
+      ],
+      "correct": 2,
+      "eliminate": 1,
+      "explanation": "The key is how React decides which element is which between renders. Keyed by position, row three becomes row two and takes over row two's DOM node — along with whatever was typed into it. It only shows up in lists that reorder, delete, or hold their own state, which is why index keys survive so long before biting. A stable id from the data fixes it."
+    },
+    {
+      "id": "react-08",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "red-flag",
+      "prompt": "The tag is added to the array — a console.log proves it — and the screen does not change. What is wrong?",
+      "subject": {
+        "kind": "code",
+        "language": "javascript",
+        "content": "const addTag = (tag) => {\n  tags.push(tag);\n  setTags(tags);\n};"
+      },
+      "options": [
+        "The tag is pushed onto the same array and that array is handed straight back, so React compares it with itself, sees no change, and does not re-render. It needs a new array: setTags([...tags, tag]).",
+        "push should be unshift, so the newest tag appears first.",
+        "addTag should be wrapped in useCallback.",
+        "setTags should be called inside a useEffect."
+      ],
+      "correct": 0,
+      "eliminate": 1,
+      "explanation": "This is the bug where the data is right and the screen is wrong, and it sometimes half-fixes itself when something else causes a render — which is what makes it so confusing. React compares state by reference, so mutating in place is invisible to it. useCallback is the tempting answer because this is a callback and that is a hook; it changes nothing here."
+    },
+    {
+      "id": "react-09",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "An empty submissions list renders a stray 0 above the empty-state message. The JSX is {submissions.length && <List items={submissions} />}. What is happening?",
+      "options": [
+        "React cannot render an array of length zero.",
+        "&& returns the left-hand side when it is falsy, and 0 is falsy but also a perfectly renderable number — so React draws it.",
+        "The List component is returning 0 when it has nothing to show.",
+        "length should be length()."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The same guard works fine for undefined and null, because React renders nothing for those; 0 is the one falsy value it will happily paint on the screen. Use submissions.length > 0 && …, or a ternary. Blaming the child is the tempting move because that is where the 0 appears — the bug is in the guard, one line up."
+    },
+    {
+      "id": "react-10",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "red-flag",
+      "prompt": "This runs whenever the selected form changes. Clicking quickly through the list sometimes leaves the wrong form on screen.",
+      "subject": {
+        "kind": "code",
+        "language": "javascript",
+        "content": "useEffect(() => {\n  fetch(`/api/forms/${id}`)\n    .then(r => r.json())\n    .then(setForm);\n}, [id]);"
+      },
+      "options": [
+        "There is no cleanup, so a request that is still in flight when id changes still resolves and still sets state — and a slow earlier response can land after a newer one.",
+        "The dependency array should be empty.",
+        "fetch should be awaited inside an async function rather than chained with .then.",
+        "setForm should be wrapped in useCallback."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "Two requests are in the air and nothing promises they come back in order, so the slower first one wins and the UI shows a form nobody selected. The fix is a cleanup that ignores stale responses — a cancelled flag, or an AbortController on the request. Switching to async/await is a fair style preference that changes none of this: the earlier call still resolves."
+    },
+    {
+      "id": "react-11",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "red-flag",
+      "prompt": "Editing works. But pick a different person from the list and the input still shows the previous name.",
+      "subject": {
+        "kind": "code",
+        "language": "javascript",
+        "content": "function EditName({ user }) {\n  const [name, setName] = useState(user.name);\n  return (\n    <input value={name} onChange={e => setName(e.target.value)} />\n  );\n}"
+      },
+      "options": [
+        "useState's argument is only the initial value — it is read on the first render and ignored on every one after, so a new user prop never reaches the input.",
+        "The input is uncontrolled and should use defaultValue instead of value.",
+        "onChange should be onInput to catch every keystroke.",
+        "The component should be wrapped in React.memo."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "Copying a prop into state creates a second source of truth, and state survives the re-render that the new prop arrives on. Either stop copying and let the parent own the edit, or force a fresh component per person with key={user.id} so useState runs again. defaultValue is the tempting one because it sounds like the mirror image of the problem — it makes the input uncontrolled, which throws away the state you were keeping."
+    },
+    {
+      "id": "react-12",
+      "stage": "ask",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "You are asked to add one field to a 700-line component nobody currently on the team wrote. First move?",
+      "options": [
+        "Split it into smaller components first — the change will be much easier afterwards.",
+        "Make the smallest change that works, and say in the pull request which parts of the file you did not understand.",
+        "Copy the component, change the copy, and point the route at the new one.",
+        "Ask for the ticket to go to whoever knows that file best."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "The rewrite is tempting because the file genuinely is too big — and it turns a one-line change into a week of review nobody asked for, with regressions nobody can trace. Small change first. The honest note about what you did not follow is the part that pays: it points the reviewer at exactly where you are unsure, and it is how the refactor eventually gets agreed rather than smuggled in."
     }
   ]
 }
