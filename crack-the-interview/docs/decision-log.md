@@ -108,6 +108,57 @@ rounds from the banks. It passes, with warnings on three thin pools.
 
 ---
 
+## 2026-08-31 — customize your interview
+
+The four job cards only cover four stacks. Anyone whose stack is not one of them
+had nothing to play. So the pick screen grew a fifth card: **choose your own five
+skills and a level**, and the game builds the job from the banks it already has.
+
+This was cheap because of the restructure above. Questions already belong to
+skills rather than to jobs, so a custom job is just a job recipe assembled at
+runtime instead of read from `content/job-titles/` — same shape, same validation,
+same assembly code. The skill list is not a second copy of anything: it is read
+out of the bundle, so a new bank shows up in the picker the moment `validate.py`
+runs.
+
+Three things had to bend, all of them small:
+
+- **Six topics became "however many the job has."** The briefing still asks for
+  three, but the count comes from the job now, so a five-topic custom job works
+  and the six-topic job cards are unchanged.
+- **Platform gained the value `any`.** A job card is web or iOS or Android and
+  filters accordingly; a custom job has no platform, so it draws from every
+  bank — pick Swift and you get the iOS-only questions.
+- **Round counts are capped by what exists.** A custom job asks for 5/7/6/5 and
+  takes whatever the five banks can actually fill. A round with nothing to ask is
+  dropped rather than shown empty, which is why the round counter reads "of 3"
+  when it has to.
+
+**Five, not "as many as you like."** Five is enough to cover a real posting and
+few enough that the choice costs something — the same reason you revise three
+topics rather than all of them. A skill with no questions at the chosen level is
+disabled rather than hidden, so the picker doubles as an honest map of how deep
+the banks go.
+
+The preview warns when five thin banks add up to a short interview. That is a
+content problem, not a code problem, and the fix is more job descriptions.
+
+**Reversed the same day: custom mode had a briefing.** It shipped reusing the job
+card flow — pick five skills, then revise three of them. Nahid played it and it
+was immediately wrong: you make the same decision twice, thirty seconds apart,
+and the second one is a worse version of the first because by then you have no
+new information. So a custom run now skips the briefing entirely and opens on
+question one, with all five topics marked revised.
+
+That last part is a scoring change, not just a screen removal. Revising a topic
+is worth +12 instead of +8 when you get it right, and caps the damage at −12
+instead of −24 when you get it wrong. Marking all five revised is the honest
+reading: you wrote the posting, you named the skills, so the room assumes you
+prepared them. The job cards keep the three-of-six choice, because there the
+topics were handed to you and picking between them is a real decision.
+
+---
+
 ## Parked — ideas for "aro shundor", after it's playable
 
 Not decided, not scheduled. Written down so they aren't lost.

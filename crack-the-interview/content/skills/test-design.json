@@ -1,0 +1,169 @@
+{
+  "skill": "test-design",
+  "label": "Test planning, test design & QA strategy",
+  "questions": [
+    {
+      "id": "test-design-01",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A candidate describes how they work. What should worry the interviewer?",
+      "subject": {
+        "kind": "quote",
+        "content": "I don't really write test cases up front. I just get the build, click through everything, and I find the bugs — I'm good at it. Writing it all down first would only slow me down."
+      },
+      "options": [
+        "Exploratory testing is not real testing, so this person has never actually tested anything.",
+        "Nothing is written down, so nobody can tell what was covered, the same coverage can't be repeated next release, and the work disappears the day they're on leave.",
+        "They should be automating instead of clicking through anything by hand.",
+        "They didn't mention which test management tool they use."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Exploratory testing is genuinely valuable and good testers do find bugs by feel — the problem is that unrecorded testing can't be repeated, handed over, or reported on, so no one can answer 'was this area covered last release?'. The tempting wrong answer is to dismiss exploratory work; the actual fix is a charter and notes around it, not replacing it."
+    },
+    {
+      "id": "test-design-02",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "A transfer amount field accepts whole numbers from 1 to 50,000. You have time for about six cases. Which six?",
+      "options": [
+        "1, 10,000, 20,000, 30,000, 40,000, 50,000 — spread evenly across the range.",
+        "0, 1, 50,000, 50,001, one valid mid-range value, and one non-numeric input such as '1,000' or '-5'.",
+        "Six random values generated inside the valid range.",
+        "50,000 six times, since the maximum is where it will break."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Bugs cluster at boundaries and at the edges of the valid class, not in the middle — 10,000 and 30,000 are the same equivalence class and the second one tells you nothing new. The evenly-spread option is tempting because it looks thorough and covers more of the range; it just covers the same class six times while never touching off-by-one or bad input."
+    },
+    {
+      "id": "test-design-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A one-line hotfix for a login bug goes out in 40 minutes. The full regression pack takes six hours. What do you run?",
+      "options": [
+        "The full regression pack — cutting it is how bugs escape.",
+        "Retest the reported bug on the fix build and sign off; the change was one line.",
+        "Verify the fix, run the smoke set over the critical journeys, then a targeted regression around authentication and anything sharing that code path — and state in writing what wasn't covered.",
+        "Skip testing and rely on the ability to roll back if something breaks."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "Risk-based selection is what regression testing is for when the clock is real: cover the blast radius of the change plus the paths that must never be broken, and make the uncovered part visible so the business owns the decision. Running the full pack is the tempting answer because it feels responsible, but a suite you can't finish before the deploy just means you ship untested and late."
+    },
+    {
+      "id": "test-design-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "order",
+      "prompt": "A new user story lands in the sprint and the build is three days away.",
+      "instruction": "Put these in the order you'd actually do them.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Write the test cases with concrete data and expected results"
+        },
+        {
+          "id": "b",
+          "text": "Read the story, spec and designs, and take the ambiguities back to the PM and the developer"
+        },
+        {
+          "id": "c",
+          "text": "List the scenarios — happy path, negative, boundary, permissions, and what happens on failure"
+        },
+        {
+          "id": "d",
+          "text": "Walk the case list past the developer and PM so gaps are found before the build arrives"
+        },
+        {
+          "id": "e",
+          "text": "Rank the scenarios by risk and decide which are in scope for this sprint"
+        }
+      ],
+      "correctOrder": [
+        "b",
+        "c",
+        "e",
+        "a",
+        "d"
+      ],
+      "explanation": "Ambiguity is cheapest to kill before anything is written — half the 'bugs' in a young feature are two people reading the same sentence differently. Scenarios come before cases because you prioritise ideas, not paragraphs, and the review comes last so the developer is reading a finished, ranked list rather than helping you draft it."
+    },
+    {
+      "id": "test-design-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "The whole spec for a feature reads: 'The user should be able to apply a discount code at checkout.' Before you write a single test case, what do you ask?",
+      "modelAnswer": "I'd go back with the questions that decide the expected results, because without them I can only test that something happens, not that the right thing happened. What makes a code valid — expiry, usage limit per customer, minimum basket, product or category restrictions? What happens with two codes: replace, stack, or reject? Is the discount applied before or after tax and delivery, and can it take the total below zero? Is the code case-sensitive, and is it trimmed of spaces when pasted? Where is it validated — client, server, or both — because that decides whether I can bypass it with a direct API call. What does the user see for each failure reason, and is that message the same on web and mobile? Does the discount survive going back to the basket, session timeout, or paying with a saved card? And who owns the answer when the PM and the developer disagree? Anything still unanswered when the build lands, I record as an assumption in the test plan rather than quietly deciding it myself.",
+      "keyPoints": [
+        "Validity rules: expiry, usage limits, minimum basket, product restrictions",
+        "Interaction rules: two codes at once, stacking, replacing, refunds",
+        "Calculation order against tax, delivery and totals; can it go below zero",
+        "Negative cases and the exact message for each failure reason",
+        "Server-side enforcement, not just the UI — can it be bypassed via the API",
+        "Consistency across web and mobile clients",
+        "Persistence across session timeout, back navigation and payment retry",
+        "Record unanswered questions as written assumptions rather than guessing"
+      ],
+      "explanation": "The strongest answers turn a vague sentence into the specific expected results a test case needs, and notice that a discount rule enforced only in the UI is not enforced at all. Listing question areas is fine; the candidates who stand out say what they do with the questions nobody answers in time."
+    },
+    {
+      "id": "test-design-06",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "The business team is busy and asks you to run UAT on their behalf and sign it off. What's the right response?",
+      "options": [
+        "Agree — you know the product better than they do, so your sign-off is worth more.",
+        "Refuse; UAT is not QA's job and the release should wait until they have time.",
+        "Offer to prepare the scenarios, data and environment and sit with them while they run it, but keep the acceptance with the business owner.",
+        "Convert the UAT scripts into automated tests and report the pass rate as the sign-off."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "UAT answers a different question from system testing — not 'does it behave as specified' but 'does this do the job we asked for' — and only the person accountable for that outcome can answer it. Running it yourself is tempting because it unblocks the release today; it just means the same team tested against the same understanding twice, and the gap between spec and intent goes to production untested. Facilitating hard is the useful middle: you remove every obstacle except the judgement."
+    },
+    {
+      "id": "test-design-07",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Two weeks before release, a feature that was never in the test plan is added. The regression window doesn't move. What do you do?",
+      "options": [
+        "Spread the existing time thinner so everything still gets some coverage.",
+        "Re-plan against risk: cover the new feature and what it touches, name in writing the areas that will now get reduced or no coverage, and have the release owner accept that trade.",
+        "Refuse to test the new feature since it wasn't in the agreed scope.",
+        "Ask the team to work the weekend so the original plan survives."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "You can't create test time, so the only real decision is which risk to accept — and that decision belongs to whoever owns the release, in writing, before the fact. Thinning everything is the popular answer because nobody has to say no, but uniformly shallow coverage means the critical journeys are now as weakly tested as the cosmetic ones, and nobody knows it."
+    }
+  ]
+}

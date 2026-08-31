@@ -1,0 +1,134 @@
+{
+  "skill": "hardware-integration",
+  "label": "Devices, protocols & hardware integration",
+  "questions": [
+    {
+      "id": "hardware-integration-01",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "platform": "systems",
+      "prompt": "A poller reading registers from devices on a serial bus sometimes returns the value belonging to the register it asked for a moment earlier. It only happens on a busy bus.",
+      "options": [
+        "The register addresses are off by one — the protocol numbers registers from one and the code numbers them from zero.",
+        "Raise the response timeout until it stops happening.",
+        "A late reply to a request you already timed out is still sitting in the receive buffer, so every following read is answered by the previous request's response. After a timeout the port has to be drained and resynchronised, not simply retried.",
+        "The baud rate is misconfigured."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "The off-by-one is a genuine trap in these protocols and a great answer to a different question — but an addressing mistake is wrong on every single read, and this one is intermittent and load-dependent. 'Sometimes, when busy' points at state left behind by a timeout. Raising the timeout does help, which is what makes it dangerous: it moves the failure to the next busy day and leaves the desynchronisation bug in place."
+    },
+    {
+      "id": "hardware-integration-02",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This is the polling loop for one device on a shared bus. A field engineer reports that when one device is unplugged, readings from the others get slow and unreliable.",
+      "subject": {
+        "kind": "code",
+        "language": "rust",
+        "content": "loop {\n    match client.read_holding_registers(addr, 8) {\n        Ok(regs) => cache.store(addr, regs),\n        Err(_) => continue,\n    }\n}"
+      },
+      "options": [
+        "The eight registers should be read one at a time so a single bad register cannot spoil the batch.",
+        "A dead device turns this into a busy loop: it retries as fast as the bus will let it, saturating the shared line that everyone else needs, and it discards the error, so nothing anywhere records that the device is gone. It needs backoff between attempts, a point marked stale after N failures, and the error logged with the address.",
+        "cache.store should be behind a mutex before it is called from a polling thread.",
+        "The match should be written as if let Ok(regs) — the Err arm does nothing anyway."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "The last option is the finding a reviewer offers when they are reading for style: it is true that the arm does nothing, and rewriting it as if let makes the bug tidier and just as harmful. Err(_) is the character of the whole thing — the code has decided in advance that no failure is worth knowing about. On a shared bus a retry storm is not just wasted work; it is a fault in one device becoming an outage across the plant."
+    },
+    {
+      "id": "hardware-integration-03",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "platform": "systems",
+      "prompt": "An operator points out that a temperature on the dashboard hasn't changed in twenty minutes. The value is being served from a cache and the sensor behind it stopped responding half an hour ago.",
+      "options": [
+        "Poll the sensor more often so the cache is fresher.",
+        "Every reading carries the time it was sampled and a validity window, and once it is outside that window it is presented as stale rather than as a number — greyed out, flagged, or absent. In a control context a confidently wrong value is worse than a missing one, because someone will act on it.",
+        "Drop the cache and read straight from the device on every request.",
+        "Keep showing the last value but refresh the display more often so it looks live."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Reading through to the device every time is the tempting answer because it sounds like choosing correctness over performance, and it does not help at all — the device is not answering, so you are now choosing between hammering a dead bus and showing the same stale number more expensively. The bug is not the cache, it is that the data has no age attached to it. Any value crossing a system boundary in a plant should carry when it was true."
+    },
+    {
+      "id": "hardware-integration-04",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A TCP link to a line controller survives a network switch reboot as far as your process is concerned — the socket is still open and writes still succeed — but no data ever comes back again.",
+      "options": [
+        "TCP guarantees delivery, so the bytes must be arriving and the framing code is dropping them.",
+        "Enable SO_REUSEADDR on the socket.",
+        "A half-open connection: your side has no way to learn the peer is gone until something it sends goes unacknowledged long enough to give up, and even then the default retransmit budget is generous. Application heartbeats with a read deadline are what detect this — OS keepalive works too, but its defaults are measured in hours.",
+        "Switch the link to UDP so a dead peer stops mattering."
+      ],
+      "correct": 2,
+      "eliminate": 1,
+      "explanation": "'Writes still succeed' is the detail that makes the first option so attractive, and it means less than it looks: a successful write only says the bytes reached your kernel's send buffer. The rule worth carrying is that a connection is only as alive as your last successful round trip, so anything that must notice a dead peer within seconds has to ask, at the application level, and act on the silence."
+    },
+    {
+      "id": "hardware-integration-05",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "How would you make code that talks to real hardware testable in CI, where there is no hardware?",
+      "modelAnswer": "I split the code at the transport. Framing, decoding and the state machine become pure functions over bytes with no I/O in them, and those get the bulk of the unit tests — including property tests that a frame survives an encode and decode round trip, and fuzzing the decoder with truncated and corrupted input, because that is exactly what a real bus delivers. Behind a transport trait I can put a fake that replays traces captured from the real device, which is the part that makes the tests credible: the corpus comes from the plant, so the tests encode what the hardware actually does rather than what the manual claims. Integration tests run against a simulator for the protocol, covering the awkward paths that are hard to produce on demand — timeouts, a device that answers late, a partial frame, a reset mid-transaction. Then I accept that this is not everything: timing, electrical behaviour and vendor quirks only show up on a rig, so I keep a small hardware-in-the-loop setup running the same suite nightly, and I treat any bug found there as a missing trace in the corpus.",
+      "keyPoints": [
+        "Separate pure protocol logic from I/O; test that logic directly",
+        "A transport trait with a fake that replays captured traces",
+        "Property tests on encode/decode, fuzzing for truncated and corrupt frames",
+        "Simulate the awkward paths: timeouts, late replies, partial frames, resets",
+        "A nightly hardware-in-the-loop rig for what a fake cannot reproduce",
+        "Every bug found on real hardware becomes a new recorded case"
+      ],
+      "explanation": "Answering only 'mock the device' is the trap — a mock you wrote encodes your beliefs about the hardware, and the bugs live precisely where those beliefs are wrong. Recorded traces and a rig are what stop the test suite from being a very fast way to confirm your own assumptions."
+    },
+    {
+      "id": "hardware-integration-06",
+      "stage": "hr",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "platform": "systems",
+      "prompt": "A candidate is asked how working on software that runs a production line changes the way they work.",
+      "subject": {
+        "kind": "quote",
+        "content": "Honestly, it's the same as any other backend job. I'd push to main, we have good tests, and if something does break we roll forward fast — I've never really believed in slowing down. Moving fast is how you keep quality up, and the line is just another user."
+      },
+      "options": [
+        "They mention rolling forward instead of rolling back, which shows they don't know how deployments work.",
+        "They admit to pushing to main, which means they haven't worked with code review.",
+        "They have flattened away the one thing that makes this job different: on a running line you often cannot deploy on demand, a bad change stops production rather than an endpoint, and 'roll forward fast' assumes a deploy channel that may only open in a maintenance window. Good instincts for a web service, applied where they don't hold.",
+        "They sound arrogant about their own speed, which suggests they will be difficult to work with."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "This one is uncomfortable because everything they said is defensible advice somewhere — continuous delivery and rolling forward are genuinely better than a change-freeze culture in most jobs. The problem is 'the line is just another user': it isn't, and the answer never tests its own assumptions against this environment. Read against a candidate saying the same thing then adding 'though I'd want to understand the deployment window and what the safe state is first', and the gap is obvious."
+    }
+  ]
+}

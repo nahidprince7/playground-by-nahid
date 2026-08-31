@@ -1,0 +1,185 @@
+{
+  "skill": "git-workflow",
+  "label": "Git & collaborative workflow",
+  "questions": [
+    {
+      "id": "git-workflow-01",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "You are three days into a task on your own branch and have not pushed anything yet. What is the better habit?",
+      "options": [
+        "Keep it local until it is finished — half-done code on the remote confuses people.",
+        "Push the branch daily even while it is unfinished, and say plainly at standup what works and what does not.",
+        "Push it and open the pull request now, so someone can start reviewing the parts that are done.",
+        "Say it is nearly done and finish it tonight."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "A pushed branch is a backup and somewhere a teammate can look when you are stuck; nobody is confused by a branch that is obviously in progress. Opening the review early is the tempting one — it sounds collaborative and spends someone's afternoon on code that is about to change underneath them. Push daily, open it as a draft if you want eyes on it early."
+    },
+    {
+      "id": "git-workflow-02",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A candidate is describing how they work with Git. What does the interviewer take away?",
+      "subject": {
+        "kind": "quote",
+        "content": "I commit everything at the end of the day as 'wip'. When a merge goes wrong I copy my files somewhere safe, delete the branch, clone the repo again and paste them back. It's faster than fighting with it."
+      },
+      "options": [
+        "Committing once a day is too infrequent to be useful history.",
+        "The re-clone: a conflict means two people changed the same lines, and pasting your copy over the top silently discards theirs with no record of what went.",
+        "They should be rebasing onto main rather than merging into their branch.",
+        "They did not say which Git host or client they use."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The commit habit is worth a comment, not a rejection — plenty of good engineers tidy their history later. The re-clone is the one that ends the conversation, because it is a workflow built on the belief that a conflict is Git being difficult rather than Git reporting a fact. Merge versus rebase is a team preference; overwriting a colleague's work without knowing it is not."
+    },
+    {
+      "id": "git-workflow-03",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "You bring main into your branch and hit a conflict in a file where a teammate rewrote the same function you changed. What do you do?",
+      "options": [
+        "Keep your version — it is the one you have tested.",
+        "Keep theirs — main is the source of truth.",
+        "Read both sides to work out what each change was for, and if the intent is not obvious from the code, ask them before resolving.",
+        "Keep both versions of the function, with the one you are not using commented out."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "Conflict markers tell you where two intentions met; they do not tell you which one is right, and nothing in the build will tell you either — a resolution that deletes a colleague's fix compiles and passes just fine. Keeping your side is the tempting default because your half is the half you understand. Thirty seconds of asking is cheaper than the week that starts with 'who deleted my validation?'."
+    },
+    {
+      "id": "git-workflow-04",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "red-flag",
+      "prompt": "A reviewer opened the history before opening the diff and stopped here. What is the problem?",
+      "subject": {
+        "kind": "code",
+        "language": "bash",
+        "content": "$ git log -1 --stat\ncommit 4f2a9c1\n\n    fix\n\n src/Feed.jsx      | 142 +++++++++++++-----------\n src/Feed.css      |  38 ++++-----\n src/utils/date.js |  12 +--\n package-lock.json | 802 ++++++++++++++++++++++++"
+      },
+      "options": [
+        "The message says 'fix' and the commit carries a bug fix, a reformat and a dependency bump together — there is nothing for a reviewer to check the change against, and no way to revert one part without the others.",
+        "package-lock.json should not be in version control at all.",
+        "142 changed lines is too much for one commit, whatever is in it.",
+        "The message is missing a ticket number."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "Size is not the fault — a rename can touch a thousand lines and still be one idea. The fault is that three ideas share one commit and the message names none of them, so the reviewer cannot tell the formatting churn from the one line that changed behaviour, and a revert takes the dependency bump with it. The lockfile belongs in the repo; it just does not belong in this commit."
+    },
+    {
+      "id": "git-workflow-05",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "You resolved a conflict last week by keeping your side. Today a teammate says their validation change is missing from main. Fastest honest way out?",
+      "options": [
+        "Ask them to write it again — it was only a few lines.",
+        "Find the merge commit, look at what came in from their branch with git show or git log on that file, and put back what you dropped.",
+        "Revert main to before the merge and have everyone re-merge their work.",
+        "Check the deploy logs to find out when the validation stopped running."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Nothing was lost. Their commit still exists on their branch and behind the merge's other parent, so the change is recoverable from history in a couple of minutes rather than from memory. Reverting the merge is tempting because it feels like undoing the mistake — it also undoes everything merged since, and replays the same conflict for someone else to get wrong."
+    },
+    {
+      "id": "git-workflow-06",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "order",
+      "prompt": "Your feature is finished on a branch and you are about to open the pull request.",
+      "instruction": "Order these by what you would do first.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Read your own diff top to bottom, as if someone else had written it"
+        },
+        {
+          "id": "b",
+          "text": "Bring in the latest main and resolve whatever conflicts"
+        },
+        {
+          "id": "c",
+          "text": "Run the tests and click through the feature once more"
+        },
+        {
+          "id": "d",
+          "text": "Write the description — what changed, why, and how you checked it"
+        }
+      ],
+      "correctOrder": [
+        "b",
+        "c",
+        "a",
+        "d"
+      ],
+      "explanation": "Main comes first because everything after it is then checked against the code that will actually merge; review your diff before merging main and you have reviewed something that no longer exists. The self-read catches the leftover console.log and the debug flag before a reviewer spends their attention on them. The description is last because by then you genuinely know what you are describing."
+    },
+    {
+      "id": "git-workflow-07",
+      "stage": "ask",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "open",
+      "prompt": "What do you look for when you read your own pull request before sending it out?",
+      "modelAnswer": "First, whether the diff contains only the change I meant to make — no stray console.logs, no commented-out attempt, no file the editor reformatted, nothing renamed on a whim, because every one of those costs a reviewer attention I would rather they spent on the logic. Then whether someone could follow it without me sitting next to them: names that say what things are, and a description that explains why, since the what is already in the diff. I flag the parts I am least sure about, in the description or as a comment on the line, because that is where I want the review to go. And I check the unhappy paths — what this does when the request fails or the list comes back empty — since that is what I get asked about anyway, and I would rather find it myself.",
+      "keyPoints": [
+        "The diff holds only the intended change — no debug leftovers, no incidental reformatting",
+        "A reviewer can follow it unaided; the description says why, not what",
+        "Point reviewers at the parts you are least confident about",
+        "Check the failure and empty paths, not just the happy one",
+        "Read it as though someone else wrote it"
+      ],
+      "explanation": "The answer that lands is about reading, not tooling. 'CI runs the linter' is true and misses the question — the point of a self-review is everything a linter cannot see, like a change that is correct and impossible for the next person to follow."
+    },
+    {
+      "id": "git-workflow-08",
+      "stage": "ask",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "Your first pull request comes back with fourteen comments, several about naming and structure. Best response?",
+      "options": [
+        "Apply every comment exactly as written, push, and say nothing.",
+        "Push back on the naming ones — they are subjective and the code works.",
+        "Work through them, ask about the two you did not understand or do not agree with, and say what you changed.",
+        "Quietly ask a different reviewer next time."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "Fourteen comments on a first PR usually means someone read it properly, which is a good sign about the team. Silent compliance is the tempting one because it looks cooperative — it also means you make the same choice again next week without knowing why it was wrong, and the reviewer never learns which of their conventions are unwritten. The two you ask about are where the actual onboarding happens."
+    }
+  ]
+}

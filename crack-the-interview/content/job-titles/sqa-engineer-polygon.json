@@ -1,0 +1,109 @@
+{
+  "slug": "sqa-engineer-polygon",
+  "title": "Software Quality Assurance Engineer (2-5 years)",
+  "level": "mid",
+  "difficulty": 3,
+  "platform": "web",
+  "stack": [
+    "Selenium",
+    "Cypress",
+    "Postman",
+    "JMeter"
+  ],
+  "briefing": {
+    "summary": "Quality for a product that ships on the web and on mobile from one shared backend. The posting wants both halves of the job: the manual craft — reading a half-written spec and turning it into test cases, exploratory passes, regression and UAT before every release — and the automation, with Selenium, Cypress or Playwright covering the critical flows and running in the build. Underneath that it asks for API testing in Postman, SQL to check the data really changed, and enough performance testing to know whether a release survives a busy day. Expect to be judged less on tools than on judgement: what you test first when the window shrinks, what you refuse to automate, and how you write a defect a developer can act on without asking you a single question.",
+    "requirements": [
+      "Test planning, test case design, and risk-based regression, smoke and UAT",
+      "Manual functional, integration and exploratory testing across web and mobile",
+      "Clear, reproducible defect reports and triage on severity versus priority",
+      "UI automation with Selenium, Cypress, Playwright or Appium, running in CI",
+      "REST API testing with Postman and SQL queries to verify data integrity",
+      "Basic performance and load testing, and validating stability across releases"
+    ]
+  },
+  "topics": [
+    {
+      "id": "planning",
+      "label": "Test planning, design & QA strategy",
+      "skills": [
+        "test-design"
+      ]
+    },
+    {
+      "id": "quality",
+      "label": "Manual, regression & where tests belong",
+      "skills": [
+        "testing"
+      ]
+    },
+    {
+      "id": "defects",
+      "label": "Defect reporting, triage & severity",
+      "skills": [
+        "defect-management"
+      ]
+    },
+    {
+      "id": "automation",
+      "label": "Selenium, Cypress & automation frameworks",
+      "skills": [
+        "test-automation"
+      ]
+    },
+    {
+      "id": "backend",
+      "label": "API testing & SQL data validation",
+      "skills": [
+        "api-integration",
+        "mysql"
+      ]
+    },
+    {
+      "id": "reliability",
+      "label": "Load testing & release stability",
+      "skills": [
+        "performance-testing",
+        "incident-response"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "id": "hr",
+      "name": "HR Screen",
+      "interviewer": {
+        "name": "Nabila",
+        "role": "Talent Acquisition"
+      },
+      "count": 5
+    },
+    {
+      "id": "technical",
+      "name": "Technical Screen",
+      "interviewer": {
+        "name": "Zubair",
+        "role": "Senior SQA Engineer"
+      },
+      "count": 7
+    },
+    {
+      "id": "deepdive",
+      "name": "Deep Dive",
+      "interviewer": {
+        "name": "Tasnim",
+        "role": "QA Lead"
+      },
+      "count": 7
+    },
+    {
+      "id": "ask",
+      "name": "The Ask",
+      "interviewer": {
+        "name": "Rezwan",
+        "role": "Engineering Manager"
+      },
+      "count": 5
+    }
+  ],
+  "extra": []
+}

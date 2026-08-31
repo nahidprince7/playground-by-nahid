@@ -1,0 +1,163 @@
+{
+  "skill": "systems-programming",
+  "label": "Systems, memory & Linux performance",
+  "questions": [
+    {
+      "id": "systems-programming-01",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "platform": "systems",
+      "prompt": "A 1 ms control loop hits its deadline almost every time, but once every few seconds one iteration takes 8 ms. The box is 30% idle and the mean iteration time hasn't moved.",
+      "options": [
+        "Spread the work across more threads so no single iteration has as much to do.",
+        "The loop body is too slow — profile it and optimise the hottest function.",
+        "Chase the tail, not the mean: an allocation that had to grow the heap, a page fault on first touch, a lock shared with a slow path, or the scheduler moving the thread off its core. Pre-allocate and lock the loop's memory, keep the hot path allocation-free, pin the thread, and measure the distribution rather than the average.",
+        "Raise the loop period to 8 ms so every iteration fits comfortably."
+      ],
+      "correct": 2,
+      "eliminate": 0,
+      "explanation": "Reaching for the profiler is the reflex and it is the wrong tool here: a sampling profiler reports where the time mostly goes, and the time mostly goes exactly where it should — the problem is the one iteration in five thousand. Rare stalls in a loop that is otherwise fast are nearly always the loop being interrupted rather than the loop being slow. Widening the period is worth saying out loud as an option, because sometimes the deadline really was arbitrary, but it is a negotiation with the process engineer, not a fix."
+    },
+    {
+      "id": "systems-programming-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "After a traffic burst, a long-running gateway's RSS climbs to 3 GB and never comes back down. The heap profiler insists the live set is about 200 MB.",
+      "options": [
+        "There is a leak the profiler is missing — look for reference cycles keeping objects alive.",
+        "Freed memory went back to the allocator, not to the kernel: RSS is roughly the high-water mark plus fragmentation. Cap the peak by bounding how many buffers can be in flight, reuse pooled buffers, or use an allocator you can ask to trim. If the live set really is 200 MB, this is allocator behaviour, not a leak.",
+        "Without a garbage collector, freed memory is returned to the OS immediately, so the profiler must be misreporting.",
+        "Schedule a nightly restart and move on."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The cycle hunt is the tempting one because reference cycles are a real way to leak in a language without a collector, and it will burn a day finding nothing — the profiler already told you the live set is small, and that is the number that rules a leak out. The question this reframes is 'what was the peak, and why was it allowed to be that big', which is a concurrency-limit problem rather than a memory one."
+    },
+    {
+      "id": "systems-programming-03",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "order",
+      "prompt": "A release doubles the p99 latency of a data-acquisition service. You have the box, both binaries and about thirty minutes before someone asks whether to roll back.",
+      "instruction": "Order the steps you'd actually take.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Reproduce it: run both builds against the same load on the same hardware and confirm the difference is real"
+        },
+        {
+          "id": "b",
+          "text": "Look at what the process is waiting on — run queue, syscalls, I/O, page faults — before assuming the cost is in your code"
+        },
+        {
+          "id": "c",
+          "text": "Sample both builds with a profiler and diff the two flame graphs"
+        },
+        {
+          "id": "d",
+          "text": "Change the one thing you suspect, rebuild, and measure it the same way to prove causation"
+        }
+      ],
+      "correctOrder": [
+        "a",
+        "b",
+        "c",
+        "d"
+      ],
+      "explanation": "Reproducing first is what stops you optimising a difference in the load generator. System-level before code-level matters more than people expect: a CPU profiler shows you almost nothing when the answer is that the process is now blocked in a syscall or faulting on memory it used to have resident. And the last step is the one that gets skipped — without it you have a correlation and a story, not a cause."
+    },
+    {
+      "id": "systems-programming-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This reads telemetry frames off a TCP socket from a line controller. It works on the bench and misbehaves in the plant.",
+      "subject": {
+        "kind": "code",
+        "language": "rust",
+        "content": "let mut buf = [0u8; 1024];\nloop {\n    let n = stream.read(&mut buf)?;\n    let frame = Frame::parse(&buf[..n])?;\n    handle(frame);\n}"
+      },
+      "options": [
+        "read returns whatever bytes have arrived, not a message: a frame can be split across two reads and two frames can arrive in one. This parses garbage the moment the network delivers a partial frame — it needs a buffer that persists across reads and a loop that pulls out whole frames. n == 0 also means the peer closed, and here it parses an empty slice forever.",
+        "The buffer should be heap-allocated; 1024 bytes on the stack risks overflow.",
+        "read should be read_exact so short reads cannot happen.",
+        "The ? should be an unwrap so that errors are not silently swallowed."
+      ],
+      "correct": 0,
+      "eliminate": 1,
+      "explanation": "read_exact is the near-right answer and it is why the bug survives review: it fixes short reads only when you already know how many bytes to expect, which for variable-length framing is exactly what you are trying to find out. You still need the accumulate-and-drain loop; read_exact just becomes how you fill the header and then the body. Working on the bench is the tell — on a local link frames usually arrive whole, which is why this class of bug ships."
+    },
+    {
+      "id": "systems-programming-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A containerised service restarts every few hours with exit code 137 and nothing at all in its own log — no panic, no shutdown message.",
+      "options": [
+        "The health check is failing and the runtime is restarting the container.",
+        "The process panicked; that maps to exit code 137.",
+        "137 is 128 + 9, so it was SIGKILL — nearly always the kernel OOM killer enforcing the container's memory limit. The silence is the evidence: SIGKILL cannot be handled, so no shutdown path runs. Check the kernel log and the cgroup memory events, then decide whether the limit is wrong or the peak is.",
+        "The entrypoint process is exiting normally and taking the container with it."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "The health-check answer is the plausible one, because restarts do usually mean liveness — but that path sends SIGTERM first, and a service with any shutdown logging would have said goodbye. An empty log is not the absence of a clue; it narrows things to the signals a process cannot catch. Whether the fix is a higher limit or a lower peak is a separate argument, and worth having before you just raise the limit."
+    },
+    {
+      "id": "systems-programming-06",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A logger writes one line per sample at 10 kHz, straight to a file. The process now spends most of its time in the kernel and the acquisition loop is missing deadlines.",
+      "options": [
+        "Every line is a write syscall, and the transition costs more than the work. Buffer the writes and flush on a size or time threshold, accepting the bounded loss window that creates — or, better on a deadline-bound thread, hand lines to a bounded channel and let a separate thread do the writing.",
+        "Open the file with O_SYNC so that writes become cheaper.",
+        "Lower the log level so that fewer lines are produced.",
+        "Use a faster formatting crate — the cost is in formatting, not in writing."
+      ],
+      "correct": 0,
+      "eliminate": 1,
+      "explanation": "Turning the log level down is the tempting answer because it works, immediately, and it also throws away the data you built the acquisition system to collect. Formatting cost is a real thing and a good instinct in general, but 'most of its time in the kernel' has already told you where the time went. The part people forget to say out loud is the trade they just made: a buffer means the last few milliseconds of log are lost in a hard crash, which is fine here and is not fine for an audit trail."
+    },
+    {
+      "id": "systems-programming-07",
+      "stage": "ask",
+      "levels": [
+        "senior"
+      ],
+      "type": "open",
+      "platform": "systems",
+      "prompt": "What does 'production-grade' mean for software running a production line that it doesn't mean for a web service?",
+      "modelAnswer": "The blast radius is physical, so the first difference is what failure means: not a bad request but a stopped line, scrapped material, or a machine in an unsafe state. That pushes failure behaviour to the front of the design — what the system does when a sensor goes quiet, what the safe state is, and whether it degrades to manual rather than stopping dead. The second difference is that I cannot deploy at will. There is a maintenance window, possibly monthly, so the change has to be right and reversible, and the version running is one I may be supporting for years while the hardware around it stays exactly as old as it is. Third, latency is a correctness property rather than a quality-of-service one: missing a deadline is a defect even if the answer would have been correct. Fourth, observability has to work without assuming the network — local buffered logs and counters that survive a restart, because the plant's link to the office is not something I control. And uptime is measured in months, so slow leaks, counter wraparound, log growth and clock changes all become real rather than theoretical.",
+      "keyPoints": [
+        "Failure is physical — define the safe state and the degraded mode",
+        "Deploys happen in maintenance windows: reversible changes, long-lived versions",
+        "Deadlines are correctness, not quality of service",
+        "Observability that survives a lost network link and a restart",
+        "Uptime in months makes slow leaks, wraparound and clock changes real",
+        "Backwards compatibility with hardware that cannot be upgraded"
+      ],
+      "explanation": "Most candidates answer this with testing and code review, which are table stakes and true of any job. The distinguishing answers are the ones about constraints you cannot engineer away — the maintenance window, the safe state, the hardware that will not change — because those are what actually reshape how the software gets built."
+    }
+  ]
+}

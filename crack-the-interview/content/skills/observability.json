@@ -1,0 +1,162 @@
+{
+  "skill": "observability",
+  "label": "Observability, monitoring & SRE practice",
+  "questions": [
+    {
+      "id": "observability-01",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "This role carries a pager. How do you feel about being on call?",
+      "options": [
+        "Happy to take whatever rotation you need — I don't mind being woken up.",
+        "It comes with owning what you ship. I'd want to know how many people are in the rotation, whether the alerts are actionable, and whether we're allowed to spend time removing the cause of a page that keeps coming back.",
+        "I'd prefer a role without on-call — I do my best work when I'm not interrupted.",
+        "Fine, as long as there's a runbook for everything so I always know what to do."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "They are listening for whether you have been on a rotation that was actually sustainable. The unconditional yes is the tempting answer and it reads as inexperience or as someone who will burn out and leave — the questions in the good answer are the ones people learn to ask the hard way. The runbook answer is closer than it looks, but it treats pages as permanent rather than as bugs."
+    },
+    {
+      "id": "observability-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Your alerting fires around forty times a week. The team has stopped reading it and real incidents get found by customers.",
+      "options": [
+        "Route the alerts to a dedicated channel so the noise stops interrupting the main one.",
+        "Alert on what the user feels — error rate and latency measured against an objective, with burn-rate windows so a slow burn and a fast burn page differently — and demote cause-based alerts to dashboards and tickets.",
+        "Raise every threshold by 50% so only the significant ones fire.",
+        "Add more alerts to cover the incidents that customers found first."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Forty alerts a week means the alerts describe causes — disk, CPU, queue depth — most of which have no user impact. Symptom-based alerting against an objective produces few pages, all of which matter. Raising every threshold is the tempting shortcut and does cut volume, but it keeps you alerting on the wrong thing and silently raises the bar for the alerts that were right."
+    },
+    {
+      "id": "observability-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A payment API's p99 doubled overnight. Every individual service's own latency dashboard looks normal.",
+      "options": [
+        "Turn up log verbosity on each service and correlate by request id.",
+        "Follow one slow request end to end with distributed tracing — when nobody looks slow, the time is usually in the spaces between: a retry, a connection pool wait, a queue, or an extra hop nobody counted.",
+        "Compare average latency across services to find which one moved.",
+        "Restart the pods — p99 shifts like this usually clear after a rollout."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Per-service dashboards measure time inside each service, which is exactly where this latency is not. The log-correlation answer is the strong distractor because it does work — it is how people did this before tracing — but reconstructing one request by hand across services is hours, and averages, as option three shows, will hide a p99 entirely."
+    },
+    {
+      "id": "observability-04",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "An alert rule someone added last week. It has paged four times, always at night.",
+      "subject": {
+        "kind": "code",
+        "language": "yaml",
+        "content": "- alert: HighCPU\n  expr: avg(rate(container_cpu_usage_seconds_total[5m])) > 0.8\n  for: 1m\n  labels:\n    severity: page\n  annotations:\n    summary: \"CPU is high\"\n"
+      },
+      "options": [
+        "`rate()` should be `irate()` to catch short spikes.",
+        "`for: 1m` is too short — it will fire on any brief spike and flap.",
+        "It wakes a human for a cause with no established user impact, averaged across every container so a single hot pod is invisible, and it names no service, no owner and no runbook — there is nothing the person woken up can do with it.",
+        "The severity label should be `critical` rather than `page`."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "High CPU is not an incident; a customer failing to pay is. This rule cannot even tell you which workload it is about, because the average flattens the one pod that matters. The `for: 1m` answer is the good distractor — it is genuinely wrong and does cause flapping — but lengthening it just makes a useless page less frequent."
+    },
+    {
+      "id": "observability-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Someone adds `card_id` as a label on the request-count metric. Within a day the metrics backend is out of memory and queries time out.",
+      "options": [
+        "Increase the memory limit and shard the metrics backend across more instances.",
+        "Every distinct label value creates a separate time series, so a unique identifier multiplies cardinality without bound. Identifiers belong in traces and logs, which are indexed for that; metrics carry bounded dimensions like status, route and region.",
+        "Lengthen the scrape interval so fewer samples are stored.",
+        "Drop the metric's retention to a few hours so old series expire."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "This is the most common way a monitoring system is taken down, and it is taken down by a well-intentioned change. Sharding is the tempting answer because it is what you do when metrics volume grows legitimately — here it just buys a week and doubles the bill, because the series count grows with your traffic, not with your users."
+    },
+    {
+      "id": "observability-06",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "order",
+      "prompt": "A production outage has just been mitigated.",
+      "instruction": "Order what happens next.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Write the timeline from the logs, dashboards and chat while it is still fresh"
+        },
+        {
+          "id": "b",
+          "text": "Hold a blameless review asking what made the failure possible and what made it hard to see"
+        },
+        {
+          "id": "c",
+          "text": "Confirm the customer impact has actually stopped, not just the alert"
+        },
+        {
+          "id": "d",
+          "text": "Turn the findings into tracked actions with owners, including the detection gap"
+        }
+      ],
+      "correctOrder": [
+        "c",
+        "a",
+        "b",
+        "d"
+      ],
+      "explanation": "An alert going green is not recovery — confirm at the customer's end before you stand down, because a mitigation that only silences the symptom will page you again in an hour. The timeline comes before the meeting: reconstructed from memory a week later it is fiction, and the meeting is only as good as its facts. Actions without owners are the step that quietly turns reviews into theatre."
+    },
+    {
+      "id": "observability-07",
+      "stage": "ask",
+      "levels": [
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "We say we want shared ownership of reliability between development, QA and operations. What does that actually look like day to day, and how would you move a team towards it?",
+      "modelAnswer": "In practice it means the team that writes a service is on the rotation for it, and ships its dashboard, its alerts and its runbook as part of the change rather than as a follow-up ticket. My job as a DevOps engineer is to make that a reasonable thing to ask: a paved road where a new service gets a pipeline, a dashboard, a set of default alerts and its infrastructure module without anyone building it by hand — so ownership is cheap to accept. Then agree service level objectives with whoever owns the product, because reliability without a target is a matter of opinion, and an error budget turns the argument about features versus reliability into arithmetic: when the budget is spent, reliability work goes to the top of the backlog by prior agreement, not by someone shouting. Alerts belong to teams, and any page that was not actionable is a bug filed against the alert. Reviews are blameless, and the actions come with owners and dates. Culturally, the shift I care about is that I stop being the person who deploys and becomes the person who makes deploying safe — if the ops team is still the gate, nothing is shared, it is just delegated.",
+      "keyPoints": [
+        "Teams on call for what they ship; dashboards, alerts and runbooks ship with the change",
+        "A paved road that makes ownership cheap to accept",
+        "SLOs agreed with product, and an error budget policy decided in advance",
+        "Alerts owned by teams; an unactionable page is a bug against the alert",
+        "Blameless reviews with owned, tracked actions",
+        "DevOps builds the road rather than being the gate"
+      ],
+      "explanation": "The answer that does not land is 'developers should be on call', full stop — pushing the pager onto a team with no dashboards and no ability to deploy a fix creates resentment, not ownership. The paved road and the error budget are what make it fair, and noticing that the ops team must stop being the gate is the senior part."
+    }
+  ]
+}

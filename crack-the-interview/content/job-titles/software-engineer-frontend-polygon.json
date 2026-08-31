@@ -1,0 +1,110 @@
+{
+  "slug": "software-engineer-frontend-polygon",
+  "title": "Software Engineer (Frontend, 3-5 years)",
+  "level": "mid",
+  "difficulty": 3,
+  "platform": "web",
+  "stack": [
+    "React",
+    "Next.js",
+    "SASS",
+    "Node.js"
+  ],
+  "briefing": {
+    "summary": "A product front end built in React and Next.js, where the work is turning design handoffs into interfaces that behave the same on every device and browser, and wiring them to REST APIs. The posting spends most of its words on the browser itself — the DOM, the Virtual DOM, rendering, performance, accessibility — so expect to be asked why something is slow rather than what a hook is. Bootstrap, Ant Design and SASS come up as day-to-day tools, which means questions about theming a component library rather than writing CSS from scratch. Node, Express and Mongoose appear as familiarity: enough to be asked how the data reaches you and where a payment can go wrong, not to design the database. Payments experience is called out as an advantage, so the correctness and security questions have teeth.",
+    "requirements": [
+      "React and Next.js, including when to render where",
+      "JavaScript fundamentals, the DOM and browser APIs",
+      "HTML5, CSS3, SASS and responsive interfaces across browsers",
+      "Bootstrap and Ant Design, themed to a design system",
+      "REST API integration, browser rendering and web performance",
+      "Working familiarity with Node.js, Express, MongoDB and Mongoose"
+    ]
+  },
+  "topics": [
+    {
+      "id": "react",
+      "label": "React components, state & hooks",
+      "skills": [
+        "react"
+      ]
+    },
+    {
+      "id": "nextjs",
+      "label": "Next.js & rendering strategy",
+      "skills": [
+        "nextjs"
+      ]
+    },
+    {
+      "id": "javascript",
+      "label": "JavaScript, the DOM & browser APIs",
+      "skills": [
+        "javascript"
+      ]
+    },
+    {
+      "id": "ui",
+      "label": "CSS3, SASS, responsive UI & accessibility",
+      "skills": [
+        "css",
+        "accessibility"
+      ]
+    },
+    {
+      "id": "performance",
+      "label": "Web performance & REST integration",
+      "skills": [
+        "web-performance",
+        "api-integration"
+      ]
+    },
+    {
+      "id": "backend",
+      "label": "Node.js, Express & MongoDB",
+      "skills": [
+        "nodejs",
+        "mongodb"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "id": "hr",
+      "name": "HR Screen",
+      "interviewer": {
+        "name": "Ishrat",
+        "role": "Recruiter"
+      },
+      "count": 5
+    },
+    {
+      "id": "technical",
+      "name": "Technical Screen",
+      "interviewer": {
+        "name": "Tahmid",
+        "role": "Senior Frontend Engineer"
+      },
+      "count": 7
+    },
+    {
+      "id": "deepdive",
+      "name": "Deep Dive",
+      "interviewer": {
+        "name": "Ridwan",
+        "role": "Frontend Lead"
+      },
+      "count": 7
+    },
+    {
+      "id": "ask",
+      "name": "The Ask",
+      "interviewer": {
+        "name": "Naushin",
+        "role": "Engineering Manager"
+      },
+      "count": 5
+    }
+  ],
+  "extra": []
+}

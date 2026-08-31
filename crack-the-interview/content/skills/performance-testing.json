@@ -1,0 +1,168 @@
+{
+  "skill": "performance-testing",
+  "label": "Performance & load testing",
+  "questions": [
+    {
+      "id": "performance-testing-01",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A product manager stops by: 'People are saying the app feels slow. Can you load test it before Friday?' What do you do first?",
+      "options": [
+        "Start a JMeter run with 1,000 users on the main endpoints and report the average response time on Friday.",
+        "Ask which screens feel slow and for whom, get hold of the real traffic numbers, and agree what counts as acceptable before running anything — otherwise Friday produces a number nobody can act on.",
+        "Explain that load testing needs a production-like environment, which doesn't exist, so it can't be done by Friday.",
+        "Check the server CPU graphs; if they're low, the app isn't slow and no test is needed."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "'Slow' is a symptom report, and a load test without a target is a machine that produces numbers with no pass or fail. The 1,000-user run is the tempting answer because it looks decisive and you'll have something to show — but nobody can tell whether the result is good, and 'people say it's slow' often turns out to be one report on one screen that no amount of load simulation would ever have surfaced."
+    },
+    {
+      "id": "performance-testing-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This is the whole load test a team ran before signing off a release. What's the main flaw?",
+      "subject": {
+        "kind": "code",
+        "language": "python",
+        "content": "class ShopUser(HttpUser):\n    wait_time = constant(0)\n\n    @task\n    def browse(self):\n        self.client.get(\"/api/products?page=1\")"
+      },
+      "options": [
+        "It doesn't ramp up gradually, so the server is hit by all users at once.",
+        "There's no think time and every user requests the identical cached page, so this measures how fast one endpoint can serve one cached response — not the load a real user population puts on the system.",
+        "It doesn't inspect the response body, so an error page would be counted as a successful request.",
+        "Locust is the wrong tool for this; JMeter would give more accurate numbers."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "A workload model is the actual product of load testing — the mix of journeys, the pacing between actions, and enough data variety that you're exercising the database rather than a cache. With zero think time, 500 simulated users generate the request rate of many thousands of real ones, so the result is unrelatable to anything; with one fixed URL, the expensive queries never run. Not checking the response is a real second flaw worth fixing, and the missing ramp is genuinely a gap too — but both would still leave you measuring the wrong workload."
+    },
+    {
+      "id": "performance-testing-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A load run against the checkout API gives: mean 220ms, p50 180ms, p95 1.9s, p99 6.2s, errors 0.2%. The SLA says 'under 500ms'. What do you report?",
+      "options": [
+        "It passes: the mean and the median are both comfortably inside 500ms.",
+        "It fails as reported, but only because p99 is an outlier that a longer run would smooth out.",
+        "It fails for roughly one request in twenty, which at checkout means real customers waiting two seconds and some waiting six — the tail is the finding, and the 0.2% errors need identifying before anything is signed off.",
+        "It can't be judged until the test is repeated with more users, since 220ms mean suggests the system was never under real pressure."
+      ],
+      "correct": 2,
+      "eliminate": 0,
+      "explanation": "Averages hide exactly the users you care about: a mean of 220ms is compatible with a meaningful fraction of customers having a bad time, and at checkout those seconds are abandoned carts. Option B is the tempting one because 'p99 is noise' is something people genuinely say — but a p99 thirty times the median is a shape, not noise, usually a lock, a connection pool limit or a cold cache, and the errors matter more than any of it since a failed checkout is not a slow one."
+    },
+    {
+      "id": "performance-testing-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "You're designing the load scenario for a major release. Where should the numbers in it come from?",
+      "options": [
+        "Take the current peak concurrent users from production analytics, model the journey mix and pacing on what those users actually do, and run against a dataset the size of production's.",
+        "Double last year's registered user count and drive that many virtual users at the busiest endpoint.",
+        "Use the number the business hopes to reach after the marketing campaign, since that's what the system must survive.",
+        "Use the framework's default thread count on a fresh staging database, and compare the result against the previous release's run."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "A load test is only as good as its resemblance to real traffic, and the two things teams get wrong are the journey mix and the data volume — a query that's instant against 500 staging rows is a table scan against ten million. The growth-target option is tempting and often demanded by stakeholders; it's worth running as a separate scenario, but if you skip today's real peak you won't know whether a failure means 'we can't grow' or 'we're already broken'."
+    },
+    {
+      "id": "performance-testing-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "order",
+      "prompt": "Response times climb steeply past about 200 concurrent users and you need to find out why.",
+      "instruction": "Put these in the order you'd actually do them.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Look at where the system saturates — CPU, memory, database connections, thread pool, disk"
+        },
+        {
+          "id": "b",
+          "text": "Re-run the same scenario after the fix and compare against the original numbers"
+        },
+        {
+          "id": "c",
+          "text": "Check the load generator itself isn't the bottleneck — its own CPU, network and open file limits"
+        },
+        {
+          "id": "d",
+          "text": "Reproduce it with a controlled ramp so you can name the point where latency turns"
+        },
+        {
+          "id": "e",
+          "text": "Trace the slow requests in the APM to find which call inside them grew"
+        }
+      ],
+      "correctOrder": [
+        "d",
+        "c",
+        "a",
+        "e",
+        "b"
+      ],
+      "explanation": "Confirming the shape of the curve comes first, because 'gets slow under load' and 'falls off a cliff at 200' point at different causes. Clearing the load generator is the step people skip and then spend two days optimising a service that was never slow — a saturated test rig produces exactly the same graph. Only once you know which resource ran out is tracing worth the time, and re-running the identical scenario is what makes the fix a fact instead of a claim."
+    },
+    {
+      "id": "performance-testing-06",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A mobile financial services product sees roughly ten times normal traffic for about ninety minutes on salary day. What do you test?",
+      "options": [
+        "A stress test that keeps increasing load until the system breaks, so you know the ceiling.",
+        "A spike into ten times normal load, held for the full ninety minutes against production-scale data, plus a check that the system returns to normal afterwards — and that nothing was lost or double-processed on the way.",
+        "A 24-hour soak test at normal load, since salary day is really about sustained traffic.",
+        "A load test at ten times normal for five minutes, which is long enough to see whether the servers cope."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Match the test to the event: the arrival is sudden, the duration is long enough for queues and connection pools to fill, and it's money, so the correctness question — did anything get double-debited or dropped when it degraded — matters more than the latency chart. The stress test is a genuinely useful thing to run and the tempting answer here, but it tells you the breaking point, not whether you survive the event you actually know is coming; five minutes is too short for anything that leaks to show up."
+    },
+    {
+      "id": "performance-testing-07",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "How would you make performance testing part of how this team works, instead of something we panic about the week before launch?",
+      "modelAnswer": "The panic version exists because performance is nobody's acceptance criterion, so I'd start there: agree a budget per critical journey — login, search, checkout — as a p95 and a p99 number the product owner has actually signed, so a build can pass or fail rather than being discussed. Then make the cheap version routine: a short scenario, a few minutes, on a fixed environment with a fixed dataset, running on a schedule and after every release candidate, with the results tracked as a trend. The trend is the real value — a regression usually arrives as an unremarkable jump from 300 to 500ms in one build, which is invisible if you only test twice a year and obvious if you have the line. The heavy work stays occasional: full-scale load, soak and spike runs before major releases or known events like salary day, because they need a production-like environment and a day of someone's attention. I'd also close the loop from production — real latency percentiles and error rates from monitoring tell me whether my model is honest, and they're the reason to change the scenario. And I'd get the environment question settled early, since 'we can't test performance because staging is a quarter of the size' is the excuse that quietly kills the whole practice; a smaller environment with a documented ratio still catches regressions, it just can't tell you the absolute ceiling.",
+      "keyPoints": [
+        "Agreed performance budgets per critical journey, as percentiles someone signed off",
+        "A short automated scenario on a fixed environment and dataset, run regularly",
+        "Track the trend across builds — regressions arrive in small increments",
+        "Reserve full load, soak and spike runs for major releases and known events",
+        "Calibrate the model against real production latency and error rates",
+        "Settle the environment problem honestly rather than letting it block everything"
+      ],
+      "explanation": "The mark of experience here is separating the cheap repeatable check from the expensive full-scale run, and knowing a trend catches more regressions than any single pass. Answers that propose running the full load test in every pipeline sound rigorous but are ignored within a month, because nobody waits an hour for a merge."
+    }
+  ]
+}

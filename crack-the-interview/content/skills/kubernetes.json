@@ -1,0 +1,183 @@
+{
+  "skill": "kubernetes",
+  "label": "Kubernetes, Docker & orchestration",
+  "questions": [
+    {
+      "id": "kubernetes-01",
+      "stage": "hr",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "Asked how they handle a misbehaving service in production, the candidate says this.",
+      "subject": {
+        "kind": "quote",
+        "content": "\"Usually I'll kubectl exec into the pod, patch the config file or bump the setting by hand, and restart the process. It's the quickest way to get people off my back while I work out the real fix.\""
+      },
+      "options": [
+        "They should be using `kubectl debug` with an ephemeral container rather than exec.",
+        "Exec into production pods should be disabled entirely by RBAC.",
+        "The fix lives inside one container until the next reschedule deletes it, and nothing in the repository records that production is no longer running what the manifests say it runs.",
+        "They should have copied the file in with `kubectl cp` so the change is reproducible."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "The problem is not the command, it is that the running cluster is now a source of truth that no one can read. The next node drain silently reverts the fix, usually at 2am, and the person debugging it is looking at a manifest that was never true. `kubectl debug` is the strong distractor because it genuinely is the better tool for investigating — but the flag here is editing, not inspecting."
+    },
+    {
+      "id": "kubernetes-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Under a traffic spike, pods start failing their liveness probe and get killed, which makes the overload worse. The probe hits `/health`, which checks the database and two downstream APIs.",
+      "options": [
+        "Increase the replica count so each pod carries less load.",
+        "Liveness is answering the wrong question: it should test whether this process is wedged, while the dependency check belongs in readiness, so an overloaded pod is taken out of rotation instead of executed.",
+        "Remove the liveness probe — Kubernetes will restart the container if it exits anyway.",
+        "Lower `initialDelaySeconds` so unhealthy pods are detected sooner."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "A liveness probe that depends on other systems turns a downstream slowdown into a cluster-wide restart storm: every pod fails at once, every restart drops in-flight requests, and the queue behind you grows. Adding replicas is the tempting answer because more capacity does help the spike — but it also multiplies the number of pods killing themselves over a shared dependency."
+    },
+    {
+      "id": "kubernetes-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "You are reviewing the Deployment for the card authorisation API.",
+      "subject": {
+        "kind": "code",
+        "language": "yaml",
+        "content": "spec:\n  replicas: 3\n  template:\n    spec:\n      containers:\n        - name: auth-api\n          image: registry.internal/auth-api:latest\n          resources: {}\n          env:\n            - name: DB_PASSWORD\n              value: \"prod-Kj29fbQ\"\n            - name: LOG_LEVEL\n              value: \"debug\""
+      },
+      "options": [
+        "`imagePullPolicy` is not set explicitly, so behaviour depends on the tag.",
+        "A production database password sits in plain text in a manifest that is in git and readable by anyone with get on the Deployment — and `:latest` means nobody can say what is running or roll back to a known image.",
+        "`resources: {}` leaves the pod BestEffort, so the scheduler cannot place it sensibly and it is first to be evicted under node pressure.",
+        "`replicas: 3` is too few for a production payments service."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The missing resources block is a genuine finding and you would raise it in the same review — it is why this pod gets evicted first and why the node bin-packs badly. But the credential in git is the one that cannot be undone by an edit, and a mutable `:latest` tag means the rollback you will reach for during the resulting incident does not exist. LOG_LEVEL=debug on a payments API is a third quiet problem: cardholder data in logs."
+    },
+    {
+      "id": "kubernetes-04",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "During a routine node upgrade, a service with three replicas went completely down for four minutes.",
+      "options": [
+        "The deployment strategy should have been Recreate rather than RollingUpdate.",
+        "All three replicas were scheduled on the drained node — nothing spread them across nodes, and no PodDisruptionBudget existed to make the drain wait for replacements.",
+        "The cluster autoscaler was disabled, so no replacement node was available.",
+        "The readiness probe's initial delay was too long for the new pods."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "Three replicas is a claim about redundancy that the scheduler is under no obligation to honour — without topology spread constraints or anti-affinity, they can all land on one node, and without a PDB the drain evicts them together. The readiness-delay answer is the good distractor: it genuinely lengthens the gap, so it is a contributing cause worth fixing, but it does not explain a full outage."
+    },
+    {
+      "id": "kubernetes-05",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A service has `cpu: limits: 500m`. Its p99 latency is terrible, but the dashboards show average CPU utilisation around 30%.",
+      "options": [
+        "Scale out — add replicas until the average utilisation drops further.",
+        "CFS throttling: the limit is enforced per 100ms slice, so a request that needs a short burst is stalled even though the average looks idle. Raise or remove the CPU limit and keep the request for scheduling.",
+        "The nodes are too small, so the pods are competing for the same cores.",
+        "Add a service mesh so you can see where the latency is coming from."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Averages hide throttling by construction — the pod is idle most of the slice and pinned for the rest of it, and `container_cpu_cfs_throttled_seconds_total` is the metric that tells you. Scaling out is the tempting move and it does help a genuinely CPU-bound service, but here every new replica gets the same 500m ceiling and the same p99. Many teams end up setting CPU requests and no CPU limit for exactly this reason."
+    },
+    {
+      "id": "kubernetes-06",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "How should application secrets reach pods in a regulated payments environment?",
+      "options": [
+        "Kubernetes Secrets are encrypted by the API server, so a Secret object plus namespace RBAC is sufficient.",
+        "Treat the cluster as a consumer rather than a store: secrets live in a managed store, are synced or projected in at run time with short-lived credentials, etcd encryption at rest is on, and RBAC limits who can read Secret objects at all.",
+        "Encrypt the secrets with a shared team key and commit them to the repository so they are version controlled alongside the manifests.",
+        "Move them into ConfigMaps and restrict access to the namespace."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The first option is the common misconception — Secrets are base64, not encrypted, unless you have turned on encryption at rest. Option three is the interesting wrong answer, because sealed secrets and SOPS are legitimate patterns used by good teams; they lose to a managed store here on rotation and audit, which is precisely what an auditor at a card issuer will ask about."
+    },
+    {
+      "id": "kubernetes-07",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "order",
+      "prompt": "A node needs to come out of service for maintenance during business hours.",
+      "instruction": "Order the steps.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Cordon the node so nothing new is scheduled onto it"
+        },
+        {
+          "id": "b",
+          "text": "Check that the workloads on it have PodDisruptionBudgets and replicas that can run elsewhere"
+        },
+        {
+          "id": "c",
+          "text": "Drain it, letting the disruption budgets pace the evictions"
+        },
+        {
+          "id": "d",
+          "text": "Confirm the evicted workloads are healthy on other nodes, then start the maintenance"
+        }
+      ],
+      "correctOrder": [
+        "b",
+        "a",
+        "c",
+        "d"
+      ],
+      "explanation": "Cordon-then-drain is the muscle memory, but the check comes first: if a workload has one replica, or no budget, or nowhere else to fit, the drain finds that out by causing an outage. Confirming health elsewhere before touching the hardware is what stops a maintenance window becoming an incident."
+    },
+    {
+      "id": "kubernetes-08",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "You inherit a cluster built three years ago by someone who has left. What do you want to know first?",
+      "options": [
+        "Upgrade it to a supported version straight away — running out of support is the biggest risk.",
+        "Whether the cluster itself can be rebuilt from code, how far behind the supported version window it is, who holds cluster-admin, and what actually happens when a node dies.",
+        "Install a service mesh so you can see traffic between services before changing anything.",
+        "Plan a migration to a managed container service so the cluster stops being your problem."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The version question matters, which is what makes the first option tempting — but upgrading a cluster you cannot rebuild is a one-way door, and half of these clusters have a manual step in them nobody remembers. Find out whether it is reproducible before you touch it; that answer determines whether the upgrade is routine or a project."
+    }
+  ]
+}

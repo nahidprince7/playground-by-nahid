@@ -1,0 +1,152 @@
+{
+  "skill": "linux-automation",
+  "label": "Linux, Bash & Python automation",
+  "questions": [
+    {
+      "id": "linux-automation-01",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "How do you decide that something is worth automating?",
+      "options": [
+        "Anything done more than once should be automated — manual work is a failure of engineering.",
+        "When it repeats, or when doing it by hand is dangerous, and the automation is cheap enough to maintain that it will not become its own liability.",
+        "When it has become boring enough that people are making mistakes on it.",
+        "When a manager asks for it, since that is where the priority is set."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The interesting half of this answer is the cost side. Automation is code someone maintains at 3am, and a fragile script that runs quarterly can be worse than a checklist. The 'automate everything' answer is the tempting one because it sounds like enthusiasm — teams that live by it end up with a graveyard of scripts nobody trusts. The dangerous-by-hand criterion matters too: a rare task with a huge blast radius is worth automating on the first repetition."
+    },
+    {
+      "id": "linux-automation-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This runs nightly from root's crontab on the database host.",
+      "subject": {
+        "kind": "code",
+        "language": "bash",
+        "content": "#!/bin/bash\n\nBACKUP_DIR=/var/backups/$APP_NAME\n\nrm -rf $BACKUP_DIR/*\ntar czf $BACKUP_DIR/db.tar.gz /var/lib/postgresql\naws s3 cp $BACKUP_DIR/db.tar.gz s3://backups/db.tar.gz\n\necho \"backup done\"\n"
+      },
+      "options": [
+        "The shebang should be `#!/bin/sh` for portability across hosts.",
+        "There is no `set -euo pipefail` and nothing is quoted, so an unset `APP_NAME` turns the first command into `rm -rf /var/backups/*`, and every later failure is ignored — the script still exits 0 and prints 'backup done'.",
+        "Tarring a live PostgreSQL data directory does not produce a restorable backup; it needs `pg_dump` or a filesystem snapshot with the database quiesced.",
+        "`aws s3 cp` should be `aws s3 sync` so unchanged files are not re-uploaded."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "The unquoted, unset variable is the one that destroys data tonight, and the missing `set -e` is what guarantees nobody finds out — cron sees exit 0 and the monitoring, if any, sees a successful job. The PostgreSQL answer is an excellent second finding and you would raise it in the same review: a tar of a running data directory usually restores into a corrupt cluster, so this backup is also a lie. Two silent failures, one script."
+    },
+    {
+      "id": "linux-automation-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "An application host is crawling. `top` shows load average around 30 on 8 cores, CPU mostly idle, and several processes in D state.",
+      "options": [
+        "The box is CPU-starved — the load average says so. It needs more cores.",
+        "The processes are blocked in uninterruptible I/O, which Linux counts in the load average. Check iowait, the disk or the network filesystem it is waiting on, and whether it is swapping.",
+        "A memory leak in the application — restart it and watch whether the load falls.",
+        "Too many threads: lower the worker count until the load average drops below the core count."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "Linux load average is not a CPU queue — it counts uninterruptible sleep too, which is why a stuck NFS mount or a saturated EBS volume produces a load of 30 with an idle CPU. The memory-leak answer is the good distractor because a host deep into swap shows exactly this shape, and checking swap is part of the correct diagnosis; the difference is that you check before restarting, because a restart destroys the evidence."
+    },
+    {
+      "id": "linux-automation-04",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "`df` says the root filesystem is 100% full. `du -sh /*` accounts for barely half of it.",
+      "options": [
+        "A process is still holding a deleted file open, so the space is not released until the file handle is closed — `lsof +L1` finds it, and restarting or truncating the holder frees the space.",
+        "Re-run `du` with sudo; it is skipping directories it cannot read.",
+        "The filesystem needs an fsck — the discrepancy means the free-space accounting is corrupt.",
+        "Clear out `/var/log`, which `du` under-reports because of log rotation."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "Classic on any host where someone deleted a big log to buy time while the writer kept its handle open — usually the very log they were trying to clear. Running `du` with sudo is the strong distractor: unreadable directories genuinely do hide space, so it is the right second check, and it is cheap. Reaching for fsck on a live production filesystem is how a full disk becomes an outage."
+    },
+    {
+      "id": "linux-automation-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A nightly reconciliation job started taking longer than a day. Two copies now overlap, and the output has duplicate records.",
+      "options": [
+        "Move the cron entry to a quieter hour so the job has more time to finish.",
+        "Take an exclusive lock — `flock` on a local host, or a lease if it can run anywhere — so a second instance exits rather than starts, and make the job idempotent so an overlap is harmless when the lock inevitably fails.",
+        "Split the schedule so it runs twice a day on half the data each time.",
+        "Increase the instance size so the job finishes inside its window."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Cron will happily start a job that is already running; nothing in it thinks about overlap. The lock is the fix, and idempotency is the belt to the lock's braces — locks are lost when a host dies mid-run, and the second copy will eventually start anyway. Moving the hour is the tempting answer because it works right up until the data grows again, which is what happened the first time."
+    },
+    {
+      "id": "linux-automation-06",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "cloud",
+      "type": "red-flag",
+      "prompt": "The service unit and sudoers entry for a payments API running on EC2.",
+      "subject": {
+        "kind": "code",
+        "language": "ini",
+        "content": "# /etc/systemd/system/payments-api.service\n[Service]\nUser=root\nEnvironmentFile=/opt/payments/api.env\nExecStart=/opt/payments/bin/api\nRestart=always\n\n# /etc/sudoers.d/deploy\ndeploy ALL=(ALL) NOPASSWD: ALL"
+      },
+      "options": [
+        "`Restart=always` with no `RestartSec` or `StartLimitBurst` will restart a crash-looping build forever, so an outage looks like flapping instead of a failure.",
+        "`ExecStart` should invoke the binary through a login shell so the environment is loaded properly.",
+        "The service runs as root with its credentials in a file on disk, and the deploy account can become root without a password — so any code execution in the API, or any compromise of the deploy key, is a full host compromise.",
+        "`EnvironmentFile` should be under `/etc/` rather than `/opt/`."
+      ],
+      "correct": 2,
+      "eliminate": 1,
+      "explanation": "Two independent privilege problems stack here: nothing forces the process to run as root, and the passwordless blanket sudo means the deploy path has no privilege boundary at all. A dedicated unprivileged user, a secret fetched at start rather than left on disk, and sudo scoped to the specific commands the deploy needs. The restart-loop finding is real and worth its own line in the review — it is an availability bug, not a way in."
+    },
+    {
+      "id": "linux-automation-07",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "Say half your week here turns out to be manual toil. How would you decide what to automate first, and how would you show it was worth doing?",
+      "modelAnswer": "I would spend the first couple of weeks writing down what I actually do — the task, how often, how long, and what happens when it goes wrong — because memory over-weights the annoying and under-weights the frequent. Then I would rank by frequency multiplied by cost, but push anything dangerous up the list regardless of frequency: a production change made by hand from a runbook is worth automating the first time, because the cost of getting it wrong is not measured in minutes. I would go after the things that wake people up before the things that merely bore them. The automation itself gets treated as production code — in version control, reviewed, idempotent so re-running is safe, with logging and an alert when it fails, because an automation that fails silently is worse than the manual step it replaced. And I would hand it over: documentation, a dry-run mode, and someone else running it once, so I do not become the single point of failure the automation was meant to remove. To show it worked: hours of toil before and after, how many manual production changes we still make in a month, and whether the runbook it replaced has been deleted.",
+      "keyPoints": [
+        "Measure the toil first — frequency, duration, failure rate — instead of guessing",
+        "Rank by frequency times cost, but promote anything dangerous by hand",
+        "Automate what pages people before what bores them",
+        "Treat the automation as production code: version controlled, reviewed, idempotent, observable",
+        "Hand it over — dry run, docs, someone else runs it — so it does not centre on you",
+        "Prove it with toil hours, manual change count, and the deleted runbook"
+      ],
+      "explanation": "The answer that fails is the one that jumps straight to what they would build. Measurement first is what makes the prioritisation defensible, and the handover is the part most engineers skip — automation that only its author can run has moved the toil, not removed it."
+    }
+  ]
+}

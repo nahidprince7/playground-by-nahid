@@ -1,0 +1,143 @@
+{
+  "skill": "rust-concurrency",
+  "label": "Concurrency, async & thread safety in Rust",
+  "questions": [
+    {
+      "id": "rust-concurrency-01",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A worker pool needs shared access to a config cache. Rc<RefCell<Config>> was fine when this was single-threaded; inside thread::spawn the compiler refuses it.",
+      "options": [
+        "Rc's refcount and RefCell's borrow flag are both plain non-atomic counters, so neither type is Send or Sync. Across threads that means Arc plus a lock — the compiler is refusing the data race before it happens.",
+        "thread::spawn requires 'static, so cloning the Config into the closure is the fix.",
+        "Add an unsafe impl Send for the wrapper type — the config is only read after startup.",
+        "Use std::thread::scope instead; scoped threads allow Rc because the borrow cannot outlive the scope."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "Two different bounds get confused here and the last option is the good confusion: scoped threads do relax 'static, but Send and Sync are about whether the type is safe to touch from two threads at all, and no lifetime trick changes that. Cloning has the same problem — you would be cloning an Rc, and its refcount is exactly what races. Arc<RwLock<Config>>, or an immutable Arc<Config> swapped on reload."
+    },
+    {
+      "id": "rust-concurrency-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Your Tokio service stalls for hundreds of milliseconds at a time. The culprit is a synchronous driver call that reads from a device and takes ~200 ms.",
+      "options": [
+        "Raise the worker thread count until the stalls stop happening.",
+        "Wrap the call in an async block — that makes it non-blocking.",
+        "A blocking call occupies a runtime worker for its whole duration, and every task queued behind it waits. Move it to spawn_blocking, or to a dedicated thread that talks to the runtime through a channel, so the async workers stay free to poll.",
+        "Call futures::executor::block_on inside the task so the runtime knows to wait."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "async fn does not create a thread and an async block does not make anything non-blocking — it only wraps code in a future that, once polled, still runs to completion on the worker. More workers is the tempting answer because it genuinely does reduce the stalls, right up to the load where it doesn't; you have bought headroom, not fixed the design. The rule is simple: an async task must always be able to reach its next await point quickly."
+    },
+    {
+      "id": "rust-concurrency-03",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This is on the write path of a device state service. Under load, updates for every device slow to a crawl together.",
+      "subject": {
+        "kind": "code",
+        "language": "rust",
+        "content": "async fn update(&self, id: DeviceId, value: f64) {\n    let mut map = self.state.lock().unwrap();   // std::sync::Mutex\n    map.insert(id, value);\n    self.telemetry.publish(id, value).await;\n}"
+      },
+      "options": [
+        "std::sync::Mutex should never be used in async code — tokio::sync::Mutex is the correct type here.",
+        "The lock is held across an .await, so the task can be parked mid-publish while still holding it and every other device's update queues behind a network call. Drop the guard before awaiting — insert, end the scope, then publish.",
+        "lock().unwrap() should be lock().expect(\"state poisoned\") so a poisoned mutex is diagnosable.",
+        "insert should be entry(id).or_insert(value) to avoid overwriting an existing reading."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The first option is the near-miss that gets waved through in review: switching to tokio's Mutex makes the guard hold across await legal, so the compile error goes away and the queue behind the lock stays exactly as long. The lock should cover the map mutation and nothing else. As written this often doesn't even compile on a multi-threaded runtime, because the std guard isn't Send — and that error is doing you a favour."
+    },
+    {
+      "id": "rust-concurrency-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Sensor frames arrive at a fixed 1 kHz. The consumer that files them usually keeps up but occasionally takes longer than a millisecond. The channel between them is bounded. What should the producer do when it finds the channel full?",
+      "platform": "systems",
+      "options": [
+        "Block until there is room — a sample must never be lost.",
+        "Switch to an unbounded channel so the situation cannot arise.",
+        "It depends what the data is for. For a live telemetry or control signal, drop or overwrite the oldest and count the drops: a stale sample has no value, and blocking makes the reader miss the next hardware deadline, which loses samples anyway and hides it. Block only when every sample is genuinely required, and then size the queue for the worst case and say so.",
+        "Retry the send in a tight loop until it succeeds."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "The first option sounds like the rigorous answer and is the one that quietly breaks the system: back-pressure travels upstream into a thread with a hardware deadline, so you lose samples at the card instead of at the queue, where nobody is counting. Unbounded is the same failure with extra steps — the memory grows until the process dies. Whichever you choose, the drop counter is not optional; a silent drop is an unexplainable gap in the data three months later."
+    },
+    {
+      "id": "rust-concurrency-05",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A task reads frames in a tokio::select! against a shutdown signal. After a shutdown that was started and then aborted, the device stream comes back permanently garbled.",
+      "options": [
+        "select! drops the losing future, so a read that was part-way through consuming bytes loses them and the stream is left out of frame sync. The read was not cancellation-safe. Keep the partial state outside the future — own the buffered reader, or move the read into its own task that feeds a channel.",
+        "The device needs a longer read timeout so the shutdown branch doesn't win the race.",
+        "Put a mutex around the stream so the two select branches cannot interleave their reads.",
+        "Use futures::join! instead of select! so neither branch is cancelled."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "The mutex is the tempting answer because the symptom smells like a race — but both branches are in one task, so nothing runs concurrently and nothing is corrupted concurrently. State was thrown away, not fought over. Cancellation safety is the thing to look up before putting any read in select!: some combinators guarantee it, most hand-rolled reads do not, and the bug surfaces only on the rare path where the other branch wins."
+    },
+    {
+      "id": "rust-concurrency-06",
+      "stage": "technical",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A shutdown flag is an AtomicBool, polled in a hot loop. A colleague wants Ordering::Relaxed everywhere because it is faster.",
+      "options": [
+        "Relaxed is never acceptable in production code — use SeqCst and stop thinking about it.",
+        "With Relaxed the reader may never observe the store at all, so the loop can spin forever.",
+        "For a lone flag that guards nothing else, Relaxed is fine and the loop will see the store. It stops being fine the moment data is published alongside the flag: then the writer needs Release and the reader Acquire, or the reader can see the flag set and the data it refers to not yet written.",
+        "Wrap it in a Mutex<bool> — atomics are for counters, not for flags."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "The second option is the good misconception: memory orderings constrain the ordering of operations, not the timeliness of propagation, so a Relaxed store does become visible — it just carries no promise about what else is visible with it. SeqCst-everywhere is defensible as a default and is what most codebases should do, but 'never think about it' is the wrong reason; the moment you publish a pointer or a buffer next to the flag, Acquire/Release is the thing you actually need to have understood."
+    },
+    {
+      "id": "rust-concurrency-07",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "How do you decide between OS threads and async for a given piece of a system?",
+      "modelAnswer": "I start from what the work is waiting on. Async pays when there are many concurrent operations that spend their time waiting on I/O — thousands of sockets, a lot of device sessions — because a task at an await point costs a small allocation rather than a stack and a scheduler slot. Threads pay when the work is CPU-bound, when it must be blocking anyway because the library underneath is blocking, or when a piece of work needs its own predictable timing — a control loop I want pinned to a core with a real-time priority does not belong on a shared runtime at all. In practice a system is usually both: a threaded core doing the deterministic work, an async edge doing the networking, and a channel between them. The cost of async is that it is contagious and that every blocking call becomes a latent stall, so I keep the async surface at the boundary rather than letting it colour the whole codebase. I'd also weigh what the team can debug: a stuck thread shows up in a backtrace, a starved task usually doesn't.",
+      "keyPoints": [
+        "Decide by what the work waits on: I/O concurrency versus CPU or timing",
+        "Async for many waiting operations; threads for blocking, CPU-bound or timing-critical work",
+        "Deterministic control loops want their own pinned thread, not a shared runtime",
+        "A channel between a threaded core and an async edge is the common shape",
+        "Async is contagious and turns every blocking call into a latent stall",
+        "Debuggability matters — a stuck thread is visible, a starved task often isn't"
+      ],
+      "explanation": "The weak answer treats async as the modern default and threads as legacy. The senior signal is naming the boundary between the two and why it is where it is — plus admitting the operational cost, because a runtime that starves is much harder to diagnose at 3am than a thread that is simply blocked."
+    }
+  ]
+}

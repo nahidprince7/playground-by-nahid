@@ -1,0 +1,196 @@
+{
+  "skill": "test-automation",
+  "label": "UI test automation & framework design",
+  "questions": [
+    {
+      "id": "test-automation-01",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A candidate describes their automation record at their last company. What's the red flag?",
+      "subject": {
+        "kind": "quote",
+        "content": "We automated one hundred percent of our test cases — every manual case became a Selenium script. It took a year, and by the end nobody had to test anything by hand."
+      },
+      "options": [
+        "Selenium is outdated; a modern team would have used Playwright or Cypress.",
+        "A year of engineering went into scripting cases regardless of whether they were worth automating, and 'nobody tests by hand' means exploratory testing stopped — the suite now only ever asks the questions someone thought of a year ago.",
+        "One hundred percent coverage is impossible, so the candidate is exaggerating.",
+        "They didn't say how long the suite takes to run."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "Automation is regression protection — it re-asks known questions cheaply. It has never found a bug nobody anticipated, which is what exploratory testing is for, so a team that stops doing it by hand has traded away its only source of new findings. The runtime point is a genuine second concern and worth raising, but the deeper problem is treating a coverage percentage as the goal rather than the maintenance cost of every script that will now need updating forever."
+    },
+    {
+      "id": "test-automation-02",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "red-flag",
+      "prompt": "This test passes on your machine and fails about a third of the time in CI. What's the main problem?",
+      "subject": {
+        "kind": "code",
+        "language": "java",
+        "content": "driver.findElement(\n    By.xpath(\"/html/body/div[3]/div/div[2]/form/div[4]/button\")\n).click();\n\nThread.sleep(5000);\n\nassertTrue(driver.getPageSource().contains(\"Success\"));"
+      },
+      "options": [
+        "The sleep is too short — five seconds isn't enough for a CI machine, so it should be raised to fifteen.",
+        "The absolute XPath breaks the moment anyone adds a wrapper div, and the fixed sleep is both slower than necessary on a good run and still a race on a slow one — it should be a stable test id plus an explicit wait on the condition being asserted.",
+        "The assertion is too broad: matching anywhere in the page source would pass on an unrelated 'Success' string elsewhere on the page.",
+        "Selenium can't assert on page content directly; this needs a page object."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "A fixed sleep encodes a guess about someone else's machine, so it makes the suite slow when things are fast and flaky when things are slow — an explicit wait for the element or text is faster and more reliable at the same time. The broad assertion is a real second finding worth fixing in the same pass; it's tempting as the answer because it's true, but it explains a false pass, not the intermittent failure you were asked about."
+    },
+    {
+      "id": "test-automation-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Your suite is green when run one test at a time, but once CI runs it with four parallel workers, a handful of tests fail differently on every run. Most likely cause?",
+      "options": [
+        "The CI machines are underpowered, so the timeouts need raising.",
+        "The tests share mutable state — the same login account, the same seeded records, the same coupon — so parallel workers overwrite each other's data.",
+        "Parallel execution isn't supported by most browser drivers and the suite should be run serially.",
+        "The browser version in CI differs from the local one."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "'Different tests fail each run' is the signature of tests racing over shared data rather than any single test being wrong — the fix is that each test creates its own user and its own records, usually through the API, and doesn't care what else is running. Raising timeouts is the tempting first move because it sometimes turns the build green for a week, which is the worst possible outcome: the race is still there and now it's slower to notice."
+    },
+    {
+      "id": "test-automation-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "The end-to-end suite has grown to 300 browser tests, takes two hours, and a different ten fail every night. What's the right structural fix?",
+      "options": [
+        "Add automatic retries and shard across more CI machines so the suite is fast and green again.",
+        "Move the business-rule, validation and error-handling cases down to API and unit tests where they run in seconds and fail unambiguously, and keep a small end-to-end set on the journeys that actually earn money.",
+        "Rewrite the suite in a faster framework, since the tool is what makes browser tests slow.",
+        "Run the full suite weekly instead of nightly, so failures get investigated properly."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Most of a 300-test browser suite is checking rules that never needed a browser — a field validation driven through the UI is the same assertion, a hundred times slower and with a hundred more ways to fail for reasons that aren't the bug. Retries and sharding are the tempting answer because they work immediately and the metrics improve, but retrying a flaky test hides the class of failure that also happens to real users; sharding just pays more to run the wrong tests."
+    },
+    {
+      "id": "test-automation-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This test has been in the suite for months and fails roughly once a week for reasons nobody can explain. What's the core design flaw?",
+      "subject": {
+        "kind": "code",
+        "language": "javascript",
+        "content": "it('checkout works', () => {\n  cy.visit('/login');\n  cy.get('#email').type('qa.tester@example.com');\n  cy.get('#password').type('Passw0rd!');\n  cy.get('.btn').click();\n\n  cy.visit('/cart');\n  cy.get('.cart-item').should('have.length', 3);\n  cy.get('.btn-primary').click();\n});"
+      },
+      "options": [
+        "The password is hardcoded in the repository instead of coming from an environment variable.",
+        "It depends on a shared account whose cart someone set up by hand — any other test, tester or nightly data reset changes that count of three, and the failure looks like a product bug rather than a test-data problem.",
+        "It logs in through the UI instead of seeding the session, which makes every test slower.",
+        "`.btn` and `.btn-primary` are styling classes, so a CSS refactor silently retargets the click."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "A test that asserts on state it didn't create is not testing checkout, it's testing that nobody touched that account this week — which is why the failure is weekly and unexplainable. The class-selector point is the strongest runner-up and worth fixing in the same pass, since a styling class is not a contract; logging in through the UI is a real speed cost but an honest one. The secret hardcoded in a repo is a genuine finding, just not the cause of the flakiness."
+    },
+    {
+      "id": "test-automation-06",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "order",
+      "prompt": "You're adding automation coverage for a feature that until now was only tested by hand.",
+      "instruction": "Put these in the order that gets you a suite people trust.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Run it on every pull request, publishing screenshots, video or a trace on failure"
+        },
+        {
+          "id": "b",
+          "text": "Pick the two or three flows where a regression would actually hurt, and leave the rest manual for now"
+        },
+        {
+          "id": "c",
+          "text": "Make each test create its own data and account through the API, and clean up after itself"
+        },
+        {
+          "id": "d",
+          "text": "Make the merge conditional on the suite, once it has been green for its own reasons for a couple of weeks"
+        },
+        {
+          "id": "e",
+          "text": "Replace every fixed wait with an explicit wait on the application state the test is about to assert"
+        }
+      ],
+      "correctOrder": [
+        "b",
+        "c",
+        "e",
+        "a",
+        "d"
+      ],
+      "explanation": "Choosing what not to automate is the first and most valuable decision. Independent data comes before stability work because most flakiness is a data collision wearing a timing costume. And gating the merge is last on purpose: a blocking gate that fails for its own reasons trains the whole team to click through it, and you never get that trust back."
+    },
+    {
+      "id": "test-automation-07",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "You'd be the first person here to automate anything. There's no framework, no CI integration, nothing. What do you do in the first month?",
+      "modelAnswer": "The first week I wouldn't write a test at all — I'd find out where the escaped defects came from over the last few releases and which flows the business can't afford to have broken, because that list is what deserves automating and everything else is enthusiasm. Then I'd pick five to eight critical journeys, web and mobile, and automate those first: login, the core transaction, payment, and whatever the support inbox complains about. Structurally, tests set up their own data through the API rather than clicking through prerequisite screens, elements are found by stable test ids I'd ask the developers to add as part of the definition of done, and there are no fixed sleeps anywhere. It runs in CI on every pull request from about week two, reporting into the team's channel with a trace or video on failure, but it does not block merges until it has earned that — a gate that cries wolf gets ignored forever. I'd write the framework so a manual tester on the team can read a test and add a case without me, because a suite only one person maintains dies when that person is on leave. And I'd report progress as escaped defects and regression hours saved, not as number of scripts written, so the investment can be judged honestly — including the parts I decide are not worth automating.",
+      "keyPoints": [
+        "Start from escaped defects and business-critical flows, not from the existing manual case list",
+        "Five to eight critical journeys across web and mobile first",
+        "Test data created via API; stable test ids agreed with developers; no fixed sleeps",
+        "Runs in CI on every PR with useful failure artifacts, before it gates anything",
+        "Readable enough that a manual tester can extend it",
+        "Measured by escaped defects and time saved, not script count"
+      ],
+      "explanation": "The revealing part of this answer is what the candidate refuses to automate and how they earn the right to block a merge. Answers that jump straight to tool choice — Cypress versus Playwright — are answering an easier question; the tool matters far less than the data strategy and whether anyone trusts the result."
+    },
+    {
+      "id": "test-automation-08",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "The nightly automation report has been going out for six months. Nobody reads it and failures sit unlooked-at for days. What actually fixes this?",
+      "options": [
+        "Send the report to the engineering manager as well, so there's accountability for ignoring it.",
+        "Move the suite onto every pull request so a failure belongs to a change someone just made, make each failure ship its trace and the owning test, and delete or fix the tests nobody trusts.",
+        "Add a dashboard showing pass rate over time so the trend is visible to everyone.",
+        "Run the suite twice nightly to confirm which failures are real before reporting them."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "Feedback gets acted on when it arrives attached to a specific change and a specific person, which nightly runs destroy by batching a day of commits into one red report nobody owns. The dashboard is the tempting answer because visibility feels like the missing ingredient — but a chart of a number people already distrust changes nothing; the trust problem is that a share of those failures are the suite's own fault, and until those are gone every report is noise."
+    }
+  ]
+}

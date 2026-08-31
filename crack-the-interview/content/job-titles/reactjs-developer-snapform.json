@@ -1,0 +1,108 @@
+{
+  "slug": "reactjs-developer-snapform",
+  "title": "ReactJS Developer (React & Realtime, 1-2 years)",
+  "level": "junior",
+  "difficulty": 2,
+  "platform": "web",
+  "stack": [
+    "React",
+    "JavaScript",
+    "WebSockets",
+    "REST APIs"
+  ],
+  "briefing": {
+    "summary": "An early frontend seat on a small product team, building the screens of a form service in React and wiring them to a REST API. Most of the work is ordinary component work done properly — state in the right place, lists that survive a delete, a request whose failure the user can actually see — so expect to be asked why something behaves oddly rather than to define a term. Live updates run over WebSockets, and the questions follow what that costs in a browser: connections that need closing, reconnects that need patience, the same message arriving twice. Clean code and Git come up as often as React does, because the team is small enough that your commits and your pull requests are how everyone else finds out what you did. Nothing here needs you to have designed a system; it needs you to have shipped features and paid attention to what went wrong.",
+    "requirements": [
+      "React components, state, effects and lists that behave under edit and delete",
+      "JavaScript fundamentals — promises, async/await, and what is really falsy",
+      "REST API integration, including error responses, loading states and races",
+      "WebSockets for live updates: connection lifecycle, reconnects and duplicates",
+      "Semantic, accessible forms and CSS you can still read next month",
+      "Git and code review: small commits, honest messages, readable pull requests"
+    ]
+  },
+  "topics": [
+    {
+      "id": "react",
+      "label": "React components, state & hooks",
+      "skills": [
+        "react"
+      ]
+    },
+    {
+      "id": "javascript",
+      "label": "JavaScript & the browser",
+      "skills": [
+        "javascript"
+      ]
+    },
+    {
+      "id": "realtime",
+      "label": "WebSockets & live updates",
+      "skills": [
+        "websockets"
+      ]
+    },
+    {
+      "id": "api",
+      "label": "REST API integration",
+      "skills": [
+        "api-integration"
+      ]
+    },
+    {
+      "id": "collaboration",
+      "label": "Git & working with a team",
+      "skills": [
+        "git-workflow"
+      ]
+    },
+    {
+      "id": "ui",
+      "label": "Forms, CSS & accessible markup",
+      "skills": [
+        "css",
+        "accessibility"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "id": "hr",
+      "name": "HR Screen",
+      "interviewer": {
+        "name": "Samiha",
+        "role": "People Lead"
+      },
+      "count": 5
+    },
+    {
+      "id": "technical",
+      "name": "Technical Screen",
+      "interviewer": {
+        "name": "Fahim",
+        "role": "Frontend Engineer"
+      },
+      "count": 6
+    },
+    {
+      "id": "deepdive",
+      "name": "Deep Dive",
+      "interviewer": {
+        "name": "Tanzil",
+        "role": "Founding Engineer"
+      },
+      "count": 6
+    },
+    {
+      "id": "ask",
+      "name": "The Ask",
+      "interviewer": {
+        "name": "Orin",
+        "role": "Co-founder & CTO"
+      },
+      "count": 5
+    }
+  ],
+  "extra": []
+}

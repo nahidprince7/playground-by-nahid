@@ -51,6 +51,71 @@
       "level": "mid",
       "difficulty": 3,
       "questionCount": 24
+    },
+    {
+      "slug": "software-engineer-frontend-polygon",
+      "title": "Software Engineer (Frontend, 3-5 years)",
+      "stack": [
+        "React",
+        "Next.js",
+        "SASS",
+        "Node.js"
+      ],
+      "level": "mid",
+      "difficulty": 3,
+      "questionCount": 24
+    },
+    {
+      "slug": "rust-software-engineer-industrial",
+      "title": "Rust Software Engineer (Industrial, 5+ years)",
+      "stack": [
+        "Rust",
+        "Tokio",
+        "Linux",
+        "Docker"
+      ],
+      "level": "senior",
+      "difficulty": 5,
+      "questionCount": 23
+    },
+    {
+      "slug": "devops-engineer-paymentology",
+      "title": "DevOps Engineer (AWS + Kubernetes, 7+ years)",
+      "stack": [
+        "AWS",
+        "Terraform",
+        "Kubernetes",
+        "Kafka"
+      ],
+      "level": "senior",
+      "difficulty": 5,
+      "questionCount": 24
+    },
+    {
+      "slug": "sqa-engineer-polygon",
+      "title": "Software Quality Assurance Engineer (2-5 years)",
+      "stack": [
+        "Selenium",
+        "Cypress",
+        "Postman",
+        "JMeter"
+      ],
+      "level": "mid",
+      "difficulty": 3,
+      "questionCount": 24
+    },
+    {
+      "slug": "reactjs-developer-snapform",
+      "title": "ReactJS Developer (React & Realtime, 1-2 years)",
+      "stack": [
+        "React",
+        "JavaScript",
+        "WebSockets",
+        "REST APIs"
+      ],
+      "level": "junior",
+      "difficulty": 2,
+      "questionCount": 22
     }
   ]
 }

@@ -1,0 +1,150 @@
+{
+  "skill": "aws",
+  "label": "AWS & cloud infrastructure",
+  "questions": [
+    {
+      "id": "aws-01",
+      "stage": "hr",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "The recruiter reads back something the candidate said earlier in the call.",
+      "subject": {
+        "kind": "quote",
+        "content": "\"We were blocked on a permissions error the night before launch, so I gave the service account AdministratorAccess to get it out the door. We were going to tighten it up the week after.\""
+      },
+      "options": [
+        "They should have raised a change request instead of touching IAM at all.",
+        "The launch shipped on a permission grant nobody scoped, nobody reviewed and nobody removed — 'we'll tighten it later' is how production ends up with admin credentials in it, and there is no sign they went back.",
+        "AdministratorAccess is fine for a service account as long as it is in a non-production account.",
+        "They should have used an IAM user rather than a service account."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Nobody is scoring them on knowing least privilege — they clearly do. The flag is the trade they made and never unwound. The strongest wrong answer is the change-request one, because process would have helped; but the thing an interviewer at a card issuer actually hears is a temporary security exception with no owner and no date."
+    },
+    {
+      "id": "aws-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Your Multi-AZ RDS instance failed over at 3am. The failover finished in about 90 seconds, but the application stayed broken for twenty minutes until someone restarted it.",
+      "options": [
+        "Multi-AZ only protects the backups — you need a read replica promoted manually for real failover.",
+        "The application cached the resolved IP of the endpoint. Failover moves the CNAME, so a client that never re-resolves DNS keeps dialling the old, now-dead, address until it is restarted.",
+        "The instance class is too small, so recovery took longer than the health check allowed.",
+        "The connection pool was too large and exhausted the new primary."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "Multi-AZ failover is a DNS change, and any client that pins the address — a JVM with an infinite DNS cache, a pooled connection that is never validated — sits out the whole event. The read-replica answer is the tempting one because promoting a replica is a real recovery story; it is just not what Multi-AZ does, and it would not explain why a restart fixed it."
+    },
+    {
+      "id": "aws-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A CI runner in your tooling account needs to deploy into the production account. How should it authenticate?",
+      "options": [
+        "Create an IAM user in production, generate an access key, and store the key in the CI system's secret store.",
+        "Federate the CI provider as an OIDC identity provider in production and let the pipeline assume a role whose trust policy is scoped to that specific repository and branch.",
+        "Put the production credentials in an encrypted file in the deployment repository so the pipeline can decrypt them at run time.",
+        "Peer the two accounts' VPCs so the runner reaches production over private networking."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "A short-lived role assumed through OIDC has no secret to leak, rotate or find in a log, and the trust policy pins it to one repo and branch, so a fork or a feature branch cannot deploy. The IAM-user answer is the tempting one because it is what most teams actually do and it does work — but a long-lived key in a CI secret store is a credential that outlives every person who knew about it. VPC peering answers a networking question nobody asked."
+    },
+    {
+      "id": "aws-04",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "cloud",
+      "type": "mcq",
+      "prompt": "Pods in private subnets read and write S3 all day. The NAT gateway's data-processing charge is now one of the largest lines on the bill.",
+      "options": [
+        "Move the nodes into public subnets with public IPs so the traffic skips NAT.",
+        "Add a gateway VPC endpoint for S3, so that traffic is routed to S3 inside the VPC and never touches the NAT gateway at all.",
+        "Put CloudFront in front of the bucket so repeat reads are cached.",
+        "Replace the NAT gateway with a NAT instance on a smaller instance type."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "S3 and DynamoDB have gateway endpoints that cost nothing and are a route-table entry — the single highest-leverage line item in most AWS bills with private subnets. CloudFront is the tempting answer because caching does cut egress, but it does nothing for writes and the pods would still leave via NAT unless you changed the endpoint they call. A NAT instance trades a bill for an on-call pager."
+    },
+    {
+      "id": "aws-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This bucket policy is on the bucket that holds settlement files.",
+      "subject": {
+        "kind": "code",
+        "language": "json",
+        "content": "{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Effect\": \"Allow\",\n      \"Principal\": \"*\",\n      \"Action\": \"s3:*\",\n      \"Resource\": \"arn:aws:s3:::settlement-files/*\",\n      \"Condition\": {\n        \"StringEquals\": { \"aws:SourceVpce\": \"vpce-0a12b34c\" }\n      }\n    }\n  ]\n}"
+      },
+      "options": [
+        "The statement has no Sid, so it cannot be referenced in an audit.",
+        "The Resource covers objects but not the bucket itself, so ListBucket will fail.",
+        "Any principal that can reach that VPC endpoint gets every S3 action on the bucket, deletes and policy changes included — the condition is a network boundary standing in for an identity boundary.",
+        "It should specify a KMS key so the objects are encrypted."
+      ],
+      "correct": 2,
+      "eliminate": 0,
+      "explanation": "The endpoint condition makes this look tightly scoped, and it is the reason a policy like this survives review. But it only says where the caller came from, not who they are: every workload sharing that VPC — including a compromised sidecar — is now an admin of the settlement bucket. The Resource observation is the strong distractor: it is genuinely true and will cause a bug, it just is not the security hole."
+    },
+    {
+      "id": "aws-06",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "Card authorisation has to keep working when an availability zone goes away. Walk us through how you would build for that on AWS.",
+      "modelAnswer": "Everything stateless runs in at least three AZs behind an ALB, with auto scaling groups and EKS node groups per AZ and pod topology spread so a lost zone costs a third of capacity rather than a service. Every AZ must be able to carry the load with one zone gone, so I size for N-1 and check the reserved capacity and per-AZ quotas actually exist rather than assuming the API will give me instances during a regional event. Stateful things get zone-aware equivalents: RDS Multi-AZ with the application re-resolving DNS on failure, MSK across three zones with replication factor three and min.insync.replicas of two, and nothing important living on instance storage or a single-AZ EBS volume. I would keep the whole thing in code so the recovery path is a rebuild rather than a memory, and I would prove it — fault injection that actually removes a zone in a lower environment, and a game day, because a design that has never been tested is a hypothesis. Then I would be honest about what is still single-zone or single-region, write it down, and decide whether the card scheme's availability commitments make it worth fixing.",
+      "keyPoints": [
+        "Three AZs, and capacity sized so N-1 still carries peak",
+        "Zone-aware data tier: RDS Multi-AZ, MSK RF3 with min.insync.replicas 2",
+        "No state on single-AZ storage; clients re-resolve DNS on failover",
+        "Quotas and reserved capacity checked, not assumed",
+        "Recovery is a rebuild from code, not tribal knowledge",
+        "Tested with fault injection or a game day",
+        "The remaining single points of failure written down and consciously accepted"
+      ],
+      "explanation": "Anyone can say 'multi-AZ'. What separates a seven-year answer is the capacity arithmetic (does N-1 hold?), the admission that AWS may not hand you instances during a zone event, and having actually tested it. An answer that never mentions testing is describing a diagram, not a system."
+    },
+    {
+      "id": "aws-07",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "You join and inherit an AWS estate nobody has fully mapped. What do you do in the first fortnight?",
+      "options": [
+        "Start rewriting the highest-risk resources in Terraform immediately, so at least something is under control.",
+        "Read the bill, CloudTrail and the existing IaC together — the bill says what exists, CloudTrail says who changes it and how, and the gap between them is the work.",
+        "Turn on every AWS security service and triage the findings.",
+        "Propose a migration plan to a single well-architected landing zone."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The bill is the only inventory that cannot lie, and CloudTrail tells you whether changes arrive through a pipeline or through someone's console session — which decides everything about how you fix it. Importing into Terraform first is the tempting answer, and you will get there, but importing an estate you have not mapped just encodes the mess with a state file attached."
+    }
+  ]
+}

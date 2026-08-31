@@ -1,0 +1,166 @@
+{
+  "skill": "kafka",
+  "label": "Kafka, MSK & event streaming",
+  "questions": [
+    {
+      "id": "kafka-01",
+      "stage": "hr",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "The candidate is talking about how their last team handled monitoring.",
+      "subject": {
+        "kind": "quote",
+        "content": "\"We had a consumer lag alert that went off most afternoons. It always caught up eventually, so in the end we just switched the alert off and nobody missed it.\""
+      },
+      "options": [
+        "They should have raised the alert threshold instead of switching it off.",
+        "Consumer lag is not a meaningful alert in the first place — throughput would have been the right signal.",
+        "The alert was reporting a real thing — consumers that cannot keep up with the afternoon peak — and the team removed the signal instead of the cause or the noise.",
+        "They should have added partitions to the topic."
+      ],
+      "correct": 2,
+      "eliminate": 1,
+      "explanation": "Nobody is against deleting a noisy alert; alert fatigue is real and this team was right to be annoyed. The flag is that they never established which it was — noise, or a system running at its limit every afternoon with no headroom left for a bad day. Raising the threshold is the strong distractor because it is the same decision made with better manners, and it is defensible only after you know the answer."
+    },
+    {
+      "id": "kafka-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Authorisation, capture and reversal events for a single card must be processed in the order they happened. Throughput is tens of thousands of events a second across millions of cards.",
+      "options": [
+        "Use a single-partition topic, which is the only way Kafka guarantees ordering.",
+        "Partition by card identifier, so every event for one card lands on the same partition and one consumer in the group owns that partition.",
+        "Set `acks=all` on the producer so events are written in order.",
+        "Enable the idempotent producer, which preserves ordering across the cluster."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "Kafka orders within a partition, never across them, so ordering is a partitioning-key decision. The single-partition answer is the honest trap: it is completely correct about the guarantee and completely unusable at this rate, because one partition means one consumer. Idempotence prevents duplicates from producer retries and preserves order per partition — useful, but it is not what puts a card's events together."
+    },
+    {
+      "id": "kafka-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A topic has 10 partitions. You scale the consumer group to 14 pods to clear a backlog, and four of them sit idle.",
+      "options": [
+        "Raise `max.poll.records` so each consumer takes more work per poll.",
+        "A partition is assigned to at most one consumer within a group, so partitions — not pods — are the unit of parallelism. More consumers than partitions does nothing.",
+        "The idle consumers are failing their group join and need a longer session timeout.",
+        "Give each consumer its own group id so they all receive the data."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "The ceiling is the partition count, and raising it later is not free: adding partitions changes which partition a key hashes to, so ordering guarantees for in-flight keys break at the boundary. The separate-group-id answer is the instructive wrong one — every consumer would indeed receive data, but each would receive all of it, which is fan-out, not sharing the work."
+    },
+    {
+      "id": "kafka-04",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This is the configuration for the topic that carries card authorisations.",
+      "subject": {
+        "kind": "code",
+        "language": "properties",
+        "content": "# topic: card-authorisations\nreplication.factor=3\nmin.insync.replicas=1\nunclean.leader.election.enable=true\nretention.ms=3600000\n\n# producer\nacks=1"
+      },
+      "options": [
+        "`retention.ms` of one hour leaves no room to replay after a bad consumer deploy.",
+        "`replication.factor=3` is too low for a payments workload; it should be 5.",
+        "The durability settings cancel out the replication: `acks=1` with `min.insync.replicas=1` acknowledges an authorisation that exists on one broker, and unclean leader election then lets an out-of-date replica take over and drop it.",
+        "The topic name should be namespaced by environment."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "Three replicas look like safety and buy nothing here: nothing waits for them and an out-of-sync broker is allowed to become leader, so an acknowledged authorisation can vanish. `acks=all` with `min.insync.replicas=2` and unclean election off is the standard payments posture. The retention answer is the strong distractor — one hour genuinely is too short to recover from a bad deploy, and you would fix it in the same change."
+    },
+    {
+      "id": "kafka-05",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Your consumers keep dropping out of the group mid-batch. The group rebalances every few minutes and the same records are processed more than once.",
+      "options": [
+        "Raise `max.poll.interval.ms` until the rebalances stop.",
+        "The processing loop is exceeding the poll interval, so the coordinator considers the consumer dead. Cut the batch size or move the slow work off the poll thread, so the consumer keeps polling and the offsets keep advancing.",
+        "Add partitions so each consumer has less to process per poll.",
+        "Switch to at-most-once by committing offsets before processing."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Every rebalance replays whatever was uncommitted, which is why duplicates appear. Raising the interval is the tempting answer because it is the documented knob and it does stop the symptom — at the cost of a genuinely dead consumer now taking minutes to be detected. Fix the pace first, then tune the timeout to fit what the workload actually needs. Committing before processing turns the duplicates into lost authorisations."
+    },
+    {
+      "id": "kafka-06",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "On an Amazon MSK cluster, one broker is at 85% disk while the others sit around 40%.",
+      "options": [
+        "Scale the cluster up to a larger broker type.",
+        "Partitions are unevenly distributed — often one high-volume, long-retention topic's leaders clustered on that broker. Reassign partitions to rebalance, and keep storage autoscaling as a safety net rather than the fix.",
+        "Reduce `retention.ms` across all topics until the disk drops.",
+        "Delete and recreate the topic so partitions are placed evenly."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "MSK adds brokers and storage but does not move existing partitions for you, so the imbalance follows you up to the bigger instance type — which is why scaling up is the tempting answer and only buys weeks. Cutting retention across every topic is the blunt version: it works, and it silently removes the replay window you will want during the next incident."
+    },
+    {
+      "id": "kafka-07",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "Set up the topic that carries card transactions so that we can defend it in an audit. What do you configure, and what do you monitor?",
+      "modelAnswer": "Durability first: replication factor three across three availability zones, min.insync.replicas of two, acks=all, unclean leader election off. That combination means a write is only acknowledged once it is on two brokers in different zones, and a stale replica is never allowed to become leader, so an acknowledged transaction cannot silently disappear. Producers are idempotent, and anything that must be atomic with a database write goes through an outbox rather than a dual write. Key by card or account so ordering holds where it matters, and size partitions for peak plus headroom, since repartitioning later breaks key affinity. Consumers are idempotent against a dedup key because at-least-once is what you actually get; poison messages go to a dead-letter topic with a documented replay path, and retention is long enough — days, not hours — to replay after a bad deploy. On access: TLS in transit, encryption at rest with a customer-managed key, IAM or SASL authentication and per-topic ACLs so a service can only read what it needs, plus client quotas so one misbehaving consumer cannot starve the cluster. Monitoring is consumer lag per group, under-replicated and offline partitions, ISR shrink events, broker disk and CPU, and request latency percentiles — with lag alerting on trend, not on a fixed number.",
+      "keyPoints": [
+        "RF3 across AZs, min.insync.replicas 2, acks=all, no unclean leader election",
+        "Idempotent producers; outbox rather than dual write",
+        "Key for ordering; partition count sized for peak because repartitioning breaks key affinity",
+        "Idempotent consumers with a dedup key; DLQ with a replay path",
+        "Retention long enough to replay a bad deploy",
+        "TLS, encryption at rest, authentication, per-topic ACLs, client quotas",
+        "Monitor lag, under-replicated and offline partitions, ISR shrinks, disk"
+      ],
+      "explanation": "The audit-ready answer is not a longer list of settings, it is the pairing: replication factor is meaningless without min.insync.replicas and acks, and ACLs are the part most candidates forget entirely. Mentioning that adding partitions later breaks ordering is the detail that separates operating a cluster from configuring one."
+    },
+    {
+      "id": "kafka-08",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A team proposes putting Kafka between two services because 'we should be event-driven'. What is the right response?",
+      "options": [
+        "Agree — decoupling services with events is good practice and Kafka is the standard choice.",
+        "Ask what it buys them. A durable, replayable log with multiple independent readers is worth a cluster to operate; a request that needs an answer now is not, and event-driven adds ordering, duplication and debugging problems they do not have today.",
+        "Push back on principle — a synchronous call between two services is simpler and always sufficient.",
+        "Suggest SQS instead, since it is managed and needs no cluster operations."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "The question is whether the workload wants a log — replay, fan-out to readers who arrive later, buffering a slow consumer — or just a message passed along. The SQS answer is the good distractor and is often right for a plain work queue, but recommending a technology before you know the requirement makes the same mistake in the other direction."
+    }
+  ]
+}

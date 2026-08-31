@@ -86,6 +86,88 @@
       "correct": 1,
       "eliminate": 3,
       "explanation": "A vague truthiness assertion can stay green through serious regressions. A valuable test states the observable contract: which order was created, with what values, and which externally meaningful side effects occurred."
+    },
+    {
+      "id": "testing-05",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "In a retro after a bad release, someone says this. What's wrong with it?",
+      "subject": {
+        "kind": "quote",
+        "content": "Look, if a bug reaches production, that's a QA failure. Testing is the gate — if something got through, the gate didn't do its job."
+      },
+      "options": [
+        "It's the wrong target: the developer wrote the bug, so it's a development failure.",
+        "It treats quality as something inspected in at the end rather than built in, so the only lever anyone ever pulls is 'test harder' — and a team that punishes escaped defects gets fewer defects reported, not fewer defects.",
+        "Nothing is wrong with it — QA's whole purpose is to be the last line of defence before production.",
+        "It ignores that some bugs only appear under production load and could never have been caught."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "Every escaped defect had a cheaper place it could have been caught — an ambiguous requirement, a missing unit test, a review nobody did — and blaming the last checkpoint guarantees none of those get looked at. The last option is true and worth saying, but it's a defence of one particular bug rather than the reason the framing itself is corrosive; passing the blame to developers is the same mistake pointed the other way."
+    },
+    {
+      "id": "testing-06",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A web app and a mobile app share one backend API. How should the functional test effort be split?",
+      "options": [
+        "Run the same full functional matrix through both user interfaces, so each platform is equally covered.",
+        "Test the business rules and error handling once at the API level, then test each client for what only it can get wrong — rendering, navigation, offline and background behaviour, permissions, and how it handles the API's error responses.",
+        "Test through the web UI only; anything found there will be the same on mobile since the backend is shared.",
+        "Test through the mobile app only, since it's the more constrained environment and covers the harder cases."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Running the same matrix twice pays double for the same finding and still misses the client-specific failures, which is where the interesting mobile bugs live — a request retried after the app was backgrounded, a partial state after connectivity dropped. The web-only option is tempting when time is short, and it's the right compromise for a shared rule; it just can't tell you what the mobile client does with a 500 response."
+    },
+    {
+      "id": "testing-07",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "The same regression has now reached production three times in six months. Walk us through how you'd handle the third occurrence.",
+      "modelAnswer": "Fixing it a third time is the least interesting part, so I'd spend the effort on why it keeps coming back. First, is it actually the same bug, or three different causes with the same symptom? That changes everything — one is a coverage gap, the other is a design weakness in that area. Then I'd look at the mechanism: was the earlier fix reverted by a merge or a hotfix branch that never made it back to main, which is common and looks exactly like a recurring bug? Was there a test added for the first fix, and if so, why is it green — was it asserting on something the third variant sidesteps? Whatever the answer, the fix doesn't ship until there's an automated test at the lowest level that reproduces the failure and fails before the fix, so the same regression can't return silently. Then I'd widen it: if this is a class of bug — a rounding rule, a timezone, a null path — I'd test the siblings rather than just this instance, because the third occurrence is evidence that the area is fragile, not that we were unlucky. And I'd raise it as a process item, since three escapes in six months usually says something about branch hygiene or about a review step people are skipping under pressure.",
+      "keyPoints": [
+        "Establish whether it's one recurring bug or a fragile area producing several",
+        "Check the process cause — a fix lost to a merge or a hotfix branch is a common culprit",
+        "If a test was added, work out why it stayed green",
+        "Fix doesn't ship without a low-level automated test that fails first",
+        "Test the class of bug, not just the instance",
+        "Raise the pattern at the process level — three escapes is a system signal"
+      ],
+      "explanation": "The distinguishing move is checking whether the earlier fix was lost in version control before assuming a testing gap — teams burn weeks re-fixing bugs that a branch merge quietly reverted. An answer that only says 'add a regression test' is right but shallow; it doesn't explain why the first regression test didn't already catch it."
+    },
+    {
+      "id": "testing-08",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Release is tomorrow morning. Three medium-severity defects are open and there's no time to fix them. You're asked for QA sign-off. What do you do?",
+      "options": [
+        "Withhold sign-off and block the release — quality isn't negotiable, and signing off on known defects makes the sign-off meaningless.",
+        "Sign off; they're only medium severity, and every release ships with some known issues.",
+        "Write up each one as who is affected, how often, and what the workaround is, state clearly that they are unfixed, and put the go/no-go decision to the release owner with that in front of them.",
+        "Sign off on the condition that the three defects are committed to the next sprint."
+      ],
+      "correct": 2,
+      "eliminate": 1,
+      "explanation": "QA's job is to make the risk visible and legible, not to make the business decision — a tester who can veto releases stops being consulted honestly, and one who waves things through stops being useful at all. Blocking is the tempting answer because it sounds principled, and it's exactly right for data loss or a security hole; for three mediums it substitutes your risk appetite for the person accountable for the release. Option D is close and often what actually happens, but a promise about next sprint doesn't change tomorrow's risk."
     }
   ]
 }
