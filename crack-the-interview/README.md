@@ -7,6 +7,20 @@ Pick a job card, revise three of its six topics in 30 seconds, then work through
 four rounds assembled fresh from reusable skill banks. Correct answers build
 confidence; weak answers drain it. Hit zero and the interview ends immediately.
 
+## Build your own interview
+
+The **Customize your interview** card sits at the top of the role list. Pick the
+level you are interviewing at, pick any five skills from the banks, and the game
+assembles a four-round interview out of them on the spot. Each skill shows how
+many questions it can ask a candidate at that level, and a live preview says how
+long the interview will be before you commit to it.
+
+There is no briefing and no second pick. Choosing the five skills *is* the
+revision, so the first question comes straight away. The behavioural bank comes
+along whether you picked it or not — you cannot revise your way out of an HR
+screen. Everything after that is the same game: same rounds, same lifelines,
+same confidence meter, same debrief.
+
 ## The candidate moves
 
 Three lifelines model things good candidates actually do:
