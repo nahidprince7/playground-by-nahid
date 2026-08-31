@@ -90,6 +90,44 @@
 .plan-pill.lead{color:#c7d2fe;border-color:#4338ca}
 .plan-pill.warn{color:#fbbf24;border-color:#5a4318}
 @media(min-width:640px){.skill-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+/* ---------- Pick screen: three across on a desktop, and cards that line up ---------- */
+@media(min-width:1000px){.job-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.job-card{display:flex;flex-direction:column}
+.job-card .job-foot{margin-top:auto;padding-top:18px}
+.job-card .tags{margin-top:14px}
+.job-card h2{font-size:16px}
+
+/* The level is the first thing you look for, so let it carry a colour */
+.job-card[data-level="junior"]{--lvl:#34d399}
+.job-card[data-level="mid"]{--lvl:#38bdf8}
+.job-card[data-level="senior"]{--lvl:#c084fc}
+.job-card[data-level] .job-kicker{color:var(--lvl)}
+.job-card[data-level]:before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;background:radial-gradient(120% 90% at 50% 0%,color-mix(in srgb,var(--lvl) 14%,transparent),transparent 60%)}
+.job-card[data-level]:hover{border-color:color-mix(in srgb,var(--lvl) 45%,#465779)}
+.job-card[data-level]:hover:before{opacity:1}
+.job-card[data-level]:hover .dot.on{background:var(--lvl)}
+
+/* ---------- Build your own: a live border, so it reads as the odd one out ---------- */
+.job-card.build{border-color:transparent;background:#0a1120}
+.job-card.build>*{position:relative;z-index:2}
+.job-card.build:before{content:"";position:absolute;z-index:0;top:50%;left:50%;width:145%;aspect-ratio:1;opacity:.85;
+  background:conic-gradient(from 0deg,#4f46e5,#38bdf8,#34d399,#a78bfa,#4f46e5);
+  transform:translate(-50%,-50%);animation:buildspin 6s linear infinite}
+.job-card.build:after{content:"";position:absolute;z-index:1;inset:2px;border-radius:16px;background:linear-gradient(150deg,#161238,#0a1120 60%)}
+.job-card.build:hover{transform:translateY(-2px)}
+.job-card.build:hover:before{opacity:1;animation-duration:2.6s}
+.job-card.build .job-kicker{color:#c4b5fd}
+.job-card.build .tag{border-color:#3b3a72;background:#120f2e99}
+@keyframes buildspin{to{transform:translate(-50%,-50%) rotate(1turn)}}
+
+/* ---------- Hero ---------- */
+.screen[data-screen="pick"]{position:relative}
+.screen[data-screen="pick"]:before{content:"";position:absolute;z-index:-1;left:50%;top:-40px;transform:translateX(-50%);width:min(720px,100%);height:300px;pointer-events:none;background:radial-gradient(50% 50% at 50% 50%,#6366f126,transparent 70%)}
+.status-line{display:inline-flex;align-items:center;gap:9px;padding:8px 14px;border:1px solid #24344e;border-radius:999px;background:#0b1626aa;color:#a9c6e8;font-size:12.5px}
+.status-line:before{content:"";width:7px;height:7px;border-radius:50%;background:#34d399;box-shadow:0 0 10px #34d399;animation:livedot 2s ease-in-out infinite}
+@keyframes livedot{50%{opacity:.35}}
+
+@media(prefers-reduced-motion:reduce){.job-card.build:before,.status-line:before{animation:none}}
 </style></head><body>
 <!-- ===================== Playground chrome (shared with the hub) ===================== -->
 <style>
