@@ -1,0 +1,189 @@
+{
+  "skill": "rust",
+  "label": "Rust: ownership, lifetimes & error handling",
+  "questions": [
+    {
+      "id": "rust-01",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "You hold a reference to an element of a Vec and then push to that Vec. The borrow checker rejects it. A colleague says it's being pedantic — the vector has spare capacity, so nothing can move.",
+      "options": [
+        "Nothing is really at stake at runtime; it's a compile-time formality, so an unsafe block here is harmless.",
+        "push may reallocate the backing buffer and move every element, so the reference would dangle. Spare capacity today is a property of one run, not of the type — take an index, or split the borrow.",
+        "The Vec needs to be behind a Mutex before two borrows of it can coexist.",
+        "Clone the element into an Rc so the reference and the push can both hold it."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "The checker rejects the possibility, not the observed run — and it is right to, because capacity is not part of anyone's contract. The tempting move is to reach for unsafe and 'prove' the capacity by hand; that proof breaks the first time someone changes the growth policy or the caller. An index is free and keeps the compiler in the loop."
+    },
+    {
+      "id": "rust-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This is the public surface of a reusable crate that talks to plant hardware. Callers include a control loop that must retry some failures and give up on others.",
+      "subject": {
+        "kind": "code",
+        "language": "rust",
+        "content": "pub fn read_setpoint(dev: &Device) -> Result<f64, Box<dyn Error>> {\n    let raw = dev.read_register(0x1F)?;\n    let text = std::str::from_utf8(&raw)?;\n    Ok(text.trim().parse::<f64>()? * SCALE)\n}"
+      },
+      "options": [
+        "Nothing serious — Box<dyn Error> is the idiomatic error type and callers can downcast if they need detail.",
+        "Three different failure modes collapse into one opaque type, so the caller cannot tell a timed-out bus from a malformed reading and cannot retry only the one worth retrying. A library should return a concrete error enum; Box<dyn Error> and anyhow belong in the binary at the top.",
+        "The function should panic on bad input instead, so failures are impossible to ignore.",
+        "It should return Option<f64> so the caller isn't forced to deal with an error type at all."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "Erasing the error type is convenient for the author and expensive for every caller — matching becomes downcasting against types you didn't document. Option is the quieter version of the same mistake: it throws away why. Box<dyn Error> is genuinely idiomatic, which is what makes the first option tempting — just not at a library boundary, where the caller's whole job is deciding what to do about each failure."
+    },
+    {
+      "id": "rust-03",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This thread polls a sensor on a serial bus and feeds the control loop. It has been running in the plant for a week.",
+      "subject": {
+        "kind": "code",
+        "language": "rust",
+        "content": "pub fn poll_loop(port: &mut Port, tx: Sender<Reading>) {\n    loop {\n        let frame = port.read_frame().unwrap();\n        let reading = decode(&frame).unwrap();\n        tx.send(reading).unwrap();\n    }\n}"
+      },
+      "options": [
+        "Every recoverable fault — a short read, one corrupt frame, a receiver that has gone away — panics the polling thread, and a control loop that has silently stopped reading is far worse than one that logs a bad frame and carries on.",
+        "read_frame should be async so the thread isn't blocked while it waits.",
+        "Sender should be wrapped in an Arc<Mutex<..>> before it is moved into the thread.",
+        "The loop needs a sleep so it doesn't spin a core at 100%."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "unwrap is a claim that the failure is impossible, and on a physical bus none of these are. The sleep is the tempting answer because busy loops usually are the bug — here read_frame blocks on the port, so the loop is already paced. The nastiest unwrap is the send: when the consumer dies, the producer dies too, and the only symptom anyone sees on the floor is a value that stopped changing."
+    },
+    {
+      "id": "rust-04",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Your protocol decoder returns Frame<'a>, borrowing straight out of the read buffer — zero copies, and it shows in the numbers. Now those frames also need to go down a channel to a logging thread.",
+      "options": [
+        "Give the frame type a 'static lifetime so it is allowed to cross the thread boundary.",
+        "The borrow ties each frame to a buffer you are about to overwrite on the next read, so anything that outlives the read has to own its data. Convert to an owned frame at the channel boundary and keep the borrowed path for what you decode in place.",
+        "Wrap the frame in an Arc so the buffer is kept alive for as long as any frame refers to it.",
+        "Add an unsafe impl Send for Frame<'a> — the data is only read, so it is safe in practice."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "'static is not a switch you flip; it is a promise about how long the data lives, and this data lives until the next read overwrites it. Arc is the near-miss worth naming: Arc<Frame<'a>> still carries 'a, so it extends nothing. The real design question is where the zero-copy region ends, and the answer is almost always 'at the point the data escapes the loop that owns the buffer'."
+    },
+    {
+      "id": "rust-05",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This runs on every batch of samples arriving from a 50 kHz acquisition card.",
+      "subject": {
+        "kind": "code",
+        "language": "rust",
+        "content": "fn apply(&mut self, samples: &Vec<Sample>) {\n    for s in samples.clone() {\n        self.buffer.push(s.clone());\n    }\n    self.recompute(self.buffer.clone());\n}"
+      },
+      "options": [
+        "The parameter should be &[Sample] rather than &Vec<Sample>; the clones themselves cost nothing because the compiler elides them.",
+        "Three copies of data that never needed copying — a whole vector cloned to iterate it, an element cloned to push it, and the accumulated buffer cloned to pass it. Take &[Sample], iterate by reference, and let recompute borrow the buffer.",
+        "Derive Copy on Sample so that the clones become free.",
+        "apply should take self by value so the borrow checker stops complaining about the last line."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The first option is true and is the finding most reviewers stop at — &[Sample] is the better signature — but it fixes the signature and leaves the allocations. Copy does not make copying free either; it makes it implicit, which on a 50 kHz stream is worse, because now the cost does not even show up as a call. Cloning to satisfy the borrow checker is the habit to catch here; the fix is almost always to restructure the borrow."
+    },
+    {
+      "id": "rust-06",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "You're wrapping a vendor's C driver library in Rust. Where does unsafe belong, and what does your wrapper owe the rest of the codebase?",
+      "options": [
+        "Mark every function that reaches the driver as unsafe fn, so callers can see what they are dealing with.",
+        "unsafe is only needed around raw pointer dereferences — calls into extern \"C\" functions are ordinary safe calls.",
+        "Keep the unsafe blocks as small as you can inside a safe API that upholds the library's invariants for the caller — handle lifetime, thread affinity, buffer sizes, initialisation order — and document each invariant next to the block that relies on it.",
+        "Put #![allow(unsafe_code)] at the top of the module and rely on code review to catch misuse."
+      ],
+      "correct": 2,
+      "eliminate": 1,
+      "explanation": "A wrapper exists so that misuse becomes impossible from safe code; pushing unsafe up to every caller is the abdication version of the same work. The first option is the honest answer only when you genuinely cannot uphold an invariant — if the caller must guarantee the device is initialised and you cannot check it, unsafe fn is the correct signature and the docs must say why. That distinction is the whole question."
+    },
+    {
+      "id": "rust-07",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "order",
+      "prompt": "A C module inside a plant controller is being replaced with Rust, one piece at a time. There is no big-bang cutover and the line cannot stop.",
+      "instruction": "Order the steps you'd actually take.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Port the module's logic to safe Rust behind the same interface"
+        },
+        {
+          "id": "b",
+          "text": "Capture the module's real inputs and outputs from the running plant as a replayable test corpus"
+        },
+        {
+          "id": "c",
+          "text": "Expose the Rust implementation as extern \"C\" so existing callers link against it unchanged"
+        },
+        {
+          "id": "d",
+          "text": "Run both implementations on recorded traffic and compare outputs before anything is switched over"
+        }
+      ],
+      "correctOrder": [
+        "b",
+        "a",
+        "c",
+        "d"
+      ],
+      "explanation": "The corpus comes first because it is the only definition of 'correct' you will get — the C module's behaviour, bugs included, is what the plant is tuned around. Keeping the C ABI means the rewrite is a link-time change rather than a rearchitecture, and shadow-running against recorded traffic turns 'we think it matches' into evidence you can show the plant manager."
+    },
+    {
+      "id": "rust-08",
+      "stage": "ask",
+      "levels": [
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "What does Rust actually buy an industrial control system, and where does it not help at all?",
+      "modelAnswer": "It removes a whole class of failures that are expensive to debug on a factory floor: use-after-free, data races, buffer overruns, iterator invalidation. On hardware you cannot attach a debugger to at 3am, moving those from runtime to compile time is worth a lot. No garbage collector means no collection pause, so latency is a function of what my code does rather than what a runtime decides — which matters when a deadline is a millisecond, not a service-level objective. Result forces the error paths to be written rather than discovered, and that is most of what production-grade means here. What it does not buy: logical correctness, so a control algorithm can be perfectly memory-safe and still drive the valve the wrong way. It does not make code real-time on its own — allocation, page faults, lock contention and the scheduler still produce jitter, and safe Rust will happily do all four. It does not fix deadlocks, unbounded queues or resource exhaustion. And it does not make the hardware honest: a sensor still lies, a bus still drops frames, and that is application logic either way.",
+      "keyPoints": [
+        "Removes memory-safety and data-race classes at compile time",
+        "No GC pause — latency comes from your code, not a runtime",
+        "Result and the type system force error paths to be written",
+        "Does not give you real-time behaviour: allocation, faults, locks and the scheduler still cause jitter",
+        "Does not prevent deadlock, unbounded queues or logic errors",
+        "Hardware faults and bad data are still application concerns"
+      ],
+      "explanation": "The answer that only lists what Rust prevents is the one every candidate gives. Naming where it does not help — jitter, deadlock, logic — is what shows you have shipped something in it rather than read about it, and it is also how you avoid selling the rewrite to a plant manager on a promise you cannot keep."
+    }
+  ]
+}
