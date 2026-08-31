@@ -126,7 +126,13 @@
     .nav-links a:hover { color: var(--ink); background: #ffffff0d; }
 
     /* ---------- Hero ---------- */
-    .hero { text-align: center; padding: 88px 0 44px; }
+    .hero { position: relative; text-align: center; padding: 88px 0 44px; }
+    .hero::before {
+      content: ""; position: absolute; z-index: -1; pointer-events: none;
+      left: 50%; top: 4%; transform: translateX(-50%);
+      width: min(780px, 94%); height: 340px;
+      background: radial-gradient(50% 50% at 50% 50%, #7c9cff26, transparent 70%);
+    }
     .eyebrow {
       display: inline-flex; align-items: center; gap: 8px;
       font-size: 13px; font-weight: 600; letter-spacing: .02em;
@@ -319,13 +325,59 @@
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after { animation: none !important; transition: none !important; }
     }
-    /* Interview preview: candidate card + confidence signal */
-    .interview-preview{background:radial-gradient(circle at 50% 5%,#202653 0%,#0d172b 55%,#08111e 100%)}
-    .iv-room{position:absolute;inset:42px 28px 20px;display:grid;grid-template-columns:72px 1fr;gap:16px;align-items:center}
-    .iv-person{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;background:linear-gradient(145deg,#4f46e5,#0284c7);box-shadow:0 0 0 8px #818cf815,0 12px 30px -12px #6366f1}
-    .iv-sheet{padding:13px;border:1px solid #2c3e5b;border-radius:12px;background:#0a1322cc}
-    .iv-line{height:7px;margin:7px 0;border-radius:9px;background:#273752}.iv-line.short{width:64%}.iv-line.answer{background:linear-gradient(90deg,#818cf8,#38bdf8)}
-    .iv-meter{position:absolute;left:28px;right:28px;bottom:16px;height:6px;border-radius:9px;background:#1c2a40;overflow:hidden}.iv-meter:after{content:"";display:block;width:72%;height:100%;background:linear-gradient(90deg,#38bdf8,#34d399);animation:ivPulse 2.5s ease-in-out infinite}@keyframes ivPulse{50%{width:88%}}
+    /* ---------- Featured card: the newest build leads, full width ---------- */
+    .card.featured { grid-column: 1 / -1; }
+    @media (min-width: 900px) {
+      .card.featured { flex-direction: row; }
+      .card.featured .preview { flex: 1 1 54%; height: auto; min-height: 310px; border-bottom: 0; border-right: 1px solid var(--line); }
+      .card.featured .card-body { flex: 1 1 46%; justify-content: center; padding: 34px 32px; }
+      .card.featured h2 { font-size: 27px; }
+      .card.featured .tagline { font-size: 14.5px; }
+      .card.featured .sub { flex: 0 1 auto; font-size: 14.5px; }
+    }
+
+    /* Cursor spotlight — the card lights up under the pointer */
+    .card::after {
+      content: ""; position: absolute; inset: 0; border-radius: inherit;
+      pointer-events: none; opacity: 0; transition: opacity .4s;
+      background: radial-gradient(360px circle at var(--mx, 50%) var(--my, 0%), #ffffff14, transparent 68%);
+    }
+    .card:hover::after { opacity: 1; }
+
+    /* Cards arrive as you scroll to them */
+    .reveal { opacity: 0; transform: translateY(20px); }
+    .reveal.in { opacity: 1; transform: none; transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+
+    /* ---------- Interview preview: the four-round call, as the game plays it ---------- */
+    .interview-preview { height: 268px; background: radial-gradient(120% 90% at 50% 0%, #1d2450 0%, #0d172b 55%, #080f1c 100%); }
+    .iv-call { position: absolute; inset: 44px 20px 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+    .iv-tiles { display: flex; gap: 10px; align-items: flex-end; width: 100%; max-width: 340px; }
+    .iv-tile { border-radius: 12px; overflow: hidden; background: #050b14; border: 1px solid #22334d; }
+    .iv-them { flex: 1 1 auto; box-shadow: 0 0 0 1px #4f5fd044, 0 0 26px -8px #6366f199; border-color: #4f5fd0; }
+    .iv-you { flex: 0 0 86px; opacity: .74; }
+    .iv-cam { position: relative; height: 88px; display: grid; place-items: center; background: radial-gradient(circle at 50% 32%, #1c2a44, #080f1b); }
+    .iv-you .iv-cam { height: 60px; }
+    .iv-face { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; color: #fff; font: 700 13px/1 "Space Grotesk", sans-serif; background: linear-gradient(145deg, #4f46e5, #0284c7); box-shadow: 0 0 0 6px #818cf814; }
+    .iv-face.you { width: 32px; height: 32px; font-size: 9px; background: linear-gradient(145deg, #334155, #1e293b); color: #94a3b8; box-shadow: none; }
+    .iv-dots { position: absolute; bottom: 9px; display: flex; gap: 4px; padding: 5px 8px; border-radius: 999px; background: #0f1b2ecc; border: 1px solid #2b3d58; }
+    .iv-dots i { width: 4px; height: 4px; border-radius: 50%; background: #a5b4fc; animation: ivTalk 1.05s ease-in-out infinite; }
+    .iv-dots i:nth-child(2) { animation-delay: .16s; }
+    .iv-dots i:nth-child(3) { animation-delay: .32s; }
+    @keyframes ivTalk { 0%,60%,100% { opacity: .3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-3px); } }
+    .iv-bar { display: flex; align-items: center; gap: 6px; padding: 7px 9px; background: #0a1220; border-top: 1px solid #16233a; }
+    .iv-rec { flex: none; width: 6px; height: 6px; border-radius: 50%; background: #ef4444; animation: ivRec 2s ease-in-out infinite; }
+    @keyframes ivRec { 50% { opacity: .25; } }
+    .iv-nm { color: #dbe4f0; font-size: 10.5px; font-weight: 700; white-space: nowrap; }
+    .iv-rl { color: #64748b; font-size: 9.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .iv-conf { width: 100%; max-width: 340px; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; background: #0a1322cc; border: 1px solid #22324c; }
+    .iv-ring { position: relative; flex: none; width: 48px; height: 48px; }
+    .iv-ring svg { width: 100%; height: 100%; }
+    .iv-arc { stroke-dasharray: 113; animation: ivConf 5s ease-in-out infinite; }
+    @keyframes ivConf { 0%,100% { stroke-dashoffset: 48; } 50% { stroke-dashoffset: 19; } }
+    .iv-pct { position: absolute; inset: 0; display: grid; place-items: center; color: #7dd3fc; font: 700 11px/1 "Space Grotesk", sans-serif; }
+    .iv-conf-copy { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .iv-conf-copy b { color: #64748b; font: 700 8.5px/1 "Space Grotesk", sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+    .iv-conf-copy i { color: #dbe4f0; font-style: normal; font-size: 13.5px; font-weight: 700; }
   </style>
 </head>
 <body>
@@ -471,11 +523,35 @@
       </article>
 
       <!-- ===== Crack the Interview (shown first) ===== -->
-      <article class="card" style="--accent:#818cf8;--accent-2:#38bdf8; order:-2;">
+      <article class="card featured" style="--accent:#818cf8;--accent-2:#38bdf8; order:-2;">
         <div class="preview interview-preview">
           <span class="tag">Interview Simulation</span>
-          <div class="iv-room" aria-hidden="true"><div class="iv-person">NH</div><div class="iv-sheet"><div class="iv-line short"></div><div class="iv-line"></div><div class="iv-line answer"></div><div class="iv-line"></div></div></div>
-          <div class="iv-meter" aria-hidden="true"></div>
+          <div class="iv-call" aria-hidden="true">
+            <div class="iv-tiles">
+              <div class="iv-tile iv-them">
+                <div class="iv-cam">
+                  <div class="iv-face">AN</div>
+                  <div class="iv-dots"><i></i><i></i><i></i></div>
+                </div>
+                <div class="iv-bar"><span class="iv-rec"></span><span class="iv-nm">Anika</span><span class="iv-rl">Staff Engineer</span></div>
+              </div>
+              <div class="iv-tile iv-you">
+                <div class="iv-cam"><div class="iv-face you">YOU</div></div>
+                <div class="iv-bar"><span class="iv-rec"></span><span class="iv-nm">You</span></div>
+              </div>
+            </div>
+            <div class="iv-conf">
+              <div class="iv-ring">
+                <svg viewBox="0 0 48 48">
+                  <defs><linearGradient id="ivGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#818cf8"/></linearGradient></defs>
+                  <circle cx="24" cy="24" r="18" fill="none" stroke="#1c2a40" stroke-width="4"/>
+                  <circle class="iv-arc" cx="24" cy="24" r="18" fill="none" stroke="url(#ivGrad)" stroke-width="4" stroke-linecap="round" transform="rotate(-90 24 24)"/>
+                </svg>
+                <span class="iv-pct">72%</span>
+              </div>
+              <div class="iv-conf-copy"><b>Interviewer confidence</b><i>on the fence</i></div>
+            </div>
+          </div>
         </div>
         <div class="card-body">
           <h2>Crack the Interview</h2>
@@ -523,6 +599,32 @@
     onScroll();
     // Year (Date is fine in a real browser at runtime)
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    const cards = [...document.querySelectorAll('.card')];
+    const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Pointer spotlight
+    cards.forEach(card => card.addEventListener('pointermove', e => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+      card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+    }, { passive: true }));
+
+    // Reveal on scroll, then drop the classes so nothing fights :hover later
+    if (!still && 'IntersectionObserver' in window) {
+      cards.forEach(c => c.classList.add('reveal'));
+      const io = new IntersectionObserver((entries, obs) => {
+        entries.filter(e => e.isIntersecting).forEach((e, i) => {
+          setTimeout(() => {
+            e.target.classList.add('in');
+            setTimeout(() => e.target.classList.remove('reveal', 'in'), 900);
+          }, i * 90);
+          obs.unobserve(e.target);
+        });
+      }, { rootMargin: '0px 0px -12% 0px' });
+      cards.forEach(c => io.observe(c));
+    }
   </script>
+
 </body>
 </html>
