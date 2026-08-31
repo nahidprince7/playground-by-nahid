@@ -56,6 +56,89 @@
         "d"
       ],
       "explanation": "Restore service first, confirm recovery, preserve evidence, then investigate and improve the system. Debugging while users remain on a known-bad release extends the incident unnecessarily."
+    },
+    {
+      "id": "cicd-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "The pipeline takes 55 minutes. People have stopped waiting for it and merge on a green-ish feeling.",
+      "options": [
+        "Move the test suite to a nightly run so the merge pipeline is fast again.",
+        "Find where the time goes, then attack it: cache dependencies, parallelise the unit tests, and split the slow end-to-end suite out of the pre-merge gate into a post-merge stage that can block promotion instead of the merge.",
+        "Buy larger runners — most of the time is spent on under-provisioned CI machines.",
+        "Delete the flaky tests, which are the ones people are ignoring anyway."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "Nobody knows where 55 minutes goes until they measure it, and it is usually two stages, not fifty. The staged split is what keeps a fast honest gate on merges without losing the slow coverage. Bigger runners is the tempting answer because it sometimes helps and takes an afternoon — it does nothing for a serial forty-minute end-to-end stage, which is the usual culprit."
+    },
+    {
+      "id": "cicd-04",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A pipeline definition in the infrastructure repository.",
+      "subject": {
+        "kind": "code",
+        "language": "yaml",
+        "content": "on: [push]\n\njobs:\n  deploy:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@main\n      - run: |\n          mkdir -p ~/.aws\n          printf 'aws_access_key_id=%s\\naws_secret_access_key=%s\\n' \\\n            \"${{ secrets.AWS_KEY }}\" \"${{ secrets.AWS_SECRET }}\" > ~/.aws/credentials\n      - run: terraform apply -auto-approve\n"
+      },
+      "options": [
+        "`runs-on: ubuntu-latest` should be a pinned image so builds are reproducible.",
+        "The AWS credentials are long-lived and written to disk — the job should assume a role through OIDC and get short-lived credentials instead.",
+        "A push to any branch applies Terraform to production with `-auto-approve`: no reviewed plan, no environment protection, and a typo on a feature branch reaches the payments infrastructure.",
+        "`actions/checkout@main` should be pinned to a commit SHA."
+      ],
+      "correct": 2,
+      "eliminate": 0,
+      "explanation": "Both of the other real findings are worth raising — the long-lived key is the strongest of them, and an unpinned third-party action running in a job that holds production credentials is a supply-chain hole — but the trigger is the one that can destroy the estate this afternoon, without anyone being malicious. Gate on the branch, require an environment approval, and apply a plan someone read."
+    },
+    {
+      "id": "cicd-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Dev, staging and production have drifted apart and nobody is sure what differs. How should the pipeline be organised so they stay consistent?",
+      "options": [
+        "One pipeline definition, parameterised per environment, promoting the same built artefact through each — with configuration in version control and secrets pulled from a store at deploy time.",
+        "A long-lived branch per environment, each carrying the pipeline file and configuration for that environment.",
+        "A copy of the pipeline per environment, so a change to staging can never break production.",
+        "Keep one pipeline and set the per-environment differences by hand at deploy time."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "If the environments run different definitions, they will differ, and the differences will be discovered in production. Branch-per-environment is the interesting wrong answer because plenty of teams run it and it feels tidy — but the pipeline file then diverges between branches exactly like the config did, and every merge is a chance to promote the wrong thing. The same artefact through every environment is the property that makes staging evidence rather than decoration."
+    },
+    {
+      "id": "cicd-06",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "Suppose you find a team here that deploys once a month, on a Saturday, with everyone on a call. How would you move them towards continuous delivery?",
+      "modelAnswer": "I would not start by deploying more often — that just makes the frightening thing happen more. I would start by making a rollback boring: one command or one click, tested in a lower environment, so the worst case is minutes rather than a Saturday. Then find out why the batch is monthly, which is usually one of two things — a manual test cycle nobody trusts to shrink, or a release that bundles a database change with the code. Feature flags decouple deploying from releasing, so code can ship dark while the release decision stays with the product owner, which is often the actual objection. Get the pipeline green, fast and trusted, add a post-deploy smoke test and a canary, and go weekly to staging on every merge before touching the production cadence. Measure it in DORA terms — lead time, deployment frequency, change failure rate, time to restore — because the argument that wins is showing that smaller changes fail less, not that a book recommends it. And I would do it with one willing service first rather than mandating it: a team that has had a calm Tuesday deploy will convince the others faster than I can.",
+      "keyPoints": [
+        "Make rollback boring before increasing frequency",
+        "Find the real constraint — manual test cycle, or coupled database changes",
+        "Feature flags to separate deploy from release",
+        "Smoke tests and canaries so a bad deploy is caught by the pipeline, not by customers",
+        "Shrink the batch gradually: staging on every merge first",
+        "Measure with lead time, deployment frequency, change failure rate, time to restore",
+        "Demonstrate with one volunteer service instead of mandating it"
+      ],
+      "explanation": "The failure mode in this answer is enthusiasm — proposing daily production deploys to a team whose last one took eight hours. Fear of deploying is nearly always rational, and it is really fear of not being able to undo it, so the rollback comes first and the cadence follows."
     }
   ]
 }

@@ -1,0 +1,165 @@
+{
+  "skill": "terraform",
+  "label": "Terraform & infrastructure as code",
+  "questions": [
+    {
+      "id": "terraform-01",
+      "stage": "hr",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "The candidate is describing how their last team worked with Terraform.",
+      "subject": {
+        "kind": "quote",
+        "content": "\"We kept hitting state lock errors when two people applied at once, so I kept a local copy of the state file. If someone else was applying I'd just work from mine and push it up afterwards.\""
+      },
+      "options": [
+        "They should have used a separate Terraform workspace for their work.",
+        "State should have been committed to git so everyone has the same copy.",
+        "The lock is the safety feature they routed around — two applies against divergent state overwrite each other's resources, and 'push it up afterwards' means the last writer silently deletes whatever the other person created.",
+        "They should have run apply with -refresh=false to avoid the contention."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "Lock contention is a real, daily annoyance, and that is exactly why this answer is dangerous: the person is competent enough to be blocked and impatient enough to disable the guard rail. The git answer is the strong distractor — it does give everyone one copy — but state holds secrets in plain text and git has no locking, so it swaps a collision problem for a leak."
+    },
+    {
+      "id": "terraform-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Security groups are created with `count` over a list of environments. Someone removes the second entry, and the plan now wants to destroy and recreate six unrelated security groups.",
+      "options": [
+        "Run a series of `terraform state mv` commands to shift each resource down an index before applying.",
+        "Key the resources with `for_each` over a map, so each one's identity in state is its name rather than its position in a list.",
+        "Add `-target` to the apply so only the intended resource changes.",
+        "Add `lifecycle { prevent_destroy = true }` to the resource."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "`count` addresses resources by index, so removing an element renumbers everything after it and Terraform reads that as 'destroy and recreate'. `for_each` gives each resource a stable key and the problem disappears permanently. The state-mv answer is genuinely tempting because it is the correct emergency fix for the plan in front of you — it just guarantees you do the same dance every time the list changes. prevent_destroy would block the apply and leave you stuck, not fixed."
+    },
+    {
+      "id": "terraform-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This is in a pull request against the production infrastructure repo.",
+      "subject": {
+        "kind": "code",
+        "language": "hcl",
+        "content": "resource \"aws_db_instance\" \"cards\" {\n  identifier          = \"cards-prod\"\n  engine              = \"postgres\"\n  instance_class      = \"db.r6g.xlarge\"\n  username            = \"admin\"\n  password            = \"Pa55word-cards-prod\"\n  publicly_accessible = true\n  skip_final_snapshot = true\n}"
+      },
+      "options": [
+        "`instance_class` is hard-coded rather than taken from a variable, so the same module cannot be reused for staging.",
+        "`skip_final_snapshot = true` means a destroy leaves you with no snapshot to recover from.",
+        "`publicly_accessible = true` puts the cardholder database on the public internet, and the password is committed to the repository — where it also lands in state and in every plan output.",
+        "`engine_version` is not pinned, so a future apply could upgrade the engine."
+      ],
+      "correct": 2,
+      "eliminate": 0,
+      "explanation": "Two of these are real findings and you would raise both, but only one is an open door: a routable database plus a credential in version control is a breach waiting for someone to grep GitHub. The final-snapshot answer is the best distractor because it is true, serious and the kind of thing reviewers do catch — it just costs you during a destroy you control, not during an attack you do not."
+    },
+    {
+      "id": "terraform-04",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Every team's stack references your shared modules as `source = \"git::ssh://.../modules//vpc\"` with no ref. What goes wrong?",
+      "options": [
+        "Nothing, as long as `terraform init -upgrade` is run before every plan.",
+        "There is no such thing as a stable plan: a merge to the module repo's default branch changes what everyone's next apply does, and nobody's change and the module's change can be told apart in the diff.",
+        "Module lookups will be slow because Terraform clones the repository on every init.",
+        "Terraform will refuse to init without a version constraint."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "An unpinned module means the blast radius of a module change is 'everyone, at a time of their choosing, without reading it'. Pin to a tag or a registry version and let teams upgrade deliberately. The `-upgrade` answer is the tempting one — it sounds like taking control — but it does the opposite: it forces the latest module in, every time."
+    },
+    {
+      "id": "terraform-05",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "One root module holds the VPC, the EKS cluster, the databases and every application resource. A plan takes twenty minutes and everyone is nervous about applying anything.",
+      "options": [
+        "Split it into layered states — network, platform, applications — each with its own lifecycle, its own permissions, and data lookups or remote state between the layers.",
+        "Keep the single configuration but use a Terraform workspace per environment so state is separated.",
+        "Raise `-parallelism` and set up a faster runner so plans finish sooner.",
+        "Adopt `-target` as the normal way to apply changes to a specific resource."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "The problem is not speed, it is blast radius: one apply can currently take out the VPC on the way to changing a tag. Splitting by rate of change also splits who is allowed to apply what. Workspaces are the seductive answer because people conflate them with environments — but every workspace shares the same configuration and the same all-or-nothing apply, so the twenty-minute plan and the blast radius both survive."
+    },
+    {
+      "id": "terraform-06",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "order",
+      "prompt": "Terraform changes reach production through the pipeline, never from a laptop.",
+      "instruction": "Order the stages of that pipeline.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Run plan against the real state and publish the output on the pull request"
+        },
+        {
+          "id": "b",
+          "text": "Merge, once someone who can read a plan has approved it"
+        },
+        {
+          "id": "c",
+          "text": "Run fmt, validate and policy checks on the change itself"
+        },
+        {
+          "id": "d",
+          "text": "Apply the saved plan file from the merge commit, holding the state lock"
+        }
+      ],
+      "correctOrder": [
+        "c",
+        "a",
+        "b",
+        "d"
+      ],
+      "explanation": "Cheap static checks run first so a formatting error never costs a state lock. The reviewed artefact is the plan, not the diff — and applying that saved plan rather than re-planning at apply time is what stops the infrastructure drifting between the thing approved and the thing executed."
+    },
+    {
+      "id": "terraform-07",
+      "stage": "ask",
+      "levels": [
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "Roughly half our infrastructure is in Terraform. The rest was clicked into the console years ago by people who have left. How would you close that gap?",
+      "modelAnswer": "First stop it getting worse: take console write access away from humans in production, leave a break-glass role that alarms when it is used, and alert on any CloudTrail write that did not come from the pipeline. Then inventory what exists — the bill and Config or a resource explorer are more honest than any wiki — and rank by risk rather than by how easy it is to import, because the resources nobody dares touch are exactly the ones that need to be reproducible. Import in slices, smallest blast radius first, and treat 'plan is a clean no-op' as the definition of done for each slice; if the plan wants to change something, the code is wrong, not the infrastructure. Along the way I would put the layering in — network, platform, apps — rather than importing everything into one root module, because that is a mistake you only get to make once. And I would not do a big bang or a freeze: this runs alongside normal work for months, with the new-things-must-be-in-code rule from day one, so the untracked half shrinks from both ends.",
+      "keyPoints": [
+        "Stop the bleeding first: no console writes, break-glass alarms, CloudTrail alerts on out-of-band changes",
+        "Inventory from the bill and resource inventory rather than documentation",
+        "Prioritise by risk, not by ease of import",
+        "Import in slices; done means the plan is a clean no-op",
+        "Layer the state as you go rather than one giant root module",
+        "New things must be in code from day one, so the gap closes from both ends",
+        "Incremental — no freeze, no big bang"
+      ],
+      "explanation": "The instinct is to start importing on day one, and that is the answer that quietly fails: import without first closing the console lets someone re-drift what you just captured. Naming the anti-drift controls before the import work is the tell that someone has actually finished one of these."
+    }
+  ]
+}
