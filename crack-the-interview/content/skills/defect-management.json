@@ -1,0 +1,172 @@
+{
+  "skill": "defect-management",
+  "label": "Defect reporting, triage & severity",
+  "questions": [
+    {
+      "id": "defect-management-01",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A candidate is asked how they handle a developer disagreeing with a bug they raised. What's the red flag?",
+      "subject": {
+        "kind": "quote",
+        "content": "If the developer says it's not a bug, I close it. They wrote the code, so they know it better than I do — and honestly, arguing with developers is not a fight a tester wins."
+      },
+      "options": [
+        "They should escalate straight to the engineering manager, who can overrule the developer.",
+        "They're settling a question about intended behaviour by seniority rather than by going to the requirement and the person who owns it.",
+        "They're admitting they don't read code, which is disqualifying for an SQA role.",
+        "Closing a defect at all is a decision only the person who raised it should make."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "'Is this a bug?' is a question about what the product is supposed to do, and the developer's opinion is one input, not the answer — the spec, the designs and the PM are. Escalating is the tempting alternative because it looks assertive, but reaching for a manager on the first disagreement burns the working relationship this job depends on; you go to the requirement first, and only escalate when the requirement genuinely doesn't say."
+    },
+    {
+      "id": "defect-management-02",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "red-flag",
+      "prompt": "This defect came back from the developer as 'Cannot reproduce' two days later. What's the main problem with it?",
+      "subject": {
+        "kind": "quote",
+        "content": "Title: Payment not working\nPriority: High\nDescription: I tried to pay and it failed. Same thing happened yesterday too. Please check and fix urgently."
+      },
+      "options": [
+        "The priority should have been set by the product manager, not by the tester.",
+        "There's no build, environment, account, payment method, steps, actual result, expected result or evidence — nothing a developer can act on, so the round trip costs two days before any work starts.",
+        "The title is too short and doesn't name the module.",
+        "It should have been raised in a chat message first so the developer sees it sooner."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "A defect report is a set of instructions for recreating a failure; this one is a complaint. The priority point is a fair second finding — a tester proposing priority without impact evidence tends to get ignored — but even a perfectly triaged ticket is unworkable if nobody can get the system into the failing state. The cheapest minute you will ever spend is the one adding the build number and the exact steps."
+    },
+    {
+      "id": "defect-management-03",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Two defects, one release. (A) The company name is misspelled in the checkout header on every page. (B) An admin report used once a quarter crashes on export. How should these be classified?",
+      "options": [
+        "A is low severity but high priority; B is high severity but lower priority.",
+        "A is low severity and low priority; B is high severity and high priority.",
+        "Both are high priority, since a crash and a customer-visible error are equally urgent.",
+        "Severity and priority should always match, otherwise the fields contradict each other."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "Severity is how badly the product is broken; priority is how soon it must be fixed — and they come apart exactly here. The typo breaks nothing but is seen by every customer and takes five minutes, so it goes now. The crash is severe but hits one person once a quarter, who has a workaround, so it can wait for the next sprint. Answer B is the tempting one because severity is the loudest signal in the room and people let it drive the schedule."
+    },
+    {
+      "id": "defect-management-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "You've hit a checkout failure once in about twenty attempts and you cannot make it happen on demand. Release is in four days. What do you do?",
+      "options": [
+        "Hold off on filing until you can reproduce it reliably, so you don't send the developer on a hunt.",
+        "File it now as intermittent, with the frequency you observed, the exact build, timestamps, request and response, logs from that attempt and what differed between the runs that failed and the ones that passed.",
+        "File it as a low-severity defect, since it only happens 5% of the time.",
+        "Mention it verbally in standup and move on to the planned test cases."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Timestamps are the whole point: with them a developer can find your one failure in the server logs, and a rare bug in payments is usually a race or a timeout that is far more frequent under production load than under one tester. Waiting for a clean reproduction is the tempting answer because it's what good practice usually demands — but the evidence you have decays as builds roll and logs rotate, and 'five percent of checkouts' is a severe defect, not a minor one."
+    },
+    {
+      "id": "defect-management-05",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "order",
+      "prompt": "You've just seen a feature behave wrongly on the QA build.",
+      "instruction": "Put the defect's life cycle in the order you'd actually run it.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Verify the fix on the build that actually contains it, and retest the area around it"
+        },
+        {
+          "id": "b",
+          "text": "Log it with steps, environment, actual vs expected and evidence, and propose severity and priority"
+        },
+        {
+          "id": "c",
+          "text": "Reproduce it deliberately, narrow the steps, and check it still happens on the latest build"
+        },
+        {
+          "id": "d",
+          "text": "Search the tracker for an existing or previously closed ticket for the same behaviour"
+        },
+        {
+          "id": "e",
+          "text": "Agree the severity and priority with the PM and the developer in triage"
+        }
+      ],
+      "correctOrder": [
+        "c",
+        "d",
+        "b",
+        "e",
+        "a"
+      ],
+      "explanation": "Reproducing first is what turns 'something looked wrong' into a defect, and confirming it on the latest build stops you filing something already fixed. The duplicate search comes before writing, not after, because a reopened ticket carries the earlier investigation with it. Verifying on the build that contains the fix, rather than whatever is deployed, is the step teams skip and then re-open the same bug over."
+    },
+    {
+      "id": "defect-management-06",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "A defect you raised as critical was downgraded in triage and shipped. Two weeks later it caused a production incident. What would you do differently?",
+      "modelAnswer": "The honest lesson is that I argued with a label instead of with evidence. 'Critical' is my opinion; what moves a triage is impact expressed in the business's own terms — how many users hit this path a day, what it costs them when it fails, whether there's a workaround, and whether it's recoverable or silently corrupts data. I'd bring that to triage, and where I don't have the numbers I'd ask for a day to get them rather than turning up with an adjective. Second, I'd make the decision explicit and written: the ticket should record that the risk was described, understood and accepted, and by whom — not so there's someone to blame afterwards, but so the same trade isn't made accidentally next time. After the incident I'd bring the timeline and the actual cost to the retro without naming anyone, because the goal is to recalibrate how the team triages, and blame is the fastest way to stop people raising things at all. Then the concrete fixes: the scenario goes into the regression pack and, if it's automatable, into the suite, so this specific bug can never return quietly.",
+      "keyPoints": [
+        "Argue impact in business terms — frequency, cost, workaround, recoverability — not the severity label",
+        "Get the numbers before triage rather than turning up with an adjective",
+        "Record the accepted risk and who accepted it, in writing on the ticket",
+        "Bring the timeline and real cost to the retro without blaming a person",
+        "Add the scenario to the regression pack and to automation so it can't return silently",
+        "Own the part that was yours — a downgraded bug is usually a communication failure, not a QA one"
+      ],
+      "explanation": "The answer that impresses is the one where the candidate takes a share of the failure without theatrics, and shows they know severity labels don't persuade anyone — impact numbers do. Answers that stop at 'I would have escalated harder' miss that the escalation only works if it carries evidence."
+    },
+    {
+      "id": "defect-management-07",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "The bug backlog has grown to 400 open tickets and nobody looks at it any more. What's the useful move?",
+      "options": [
+        "Bulk-close everything older than six months; if it mattered, someone will raise it again.",
+        "Ask for a dedicated bug-fixing sprint to clear the whole list.",
+        "Run a timeboxed triage where every ticket gets one of three outcomes — fix now with an owner, fix by a named date, or won't-fix and closed with the reason — and keep new bugs triaged weekly so it never rebuilds.",
+        "Leave it; a large backlog is normal for any mature product and closing tickets doesn't improve quality."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "A backlog only has value if it's a list of decisions; 400 undecided items is noise that hides the ten tickets that matter. The bulk-close is tempting because it's honest about the fact nobody will read them, but it throws away real reproduction steps unread and teaches people that filing bugs is pointless. A bug sprint is the second-best answer — it clears the list once, then it fills right back up because the intake was never fixed."
+    }
+  ]
+}
