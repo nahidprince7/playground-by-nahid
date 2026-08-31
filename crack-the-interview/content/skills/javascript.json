@@ -1,0 +1,281 @@
+{
+  "skill": "javascript",
+  "label": "JavaScript, the DOM & the browser runtime",
+  "questions": [
+    {
+      "id": "javascript-01",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A candidate was asked how they debug. What will worry the interviewer?",
+      "subject": {
+        "kind": "quote",
+        "content": "When the UI misbehaves I add console.logs until it stops. If that doesn't work I wrap the call in a setTimeout — that usually clears up the race and then I move on."
+      },
+      "options": [
+        "Using console.log instead of the debugger.",
+        "The setTimeout: it makes the symptom go away without ever finding out what the race was, so it comes back on a slower device or a slower network.",
+        "Not writing a failing test before fixing.",
+        "Not asking a senior engineer for help sooner."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "console.log is fine; plenty of strong engineers debug that way. The problem is 'usually clears up' — a timing fix that is not understood is a bug you have rescheduled, not removed, and it reappears in production on the exact devices your customers have. Interviewers listen for whether someone stops at 'it works now'."
+    },
+    {
+      "id": "javascript-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "A click handler runs a 400ms transform over a large JSON payload. Users report the whole page freezes — even the loading spinner stops spinning. What actually fixes it?",
+      "options": [
+        "Wrap the transform in a Promise — asynchronous code doesn't block.",
+        "It runs on the same thread as rendering, so move it to a Web Worker, or chunk it and hand the thread back between slices.",
+        "Run it inside a requestAnimationFrame callback so it is scheduled together with painting.",
+        "Turn off StrictMode so the work only happens once."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The first option is the misconception the whole question is built on: a Promise changes when your code runs, never where. A 400ms synchronous body blocks paint whether or not it is wrapped in one, which is why the spinner — a CSS animation driven by the same main thread — stops dead. requestAnimationFrame is worse, not better; it books the block right before a frame."
+    },
+    {
+      "id": "javascript-03",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "Why is the Virtual DOM faster than manipulating the DOM directly?",
+      "options": [
+        "It batches all changes and applies them in one pass, so it always beats hand-written DOM code.",
+        "It isn't inherently faster. It is a diffing layer that makes 'describe the whole UI as a function of state' cheap enough to be practical, and it removes the accidental thrash that hand-written updates tend to accumulate.",
+        "It runs in a separate thread, so layout never blocks the UI.",
+        "It keeps a copy of the DOM in memory, so reads like offsetHeight don't cost anything."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "This is asked to see whether you repeat the marketing line. Careful hand-written DOM updates beat a diff every time — the diff is overhead you accept in exchange for never having to work out which nodes changed. Saying that plainly reads as someone who knows what the framework is buying them; the first option reads as someone who has only heard it described."
+    },
+    {
+      "id": "javascript-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "red-flag",
+      "prompt": "Users say the app gets sluggish after twenty minutes of use and a refresh fixes it. This runs on every route change.",
+      "subject": {
+        "kind": "code",
+        "language": "javascript",
+        "content": "function mountTicker(el) {\n  const rows = [];\n  window.addEventListener('resize', () => layout(el, rows));\n  setInterval(async () => rows.push(await fetchRow()), 1000);\n}"
+      },
+      "options": [
+        "fetchRow is awaited inside the interval callback, so ticks can overlap.",
+        "Nothing is ever torn down: every route change adds another resize listener and another interval, each holding the previous element and its growing rows array alive.",
+        "rows should be component state rather than a local array.",
+        "setInterval should be a self-scheduling setTimeout."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "In a single-page app the page never reloads, so anything you attach you own until you detach it. The first option is a real overlap bug and worth mentioning second. But 'slow after twenty minutes, fine after refresh' is the signature of accumulated listeners and timers, and the fix is a teardown function the caller actually invokes."
+    },
+    {
+      "id": "javascript-05",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A dashboard awaits five independent API calls one after another and takes four seconds to load. What is the right change?",
+      "options": [
+        "Start them together and await them as a group — nothing depends on anything else, so serialising them costs the sum instead of the slowest one.",
+        "Move the awaits into a for loop so the runtime can batch them.",
+        "Use Promise.race so the fastest response renders first.",
+        "Cache the responses so the next load is instant."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "Caching is the tempting one because it is genuinely useful — and it does nothing for the first visit, which is the one that decides whether someone stays. Worth adding in the same breath: use allSettled rather than all, or one failing widget blanks a dashboard where the other four were fine."
+    },
+    {
+      "id": "javascript-06",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "A table renders 3,000 rows, each with its own click handler closing over that row. Initial render is slow and memory is high. Best fix?",
+      "options": [
+        "Put one listener on the table body and read the row id off the event target — one closure instead of three thousand.",
+        "Wrap each row's handler in useCallback so the functions are stable.",
+        "Debounce the click handlers.",
+        "Use onMouseDown instead of onClick to skip the click delay."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "useCallback is the reflex and it makes this worse: you keep all three thousand closures and add three thousand cache entries to hold them. Delegation works because events bubble, which is also how React attaches its own listeners at the root — one handler at the container is both the cheap answer and the idiomatic one."
+    },
+    {
+      "id": "javascript-07",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "A bug only reproduces on one client's machine, in their browser, about once a day. How do you go after it?",
+      "modelAnswer": "I would start by narrowing what 'their machine' means — browser and version, extensions, screen size, network, and whether it is one user or one environment — because that list usually contains the answer. Then I would make the failure visible rather than trying to catch it live: error monitoring with source maps and breadcrumbs so I get a stack and the actions leading up to it, plus structured logging around the path I suspect. If it still hides, I would narrow by bisecting — feature-flag the suspect code path off for that user and see whether it stops. Once it reproduces reliably I write the failing test first, so the fix is provable and the bug cannot come back quietly.",
+      "keyPoints": [
+        "Pin down what is different about that environment before theorising",
+        "Instrument for evidence — source maps, breadcrumbs, structured logs",
+        "Narrow by bisecting or flagging, rather than reading code hoping to spot it",
+        "Get a reliable reproduction before attempting a fix",
+        "Lock it down with a test so it cannot return silently"
+      ],
+      "explanation": "Frequency and locality are the clues, and a strong answer treats them as data. The weak version of this answer jumps straight to a guess about the cause; the strong one describes how to turn a rumour into a reproduction."
+    },
+    {
+      "id": "javascript-08",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "Where should the session token from a payments API live in a browser app?",
+      "options": [
+        "localStorage — it survives a refresh and the fetch wrapper can read it easily.",
+        "An httpOnly, Secure, SameSite cookie set by the server, so no JavaScript on the page — including anything injected into it — can read the token at all.",
+        "sessionStorage — it is cleared when the tab closes, so a script cannot get at it.",
+        "In a hidden input on the page, so it is never in storage."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "sessionStorage is the trap: shorter lifetime feels safer, but any script running on your origin reads it exactly as easily as localStorage, and one compromised npm package is all it takes. httpOnly moves the token somewhere your own code cannot reach — which is the point, and also why it forces you to think about CSRF instead."
+    },
+    {
+      "id": "javascript-09",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "getForm is an async function. `const form = getForm(id); console.log(form.name)` prints undefined, and no error appears anywhere. Why?",
+      "options": [
+        "The API response has no name field.",
+        "An async function returns a Promise immediately, so form is the Promise and not the data — reading .name off it gives undefined. It needs await, or .then.",
+        "console.log runs before the assignment, because it is hoisted.",
+        "getForm is missing a return statement."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "The silence is what makes this cost an afternoon: reading a property that does not exist on an object is not an error in JavaScript, it is undefined. Learn the shape of it — a result you used without waiting for it looks exactly like an API that returned nothing, and you can burn a morning in the network tab where the response was fine all along."
+    },
+    {
+      "id": "javascript-10",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "A field renders the fallback 'Not set' whenever the stored value is 0. The code is `value || 'Not set'`. What is the right fix?",
+      "options": [
+        "Use `value ?? 'Not set'` so only null and undefined fall through — || also catches 0, '' and false, which are real values here.",
+        "Convert it with String(value) before the check.",
+        "Use `value === undefined ? 'Not set' : value`.",
+        "Store the value as a string so it can never be falsy."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "|| asks 'is this falsy', and 0, empty string and false are all falsy and all legitimate answers a user gave you. ?? asks the question you meant: is there a value at all. The explicit undefined check is close enough to pass review and leaves the bug in place for every endpoint that returns null instead — which is most of them."
+    },
+    {
+      "id": "javascript-11",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "red-flag",
+      "prompt": "'All saved' appears instantly and the saves are still going. What is wrong?",
+      "subject": {
+        "kind": "code",
+        "language": "javascript",
+        "content": "async function saveAll(rows) {\n  rows.forEach(async (row) => {\n    await save(row);\n  });\n  console.log('all saved');\n}"
+      },
+      "options": [
+        "forEach ignores whatever its callback returns, and an async callback returns a Promise — so nothing is awaited, the function resolves while the saves are in flight, and a failure inside the loop becomes an unhandled rejection nobody sees.",
+        "save should be called without await inside the callback.",
+        "forEach should be map, so the rows come back out.",
+        "saveAll does not need to be async at all."
+      ],
+      "correct": 0,
+      "eliminate": 1,
+      "explanation": "await only waits inside the function it is written in, and here that function is the callback, not saveAll. Use for…of with await for saves that must happen in order, or map to promises and await Promise.all for parallel ones. Option three is half the fix and stops just short of the half that matters — map alone still does not wait."
+    },
+    {
+      "id": "javascript-12",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "red-flag",
+      "prompt": "The table sorts correctly. A completely different list on the same page quietly changed order too.",
+      "subject": {
+        "kind": "code",
+        "language": "javascript",
+        "content": "function SubmissionTable({ rows }) {\n  const newest = rows.sort((a, b) => b.createdAt - a.createdAt);\n  return <Table rows={newest} />;\n}"
+      },
+      "options": [
+        "sort reorders the array in place and hands back the same array, so this rearranges the caller's rows — the prop, and the state it came from.",
+        "The comparator is backwards; it should be a.createdAt - b.createdAt.",
+        "The sort should happen in a useEffect rather than during render.",
+        "The sort should be wrapped in useMemo so it does not run on every render."
+      ],
+      "correct": 0,
+      "eliminate": 1,
+      "explanation": "Almost every array method you reach for returns a new array; sort and reverse are the two that do not. Mutating a prop means mutating something a parent still holds and believes nobody touched, which is precisely the assumption React's rendering rests on. [...rows].sort(…) costs one copy and removes the whole class of bug. Memoising is a fair thought that does nothing about the mutation."
+    },
+    {
+      "id": "javascript-13",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "A form with a real <form> and a submit button flashes, reloads the page, and the fetch never finishes. What is going on?",
+      "options": [
+        "The submit handler never calls preventDefault, so the browser performs its own form submission — a navigation, which throws away the page and the request in flight with it.",
+        "The button needs type='button'.",
+        "The fetch is not being awaited.",
+        "The form is missing an action attribute."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "The default action of a submit button inside a form is to submit that form to the current URL, and a navigation cancels everything the page was doing. type='button' does stop the reload, which is why it is such a common fix, and it quietly kills pressing Enter in a text field — which is how a lot of people submit forms, and how nobody tests them. preventDefault keeps both."
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "skill": "mongodb",
+  "label": "MongoDB & Mongoose",
+  "questions": [
+    {
+      "id": "mongodb-01",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A reviewer objects that each order line copies the product's name and price into the order document, duplicating data that already exists in the products collection. What is the right answer?",
+      "options": [
+        "They are right — reference the product and join at read time so the data has one home.",
+        "The copy is the point: an order records what the customer was actually charged, and must not change when the catalogue does. Keep the product id alongside it for traceability.",
+        "Keep the copy and add a nightly job that re-syncs order lines with the current catalogue.",
+        "Store both and have the application prefer whichever was written most recently."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "The first option is the relational instinct and it is usually right — for an order it is exactly wrong, because a normalised price means last March's invoice silently reprices itself when marketing runs a sale. The re-sync job is the same mistake with a schedule attached, and it corrupts financial records automatically at 2am."
+    },
+    {
+      "id": "mongodb-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A query filters on status and sorts by createdAt. Both fields have their own index, and the query still scans the collection. Why?",
+      "options": [
+        "One index is used per query here, so an equality filter plus a sort needs a single compound index with the equality field first and the sort field second.",
+        "The planner picked wrong; add a hint() forcing the createdAt index.",
+        "The indexes have become fragmented and need rebuilding.",
+        "It needs a compound index on (createdAt, status) so the sort field leads."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "The last option is the interesting wrong answer: a compound index in the wrong order cannot serve the filter efficiently, and people conclude compound indexes 'did not help'. Equality first, then sort, then range — the order of the keys is the whole design, not a detail. A hint only forces the planner to commit to the bad plan you gave it."
+    },
+    {
+      "id": "mongodb-03",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This is the login handler for a payments dashboard. A penetration test got in without a password. How?",
+      "subject": {
+        "kind": "code",
+        "language": "javascript",
+        "content": "const user = await User.findOne({\n  email: req.body.email,\n  password: req.body.password\n});\nif (user) issueSession(user);"
+      },
+      "options": [
+        "findOne without a sort is non-deterministic when several documents match.",
+        "req.body values are not cast to strings, so posting {\"$ne\": null} as the password turns the filter into a match-anything query — and the password is being compared as a stored value at all, rather than hashed.",
+        "The query should use .lean() so a full Mongoose document is not hydrated on every login.",
+        "The email should be lowercased and trimmed before the lookup."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "A JSON body can contain objects, and an object in a query position becomes a query operator — which is the whole of NoSQL injection. Cast or validate every value before it reaches a filter. The second half matters just as much: with a hashed password there is nothing to compare in the query, so the vulnerable shape stops being expressible."
+    },
+    {
+      "id": "mongodb-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A transfer debits one account and credits another with two updateOne calls. Occasionally only the debit lands. What is the right fix?",
+      "options": [
+        "Put both writes in a multi-document transaction, or model the transfer as one document that a ledger process applies to both balances.",
+        "Retry the credit when it fails, with backoff.",
+        "Set writeConcern: 'majority' on both writes so neither can be lost.",
+        "Move the two updates into the same request handler so they execute back to back."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "The write concern answer is the best distractor because it is real and adjacent: majority buys you durability — the write will not vanish — and says nothing about whether two writes happen together. Retrying cannot help when the process died between them, and a retry without an idempotency key is how one transfer becomes two credits."
+    },
+    {
+      "id": "mongodb-05",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A dashboard loads 200 orders and then loops over them awaiting order.populate('customer') for each. The page takes nine seconds. What is the fix?",
+      "options": [
+        "Add an index on the customer field so each lookup is fast.",
+        "Stop making 200 round trips: populate the whole list in one call so the driver fetches the customers with a single query, or do it server-side in one aggregation.",
+        "Increase the connection pool so the lookups can run in parallel.",
+        "Call .lean() so Mongoose does not hydrate a full document per record."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "The index answer is nearly right and is the one most people give: it makes each of the 200 round trips faster, and 200 round trips is the actual problem. lean() is a genuine saving worth taking as well — it just trims the cost of each trip rather than removing 199 of them."
+    },
+    {
+      "id": "mongodb-06",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A payments team wants hard guarantees — account numbers unique, balances never negative. What is the honest answer about enforcing that here?",
+      "options": [
+        "MongoDB cannot enforce constraints; a relational database is the only correct choice for money.",
+        "Uniqueness is a unique index, and 'never negative' is a conditional single-document update — decrement guarded by a filter that requires a sufficient balance — so the rule lives where the write happens.",
+        "Put both rules in the Mongoose schema; validators run on every save.",
+        "Read the balance, check it in the application, then write the new value."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The Mongoose answer is the dangerous one: those validators run in your application, so they hold right up until someone uses updateOne, a migration script, or a second service — and then they silently do not. Read-then-write is the classic race, where two concurrent withdrawals both read a balance that was sufficient."
+    }
+  ]
+}

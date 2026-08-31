@@ -1,0 +1,200 @@
+{
+  "skill": "css",
+  "label": "CSS3, SASS & responsive UI",
+  "questions": [
+    {
+      "id": "css-01",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A candidate is describing how they handled a design handoff. What costs them the offer?",
+      "subject": {
+        "kind": "quote",
+        "content": "The Figma was a fixed 1440px layout with no mobile screens, so I built it at 1440. Responsive wasn't in the ticket, and if the designer wanted it they should have drawn it."
+      },
+      "options": [
+        "Building the page at a fixed 1440px width.",
+        "Treating a gap in the design as permission to ship a desktop-only page, instead of going back to the designer with the one question that would have unblocked it.",
+        "Not using a CSS framework's grid for the layout.",
+        "Not writing the ticket in more detail themselves."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Building to the design you were given is defensible; the sentence that lands badly is the last one. On a team where designers, product and engineers share a deadline, the expensive habit is answering an ambiguity alone and silently. Most of the traffic is on phones, so this is also a product failure with a clear owner."
+    },
+    {
+      "id": "css-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "A card grid should be four across on desktop, two on tablet and one on a phone — and the client keeps sending new device widths to support. Best approach?",
+      "options": [
+        "One media query per breakpoint, with a column-count modifier class for each.",
+        "Let the grid work it out: repeat(auto-fit, minmax(240px, 1fr)) so the column count follows the space available and a new device needs no new CSS.",
+        "Measure the container in JavaScript on resize and set the column count from there.",
+        "Use the framework's grid classes — col-lg-3 col-md-6 col-12 — one per breakpoint."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "The framework grid is the tempting answer because it ships today and everyone can read it — it just hard-codes the same arithmetic against viewport widths, so the next device size is another edit in every template. Breakpoints are for design decisions the browser cannot make; column counts are arithmetic, and the browser is better at it than you are."
+    },
+    {
+      "id": "css-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "On phones the page scrolls sideways by about thirty pixels. Nothing looks too wide in DevTools at desktop sizes. What do you do?",
+      "options": [
+        "Set overflow-x: hidden on the body and move on.",
+        "Find what is actually overflowing — a fixed-width image, an unbroken string, a negative margin — by comparing scrollWidth with clientWidth as you walk down the tree.",
+        "Add width: 100% and box-sizing: border-box to every container.",
+        "Check that the viewport meta tag is present and correct."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "overflow-x: hidden is what most teams ship, and it is why nobody ever finds the cause: the element is still there, still wide, and now it also breaks position: sticky in some browsers. The viewport meta tag is worth a glance, but a missing one scales the whole page rather than overhanging it by thirty pixels."
+    },
+    {
+      "id": "css-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "red-flag",
+      "prompt": "A reviewer left one comment on this SASS. What was it about?",
+      "subject": {
+        "kind": "code",
+        "language": "scss",
+        "content": ".card {\n  .header {\n    .title {\n      span { color: $blue; }\n    }\n  }\n  &.is-active .header .title span { color: $blue-dark !important; }\n}"
+      },
+      "options": [
+        "Nesting to match the markup compiles to .card .header .title span, so the only way to override it later is a longer selector or !important — which is exactly what the next line resorts to.",
+        "The colours should be CSS custom properties rather than SASS variables, so themes can change at runtime.",
+        "SASS does not allow & to be combined with a class in a nested selector.",
+        "The rules should be split into partials, one file per component."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "Nesting feels like structure and is actually specificity, compounding one level at a time. The tell is the !important on the very next line — the file has already started fighting itself. Custom properties are a real point and a good second comment, but that is about theming, not about why this stylesheet gets harder to change every week."
+    },
+    {
+      "id": "css-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "The design system says buttons are brand green with a 6px radius; the component library ships blue at 2px. The team is overriding it with .ant-btn { ... !important } in a global stylesheet. What should happen instead?",
+      "options": [
+        "Nothing — it is one file, it is obvious where to look, and it works.",
+        "Configure the library's theme once at the root — its design tokens, or its SASS variables set before the import — so components come out correct and its internal class names stay private.",
+        "Fork the library and edit its stylesheet, so the defaults are simply right.",
+        "Wrap every button in a local component that re-declares the styles the design system requires."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "The wrapper option is the near-miss: it works, and you repeat it for every component the library ships, and the two drift. Overriding by internal class name couples your styling to a name the library is free to rename in a patch release — and the upgrade that breaks all your buttons produces no error, just blue."
+    },
+    {
+      "id": "css-06",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "A layout is pixel-perfect in Chrome and visibly broken in Safari on iOS. What is the most reliable way to work?",
+      "options": [
+        "Add vendor prefixes across the stylesheet until it renders.",
+        "Check support before using a feature, keep a real-device pass in the review checklist, and branch with @supports only where a fallback is genuinely needed.",
+        "Detect Safari from the user agent string and serve it a separate stylesheet.",
+        "Log it as a known issue and wait for the next Safari release."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "Prefixing everything is the reflex, and a build-time autoprefixer already does it better than you will by hand — what it cannot do is tell you the feature is unsupported entirely. User-agent sniffing is the answer that gets remembered for the wrong reason: it breaks on every browser released after you wrote it."
+    },
+    {
+      "id": "css-07",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "open",
+      "prompt": "Our stylesheet is 400KB and nobody dares delete anything from it. What would you do about that?",
+      "modelAnswer": "I would stop it growing before I try to shrink it: new work goes into component-scoped styles with clear ownership, so the global sheet is frozen rather than compounding. Then I would get evidence — coverage tooling per route tells me what is unused, though carefully, because class names built at runtime look unused and are not. I would delete in small, verifiable increments, one page or one component at a time, with visual regression screenshots so a removal that changes rendering shows up in review rather than in production. Alongside that, pull colours, spacing and typography into tokens so the duplicates become visible, and put a size budget in CI so the number can only go down.",
+      "keyPoints": [
+        "Stop the growth first — scoped styles and ownership for anything new",
+        "Use coverage data, while knowing why it over-reports unused rules",
+        "Delete in small increments, protected by visual regression",
+        "Extract tokens so duplication becomes visible",
+        "Put a budget in CI so the win holds"
+      ],
+      "explanation": "The interesting part of the answer is 'nobody dares' — the problem is fear, and fear is fixed with a safety net, not with a bigger delete. Anyone who opens with a full rewrite of the stylesheet has skipped the part where the current one is what keeps the product looking right."
+    },
+    {
+      "id": "css-08",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "Your new rule does not apply. Adding !important makes it work. What has actually happened?",
+      "options": [
+        "The stylesheets are loading in the wrong order.",
+        "Another rule matches the same element with a more specific selector and wins — !important overrules the entire cascade instead of resolving the mismatch, so the next person needs a bigger hammer than you did.",
+        "The class name is misspelled somewhere.",
+        "The browser is serving a cached copy of the old CSS."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "DevTools answers this in seconds: the losing rule is struck through and the winner sits right above it. Matching or lowering the specificity of the rule that wins keeps the cascade readable. !important wins today and guarantees the next override has to be !important too — which is exactly how a stylesheet nobody dares touch gets built, one urgent fix at a time."
+    },
+    {
+      "id": "css-09",
+      "stage": "deepdive",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "platform": "web",
+      "type": "red-flag",
+      "prompt": "The card matches the designer's screenshot exactly. What did the reviewer flag?",
+      "subject": {
+        "kind": "code",
+        "language": "css",
+        "content": ".submission-card .title {\n  height: 48px;\n  overflow: hidden;\n  margin-top: -6px;\n}"
+      },
+      "options": [
+        "A fixed height with hidden overflow cuts off any title that wraps to a second line — which is every long title, and most titles in a language that is not English.",
+        "The selector should be a single class rather than a nested one.",
+        "Negative margins are never acceptable in CSS.",
+        "48px should be written as 3rem."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "A fixed height encodes the content you happened to have on the day you built it. min-height with padding lets the card grow rather than quietly eating the end of a sentence, and if truncation really is wanted it should look deliberate — an ellipsis or a line clamp, not a clipped letter. The rem point is a real convention worth raising in review; it is not the thing that breaks in production."
+    }
+  ]
+}
