@@ -38,11 +38,11 @@
       },
       "options": [
         "It doesn't ramp up gradually, so the server is hit by all users at once.",
-        "There's no think time and every user requests the identical cached page, so this measures how fast one endpoint can serve one cached response — not the load a real user population puts on the system.",
         "It doesn't inspect the response body, so an error page would be counted as a successful request.",
+        "There's no think time and every user requests the identical cached page, so this measures how fast one endpoint can serve one cached response — not the load a real user population puts on the system.",
         "Locust is the wrong tool for this; JMeter would give more accurate numbers."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "A workload model is the actual product of load testing — the mix of journeys, the pacing between actions, and enough data variety that you're exercising the database rather than a cache. With zero think time, 500 simulated users generate the request rate of many thousands of real ones, so the result is unrelatable to anything; with one fixed URL, the expensive queries never run. Not checking the response is a real second flaw worth fixing, and the missing ramp is genuinely a gap too — but both would still leave you measuring the wrong workload."
     },
@@ -56,14 +56,14 @@
       "type": "mcq",
       "prompt": "A load run against the checkout API gives: mean 220ms, p50 180ms, p95 1.9s, p99 6.2s, errors 0.2%. The SLA says 'under 500ms'. What do you report?",
       "options": [
+        "It fails for roughly one request in twenty, which at checkout means real customers waiting two seconds and some waiting six — the tail is the finding, and the 0.2% errors need identifying before anything is signed off.",
         "It passes: the mean and the median are both comfortably inside 500ms.",
         "It fails as reported, but only because p99 is an outlier that a longer run would smooth out.",
-        "It fails for roughly one request in twenty, which at checkout means real customers waiting two seconds and some waiting six — the tail is the finding, and the 0.2% errors need identifying before anything is signed off.",
         "It can't be judged until the test is repeated with more users, since 220ms mean suggests the system was never under real pressure."
       ],
-      "correct": 2,
-      "eliminate": 0,
-      "explanation": "Averages hide exactly the users you care about: a mean of 220ms is compatible with a meaningful fraction of customers having a bad time, and at checkout those seconds are abandoned carts. Option B is the tempting one because 'p99 is noise' is something people genuinely say — but a p99 thirty times the median is a shape, not noise, usually a lock, a connection pool limit or a cold cache, and the errors matter more than any of it since a failed checkout is not a slow one."
+      "correct": 0,
+      "eliminate": 1,
+      "explanation": "Averages hide exactly the users you care about: a mean of 220ms is compatible with a meaningful fraction of customers having a bad time, and at checkout those seconds are abandoned carts. Option C is the tempting one because 'p99 is noise' is something people genuinely say — but a p99 thirty times the median is a shape, not noise, usually a lock, a connection pool limit or a cold cache, and the errors matter more than any of it since a failed checkout is not a slow one."
     },
     {
       "id": "performance-testing-04",
@@ -75,13 +75,13 @@
       "type": "mcq",
       "prompt": "You're designing the load scenario for a major release. Where should the numbers in it come from?",
       "options": [
-        "Take the current peak concurrent users from production analytics, model the journey mix and pacing on what those users actually do, and run against a dataset the size of production's.",
         "Double last year's registered user count and drive that many virtual users at the busiest endpoint.",
         "Use the number the business hopes to reach after the marketing campaign, since that's what the system must survive.",
-        "Use the framework's default thread count on a fresh staging database, and compare the result against the previous release's run."
+        "Use the framework's default thread count on a fresh staging database, and compare the result against the previous release's run.",
+        "Take the current peak concurrent users from production analytics, model the journey mix and pacing on what those users actually do, and run against a dataset the size of production's."
       ],
-      "correct": 0,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "A load test is only as good as its resemblance to real traffic, and the two things teams get wrong are the journey mix and the data volume — a query that's instant against 500 staging rows is a table scan against ten million. The growth-target option is tempting and often demanded by stakeholders; it's worth running as a separate scenario, but if you skip today's real peak you won't know whether a failure means 'we can't grow' or 'we're already broken'."
     },
     {
@@ -136,12 +136,12 @@
       "prompt": "A mobile financial services product sees roughly ten times normal traffic for about ninety minutes on salary day. What do you test?",
       "options": [
         "A stress test that keeps increasing load until the system breaks, so you know the ceiling.",
-        "A spike into ten times normal load, held for the full ninety minutes against production-scale data, plus a check that the system returns to normal afterwards — and that nothing was lost or double-processed on the way.",
         "A 24-hour soak test at normal load, since salary day is really about sustained traffic.",
-        "A load test at ten times normal for five minutes, which is long enough to see whether the servers cope."
+        "A load test at ten times normal for five minutes, which is long enough to see whether the servers cope.",
+        "A spike into ten times normal load, held for the full ninety minutes against production-scale data, plus a check that the system returns to normal afterwards — and that nothing was lost or double-processed on the way."
       ],
-      "correct": 1,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "Match the test to the event: the arrival is sudden, the duration is long enough for queues and connection pools to fill, and it's money, so the correctness question — did anything get double-debited or dropped when it degraded — matters more than the latency chart. The stress test is a genuinely useful thing to run and the tempting answer here, but it tells you the breaking point, not whether you survive the event you actually know is coming; five minutes is too short for anything that leaks to show up."
     },
     {

@@ -51,11 +51,11 @@
       "prompt": "Crash-free users sits at 99.6%, but Play Console is warning about a 1.2% ANR rate. What is it telling you?",
       "options": [
         "ANRs are just crashes on older devices — same root causes.",
-        "The main thread was blocked long enough for the system to offer to kill the app. Look for I/O or heavy work on the main thread, very often during startup.",
         "The app is being killed for using too much memory.",
+        "The main thread was blocked long enough for the system to offer to kill the app. Look for I/O or heavy work on the main thread, very often during startup.",
         "ANRs only come from background services and can be ignored for a UI app."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 0,
       "explanation": "ANRs and crashes are different failures with different fixes: a crash is code that threw, an ANR is code that wouldn't yield. They also hurt differently — ANR rate feeds Play's quality thresholds and can suppress your store ranking while your crash numbers look excellent."
     },
@@ -69,12 +69,12 @@
       "type": "mcq",
       "prompt": "Cold start went from 1.2s to 2.4s in one release. On a modularised app, where do you look?",
       "options": [
-        "Too many modules — module count slows startup.",
         "Something moved into Application.onCreate or a startup content provider — usually a library initialising eagerly.",
+        "Too many modules — module count slows startup.",
         "Compose is slow to start up.",
         "The APK simply got bigger."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 2,
       "explanation": "Cold start regressions are nearly always eager initialisation: an analytics or crash SDK added to onCreate, or a library that installs its own ContentProvider and runs before your code does. App Startup lets you make those lazy. Module count affects build time, not runtime."
     },

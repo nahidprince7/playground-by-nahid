@@ -1,0 +1,175 @@
+{
+  "skill": "php",
+  "label": "PHP, the request lifecycle & safe input",
+  "questions": [
+    {
+      "id": "php-01",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A candidate describes working with a client who kept changing their mind. What should worry the interviewer?",
+      "subject": {
+        "kind": "quote",
+        "content": "The client changed the requirements three times, so I stopped replying on the thread and just built the version I thought was right. It took an extra week but they were happy with it in the end."
+      },
+      "options": [
+        "Building without written requirements.",
+        "Not escalating the churn to the project manager.",
+        "Going quiet: the thread was the only place anyone else could see the change, so the PM found out a week late and 'happy in the end' was luck rather than anything repeatable.",
+        "Spending an extra week without agreeing the cost with anyone."
+      ],
+      "correct": 2,
+      "eliminate": 0,
+      "explanation": "Escalating is the fix, and that option is close enough to be worth arguing for — but the flag is the silence that made escalation impossible, because for a week nobody but the candidate knew the project had moved. A job that asks you to brief a PM on progress is asking whether your status is visible when the news is bad, not when it is good."
+    },
+    {
+      "id": "php-02",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "A discount field is checked with if (empty($code)) { ... }. Customers report that the valid code 0 is rejected as if they had entered nothing. Why?",
+      "options": [
+        "The form posts an integer, and empty() only takes strings.",
+        "empty() is true for '0' as well as for '' and null — a legitimate code of zero takes the same branch as no code at all.",
+        "The code should have been trimmed before the check.",
+        "empty() only works on arrays and objects."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "empty() is shorthand for 'falsy', and PHP counts '0', 0, '' , null, false and the empty array as falsy — so it answers a slightly different question than the one you asked. When you mean 'the field was not filled in', $code === '' or !isset($code) says exactly that and nothing else. Trimming is worth doing and would not have helped."
+    },
+    {
+      "id": "php-03",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "red-flag",
+      "prompt": "A small internal page that has been live for two years.",
+      "subject": {
+        "kind": "code",
+        "language": "php",
+        "content": "$id   = $_GET['id'];\n$user = $pdo->query(\"SELECT * FROM users WHERE id = $id\")->fetch();\n\necho \"<h1>Welcome \" . $user['name'] . \"</h1>\";"
+      },
+      "options": [
+        "$pdo->query should be $pdo->exec for a SELECT.",
+        "There is no check that a row was found before ['name'] is read.",
+        "The query should use fetchAll() so multiple matches are handled.",
+        "$_GET['id'] is pasted into the SQL, so the URL rewrites the query — and the name is echoed unescaped, so whatever ends up stored there runs in the browser of everyone who views the page."
+      ],
+      "correct": 3,
+      "eliminate": 0,
+      "explanation": "The missing null check is real and will produce a warning the day an id does not exist, which is why it is the comfortable thing to say. The two that matter are the pair: input trusted on the way into the database, output trusted on the way back out to the page. A prepared statement fixes the first and does nothing at all about the second — htmlspecialchars, or a template that escapes by default, is what closes it."
+    },
+    {
+      "id": "php-04",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "On the deploy server the team runs composer update rather than composer install. Why does that matter?",
+      "options": [
+        "update re-resolves the version constraints and rewrites the lock file, so the servers can end up with library versions that nothing ever tested — install reproduces exactly what CI ran.",
+        "They are the same command; update is an alias kept for older projects.",
+        "update is slower because it ignores the lock file and hits the network.",
+        "install refuses to run without --dev, so update is the only option on a server."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "The speed answer is true as far as it goes, which is what makes it the tempting one — but the cost is not the minute, it is that a patch release published between CI and deploy can land straight in production with nobody's name on it. composer.lock exists so that 'works on my machine' and 'works on the server' are the same set of bytes; update on deploy quietly gives that up."
+    },
+    {
+      "id": "php-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A developer adds a static array inside a helper to cache lookups. It clearly works locally and appears to do nothing in production. Why?",
+      "options": [
+        "PHP is shared-nothing per request: the static lives for one request and dies with it, so under real traffic almost every request starts with an empty cache.",
+        "The static array is copied by value each time the helper is called.",
+        "OPcache is enabled in production and strips unused statics.",
+        "The static needs to be declared public to persist."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "Locally you reload the same page over and over inside what feels like one session, but each of those was its own process too — it only looked like it worked because a single request often calls the helper repeatedly. Anything that has to outlive a request goes somewhere that outlives a request: Redis, the database, or the cache layer. This is also why a queue worker, which does not die between jobs, can hold stale state that a web request never would."
+    },
+    {
+      "id": "php-06",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "An avatar upload, reported by a security review.",
+      "subject": {
+        "kind": "code",
+        "language": "php",
+        "content": "$name = $_FILES['avatar']['name'];\n\nmove_uploaded_file(\n    $_FILES['avatar']['tmp_name'],\n    __DIR__ . \"/public/uploads/$name\"\n);"
+      },
+      "options": [
+        "There is no check that the upload actually succeeded before the move.",
+        "The filename is whatever the client sent, so it chooses both the path and the extension — a .php written into a directory the web server executes is a shell on the box.",
+        "The file size is never limited, so a large upload fills the disk.",
+        "move_uploaded_file should be rename() when the source is a temporary file."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Both of the other real answers are worth fixing and neither is the emergency. The rule is that an uploaded file never keeps its own name: generate one, decide the extension yourself from a verified type, and if you can, store it outside the web root and serve it through a route. The traversal half — ../ in the name — is the same bug wearing a different hat."
+    },
+    {
+      "id": "php-07",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "You inherit a five-year-old PHP application with no tests and a two-thousand-line controller. The client wants a new feature inside it next week. How do you proceed?",
+      "modelAnswer": "I would start by reading rather than changing, and by getting it running locally with production-shaped data, because in a codebase like this the risk is not writing the feature, it is not knowing what else runs when you do. Before touching the part I need, I would write a couple of tests that pin its current behaviour — not the behaviour I wish it had, the behaviour it actually has, bugs included — so that I can tell the difference between a change and an accident. Then I would add the feature beside the old code rather than inside it: a new class or service the controller calls, so the new work is testable even though what surrounds it is not. I would resist the urge to rewrite the controller on the client's week; refactoring is a real cost and it belongs in a conversation, not smuggled into a feature branch. I would keep the change small enough to review and reversible enough to roll back, and I would deploy it behind a flag or at a quiet hour if the blast radius is unclear. And I would write down what I found — the duplication, the missing tests, whatever is one bad day away from an incident — and give it to the PM as an estimate of what fixing it costs, so the decision belongs to the person who owns the budget. If the deadline turns out to be impossible without cutting corners, I would say so at the start of the week rather than the end of it.",
+      "keyPoints": [
+        "Read and run it before changing it; production-shaped data, not seed data",
+        "Pin current behaviour with a few characterisation tests first",
+        "Add beside the old code rather than rewriting inside it",
+        "Do not refactor on someone else's deadline without agreeing it",
+        "Small, reviewable, reversible — flag or quiet-hour deploy if unsure",
+        "Write down what you found and hand the cost to whoever owns the decision",
+        "Raise an impossible deadline at the start of the week, not the end"
+      ],
+      "explanation": "Two answers fail this question in opposite directions: 'I'd rewrite it properly' and 'I'd just add my code and get out'. The first spends the client's deadline on the previous developer's mistakes; the second adds a line to the pile and leaves no record that the pile exists. What is being tested is whether you can work safely inside code you did not write, and whether the state of it becomes someone's decision rather than your private grievance."
+    },
+    {
+      "id": "php-08",
+      "stage": "ask",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "What is actually wrong with using @file_get_contents($url) to keep an integration quiet?",
+      "options": [
+        "@ measurably slows the call down because the error handler still runs.",
+        "@ has been a syntax error since PHP 8.",
+        "@ only suppresses fatal errors, so notices still reach the log.",
+        "@ suppresses the warning, not the failure — the call still returns false, and the next line uses that false as if it were a string, so the bug surfaces somewhere unrelated."
+      ],
+      "correct": 3,
+      "eliminate": 1,
+      "explanation": "The performance point is true and is the answer people give, but it is the least of it: the cost of @ is a stack trace that points at code which is fine, several files away from the request that failed. Check the return value, or use a client that throws, so the failure is handled where it happened."
+    }
+  ]
+}

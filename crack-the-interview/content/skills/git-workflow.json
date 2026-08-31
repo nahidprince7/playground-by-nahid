@@ -37,12 +37,12 @@
       },
       "options": [
         "Committing once a day is too infrequent to be useful history.",
-        "The re-clone: a conflict means two people changed the same lines, and pasting your copy over the top silently discards theirs with no record of what went.",
         "They should be rebasing onto main rather than merging into their branch.",
-        "They did not say which Git host or client they use."
+        "They did not say which Git host or client they use.",
+        "The re-clone: a conflict means two people changed the same lines, and pasting your copy over the top silently discards theirs with no record of what went."
       ],
-      "correct": 1,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "The commit habit is worth a comment, not a rejection — plenty of good engineers tidy their history later. The re-clone is the one that ends the conversation, because it is a workflow built on the belief that a conflict is Git being difficult rather than Git reporting a fact. Merge versus rebase is a team preference; overwriting a colleague's work without knowing it is not."
     },
     {
@@ -55,12 +55,12 @@
       "type": "mcq",
       "prompt": "You bring main into your branch and hit a conflict in a file where a teammate rewrote the same function you changed. What do you do?",
       "options": [
+        "Read both sides to work out what each change was for, and if the intent is not obvious from the code, ask them before resolving.",
         "Keep your version — it is the one you have tested.",
         "Keep theirs — main is the source of truth.",
-        "Read both sides to work out what each change was for, and if the intent is not obvious from the code, ask them before resolving.",
         "Keep both versions of the function, with the one you are not using commented out."
       ],
-      "correct": 2,
+      "correct": 0,
       "eliminate": 3,
       "explanation": "Conflict markers tell you where two intentions met; they do not tell you which one is right, and nothing in the build will tell you either — a resolution that deletes a colleague's fix compiles and passes just fine. Keeping your side is the tempting default because your half is the half you understand. Thirty seconds of asking is cheaper than the week that starts with 'who deleted my validation?'."
     },
@@ -79,13 +79,13 @@
         "content": "$ git log -1 --stat\ncommit 4f2a9c1\n\n    fix\n\n src/Feed.jsx      | 142 +++++++++++++-----------\n src/Feed.css      |  38 ++++-----\n src/utils/date.js |  12 +--\n package-lock.json | 802 ++++++++++++++++++++++++"
       },
       "options": [
-        "The message says 'fix' and the commit carries a bug fix, a reformat and a dependency bump together — there is nothing for a reviewer to check the change against, and no way to revert one part without the others.",
         "package-lock.json should not be in version control at all.",
         "142 changed lines is too much for one commit, whatever is in it.",
+        "The message says 'fix' and the commit carries a bug fix, a reformat and a dependency bump together — there is nothing for a reviewer to check the change against, and no way to revert one part without the others.",
         "The message is missing a ticket number."
       ],
-      "correct": 0,
-      "eliminate": 2,
+      "correct": 2,
+      "eliminate": 1,
       "explanation": "Size is not the fault — a rename can touch a thousand lines and still be one idea. The fault is that three ideas share one commit and the message names none of them, so the reviewer cannot tell the formatting churn from the one line that changed behaviour, and a revert takes the dependency bump with it. The lockfile belongs in the repo; it just does not belong in this commit."
     },
     {
@@ -99,11 +99,11 @@
       "prompt": "You resolved a conflict last week by keeping your side. Today a teammate says their validation change is missing from main. Fastest honest way out?",
       "options": [
         "Ask them to write it again — it was only a few lines.",
-        "Find the merge commit, look at what came in from their branch with git show or git log on that file, and put back what you dropped.",
         "Revert main to before the merge and have everyone re-merge their work.",
+        "Find the merge commit, look at what came in from their branch with git show or git log on that file, and put back what you dropped.",
         "Check the deploy logs to find out when the validation stopped running."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "Nothing was lost. Their commit still exists on their branch and behind the merge's other parent, so the change is recoverable from history in a couple of minutes rather than from memory. Reverting the merge is tempting because it feels like undoing the mistake — it also undoes everything merged since, and replays the same conflict for someone else to get wrong."
     },
@@ -174,11 +174,11 @@
       "options": [
         "Apply every comment exactly as written, push, and say nothing.",
         "Push back on the naming ones — they are subjective and the code works.",
-        "Work through them, ask about the two you did not understand or do not agree with, and say what you changed.",
-        "Quietly ask a different reviewer next time."
+        "Quietly ask a different reviewer next time.",
+        "Work through them, ask about the two you did not understand or do not agree with, and say what you changed."
       ],
-      "correct": 2,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "Fourteen comments on a first PR usually means someone read it properly, which is a good sign about the team. Silent compliance is the tempting one because it looks cooperative — it also means you make the same choice again next week without knowing why it was wrong, and the reviewer never learns which of their conventions are unwritten. The two you ask about are where the actual onboarding happens."
     }
   ]

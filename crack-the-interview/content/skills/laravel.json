@@ -1,0 +1,231 @@
+{
+  "skill": "laravel",
+  "label": "Laravel: Eloquent, queues & the request lifecycle",
+  "questions": [
+    {
+      "id": "laravel-01",
+      "stage": "hr",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A candidate is asked what they do when a deadline is slipping. What should worry the interviewer?",
+      "subject": {
+        "kind": "quote",
+        "content": "I don't like taking bad news to the PM, so I push and I usually get there. If I'm still behind the night before, I skip the tests and put the pull request straight in — if something's broken they can raise a ticket and I'll fix it."
+      },
+      "options": [
+        "Skipping the tests and the review, which is how the bug reaches production.",
+        "Sitting on the slip until the night before, so nobody else can re-plan, help, or tell the client while there is still time to do either.",
+        "Working late instead of asking for another pair of hands.",
+        "Expecting the PM to raise a ticket rather than testing their own work."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Skipping tests is the loud problem and a real one, but it is downstream: it only happens because the slip was hidden until there was no other option left. A team can absorb a late feature it hears about on Tuesday; it cannot absorb one it hears about on Friday night. Interviewers are listening for whether bad news travels early, because that is the part they cannot do for you."
+    },
+    {
+      "id": "laravel-02",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "A Blade view lists 200 orders and prints each order's customer name. The query log shows 201 queries for one page load. What is the fix?",
+      "options": [
+        "Eager load the relation — Order::with('customer') — so all the customers come back in a second query instead of one per row.",
+        "Add an index on orders.customer_id.",
+        "Cache the rendered page for a few minutes so the queries only run occasionally.",
+        "Replace the Eloquent loop with one raw DB::select join."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "This is the N+1: one query for the orders, then one more each time the loop touches $order->customer. The index is the tempting answer because it is genuinely good advice — but it turns 200 slow queries into 200 fast ones, and 200 round trips is still 200 round trips. Caching hides it until the cache is cold, which is usually the moment traffic arrives."
+    },
+    {
+      "id": "laravel-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A profile endpoint runs User::find($id)->update($request->all()). A user posts an extra field and gives themselves is_admin = 1. What actually went wrong?",
+      "options": [
+        "find() should have been findOrFail() so a missing user does not fall through.",
+        "The route was missing its auth middleware.",
+        "is_admin was not listed in the model's $guarded array.",
+        "Whatever the client posts is handed straight to update(), so the request decides which columns are written — the fix is validating into a known set of keys, not blocking the columns you happened to think of."
+      ],
+      "correct": 3,
+      "eliminate": 0,
+      "explanation": "$fillable and $guarded are worth having, and they would have stopped this one — but they are a blocklist you maintain by memory, and the next sensitive column someone adds will not be on it. $request->validate() returns only the keys you named, so the danger is gone rather than fenced off. Note the endpoint was authenticated the whole time: the user was allowed to edit their profile, just not that part of it."
+    },
+    {
+      "id": "laravel-04",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "Checkout works in staging and times out for real customers about once a day.",
+      "subject": {
+        "kind": "code",
+        "language": "php",
+        "content": "public function store(Request $request)\n{\n    $order = Order::create($request->validated());\n\n    Mail::to($order->email)->send(new OrderPlaced($order));\n    Http::post('https://erp.internal/orders', $order->toArray());\n\n    return response()->json($order, 201);\n}"
+      },
+      "options": [
+        "The response should be 200 rather than 201.",
+        "Order::create should be wrapped in a database transaction.",
+        "Two network calls run inside the request: when the mail host or the ERP is slow the customer waits for them, and when one fails they see an error for an order that was already created. Both belong on the queue.",
+        "The order should be reloaded from the database before being returned."
+      ],
+      "correct": 2,
+      "eliminate": 0,
+      "explanation": "The transaction is the near-miss answer — worth adding, but there is only one write here, so it changes nothing about the timeout. The shape to notice is that the customer's response time is now the sum of three systems' bad days, and the two that are not yours are the ones that fail. Dispatching jobs makes the failure retryable somewhere the customer is not sitting and watching."
+    },
+    {
+      "id": "laravel-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A queued job charges a card and then emails a receipt. Jobs retry three times on failure. Support reports a customer charged twice for one order. What is the most likely cause?",
+      "options": [
+        "The worker was running two processes, so the job was picked up twice in parallel.",
+        "tries was set to 3; with tries set to 1 this could not happen.",
+        "The charge and the email should have been two separate jobs.",
+        "The job is not idempotent: the charge succeeded and the job then died before it finished, so the retry ran the charge again. The provider needs a key it can deduplicate on."
+      ],
+      "correct": 3,
+      "eliminate": 1,
+      "explanation": "Splitting the job is genuinely the right refactor and is the answer most candidates reach for — but it only shrinks the window; the charge step itself can still time out after the money moves. Retries are only safe when running twice means the same thing as running once, which for payments means sending an idempotency key the provider remembers. Turning retries off is worse than the bug: now a blip loses the order instead of duplicating it."
+    },
+    {
+      "id": "laravel-06",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "An internal invoice list, written quickly and never revisited.",
+      "subject": {
+        "kind": "code",
+        "language": "php",
+        "content": "$rows = DB::select(\n    \"SELECT * FROM invoices\n     WHERE status = '\" . $request->status . \"'\n     ORDER BY \" . $request->sort\n);"
+      },
+      "options": [
+        "SELECT * should name its columns.",
+        "The query has no LIMIT, so a large table loads entirely into memory.",
+        "Both values are pasted into the SQL, so the URL can rewrite the query — and binding is only half the fix, because ORDER BY cannot take a bound parameter and the sort column has to be checked against a list you control.",
+        "DB::select should be an Eloquent query."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "The missing LIMIT is real and will hurt eventually, which is what makes it a comfortable thing to say instead. The part worth knowing is the second half: candidates who reach for prepared statements often bind the status, leave the ORDER BY as string concatenation, and believe the query is now safe. Identifiers are not parameters — they get whitelisted."
+    },
+    {
+      "id": "laravel-07",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "The reports page took two seconds a year ago and now takes twelve. Walk us through how you would find out why, and what you would change.",
+      "modelAnswer": "First I would measure rather than guess, because a page that got slower gradually usually has three causes and not one. I would reproduce it against a copy of production data — it is almost never reproducible on a seeded local database — and read the query log or Telescope for that one request: how many queries, which ones, and how long each took. The usual finding is an N+1 that arrived with a feature nobody connected to this page, and eager loading fixes it in a line. Then I would take the slowest remaining queries to EXPLAIN and look at whether the indexes match how the data is actually filtered now, which is often not how it was filtered when the table was small. Only after that would I look at the shape of the page itself: whether it needs every row at once or can paginate, and whether the heavy aggregate can be computed on a schedule instead of per request. Caching comes last, because a cache over a slow query is a slow query that is now also stale, and I would rather the report be honest. If it still needs to be big and exact, I would make it a queued export that emails a link, which changes it from a page nobody can load into a job nobody has to watch. Throughout I would keep the before and after numbers, so the fix is a claim I can show the PM rather than a feeling.",
+      "keyPoints": [
+        "Measure first, against production-shaped data — not a seeded local database",
+        "Read the actual query log for that request: count, which queries, how long",
+        "N+1 from features added since is the usual first find; eager load it",
+        "EXPLAIN the slow queries and check the indexes against today's filters",
+        "Paginate, or precompute the heavy aggregate on a schedule",
+        "Caching last, and knowingly — a cached slow query is a stale slow query",
+        "Consider making a genuinely big report a queued export instead of a page",
+        "Keep before/after numbers so the improvement can be shown, not asserted"
+      ],
+      "explanation": "The answer that fails here is the one that starts fixing at the first sentence — 'I'd add a cache' or 'I'd add indexes' — because it is a guess dressed as experience. What interviewers listen for is the order: reproduce, measure, fix the largest thing, measure again. The candidates who mention keeping the numbers are usually the ones who have had to defend a week of performance work to somebody paying for it."
+    },
+    {
+      "id": "laravel-08",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "order",
+      "prompt": "Orders need a new currency column that must eventually be NOT NULL. The app runs on several servers and cannot go offline for the change.",
+      "instruction": "Order these steps by what you would do first.",
+      "items": [
+        {
+          "id": "a",
+          "text": "Deploy the code that writes currency on every new and updated order"
+        },
+        {
+          "id": "b",
+          "text": "Add the column in a migration as nullable, with no default"
+        },
+        {
+          "id": "c",
+          "text": "Backfill currency on the existing rows in batches"
+        },
+        {
+          "id": "d",
+          "text": "Make the column NOT NULL and deploy the code that reads it"
+        }
+      ],
+      "correctOrder": [
+        "b",
+        "a",
+        "c",
+        "d"
+      ],
+      "explanation": "Expand, migrate, then contract. The column has to exist before any server can write to it, and it has to be nullable while the old code — still running on the other servers mid-deploy — keeps inserting rows without it. Backfill only once nothing new is arriving empty, otherwise you are chasing rows as they are created. Making it NOT NULL first is the classic outage: the migration either fails on the existing rows or every insert from the not-yet-updated servers starts throwing."
+    },
+    {
+      "id": "laravel-09",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "The deploy script runs php artisan config:cache. After that, a package that calls env() from inside a class starts reading null. Why?",
+      "options": [
+        "The .env file was not copied to the server by the deploy.",
+        "Once the config is cached, .env is no longer read at runtime — env() belongs in config files, and application code should read config() instead.",
+        "config:cache only caches the framework's own config files, not the package's.",
+        "env() needs a second argument to supply the default value."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The cached config is a single generated PHP file, and loading it is precisely what lets Laravel skip parsing .env on every request. That makes env() outside config a time bomb: it works in local development, where the cache is usually off, and returns null the first time someone runs the optimised deploy."
+    },
+    {
+      "id": "laravel-10",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A one-off command has to touch about two million rows. Which approach keeps memory flat?",
+      "options": [
+        "Model::chunkById(1000) and process each chunk",
+        "Model::all() and a foreach over the collection",
+        "Model::get() inside a while loop with an incrementing limit",
+        "Model::with('relations')->get() so the related rows load in one query"
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "all() and get() hydrate every row into a model object before the loop body runs even once, which is where the memory goes. chunkById walks the table in windows using the primary key, so it also survives rows being written while the command runs — plain chunk() with an offset can skip rows when the loop itself modifies what it is reading."
+    }
+  ]
+}

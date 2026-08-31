@@ -35,12 +35,12 @@
       "type": "mcq",
       "prompt": "Under a traffic spike, pods start failing their liveness probe and get killed, which makes the overload worse. The probe hits `/health`, which checks the database and two downstream APIs.",
       "options": [
-        "Increase the replica count so each pod carries less load.",
         "Liveness is answering the wrong question: it should test whether this process is wedged, while the dependency check belongs in readiness, so an overloaded pod is taken out of rotation instead of executed.",
+        "Increase the replica count so each pod carries less load.",
         "Remove the liveness probe — Kubernetes will restart the container if it exits anyway.",
         "Lower `initialDelaySeconds` so unhealthy pods are detected sooner."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 3,
       "explanation": "A liveness probe that depends on other systems turns a downstream slowdown into a cluster-wide restart storm: every pod fails at once, every restart drops in-flight requests, and the queue behind you grows. Adding replicas is the tempting answer because more capacity does help the spike — but it also multiplies the number of pods killing themselves over a shared dependency."
     },
@@ -79,11 +79,11 @@
       "prompt": "During a routine node upgrade, a service with three replicas went completely down for four minutes.",
       "options": [
         "The deployment strategy should have been Recreate rather than RollingUpdate.",
-        "All three replicas were scheduled on the drained node — nothing spread them across nodes, and no PodDisruptionBudget existed to make the drain wait for replacements.",
         "The cluster autoscaler was disabled, so no replacement node was available.",
-        "The readiness probe's initial delay was too long for the new pods."
+        "The readiness probe's initial delay was too long for the new pods.",
+        "All three replicas were scheduled on the drained node — nothing spread them across nodes, and no PodDisruptionBudget existed to make the drain wait for replacements."
       ],
-      "correct": 1,
+      "correct": 3,
       "eliminate": 0,
       "explanation": "Three replicas is a claim about redundancy that the scheduler is under no obligation to honour — without topology spread constraints or anti-affinity, they can all land on one node, and without a PDB the drain evicts them together. The readiness-delay answer is the good distractor: it genuinely lengthens the gap, so it is a contributing cause worth fixing, but it does not explain a full outage."
     },
@@ -97,11 +97,11 @@
       "prompt": "A service has `cpu: limits: 500m`. Its p99 latency is terrible, but the dashboards show average CPU utilisation around 30%.",
       "options": [
         "Scale out — add replicas until the average utilisation drops further.",
-        "CFS throttling: the limit is enforced per 100ms slice, so a request that needs a short burst is stalled even though the average looks idle. Raise or remove the CPU limit and keep the request for scheduling.",
         "The nodes are too small, so the pods are competing for the same cores.",
+        "CFS throttling: the limit is enforced per 100ms slice, so a request that needs a short burst is stalled even though the average looks idle. Raise or remove the CPU limit and keep the request for scheduling.",
         "Add a service mesh so you can see where the latency is coming from."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "Averages hide throttling by construction — the pod is idle most of the slice and pinned for the rest of it, and `container_cpu_cfs_throttled_seconds_total` is the metric that tells you. Scaling out is the tempting move and it does help a genuinely CPU-bound service, but here every new replica gets the same 500m ceiling and the same p99. Many teams end up setting CPU requests and no CPU limit for exactly this reason."
     },
@@ -116,12 +116,12 @@
       "prompt": "How should application secrets reach pods in a regulated payments environment?",
       "options": [
         "Kubernetes Secrets are encrypted by the API server, so a Secret object plus namespace RBAC is sufficient.",
-        "Treat the cluster as a consumer rather than a store: secrets live in a managed store, are synced or projected in at run time with short-lived credentials, etcd encryption at rest is on, and RBAC limits who can read Secret objects at all.",
         "Encrypt the secrets with a shared team key and commit them to the repository so they are version controlled alongside the manifests.",
-        "Move them into ConfigMaps and restrict access to the namespace."
+        "Move them into ConfigMaps and restrict access to the namespace.",
+        "Treat the cluster as a consumer rather than a store: secrets live in a managed store, are synced or projected in at run time with short-lived credentials, etcd encryption at rest is on, and RBAC limits who can read Secret objects at all."
       ],
-      "correct": 1,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "The first option is the common misconception — Secrets are base64, not encrypted, unless you have turned on encryption at rest. Option three is the interesting wrong answer, because sealed secrets and SOPS are legitimate patterns used by good teams; they lose to a managed store here on rotation and audit, which is precisely what an auditor at a card issuer will ask about."
     },
     {
@@ -170,14 +170,14 @@
       "type": "mcq",
       "prompt": "You inherit a cluster built three years ago by someone who has left. What do you want to know first?",
       "options": [
-        "Upgrade it to a supported version straight away — running out of support is the biggest risk.",
         "Whether the cluster itself can be rebuilt from code, how far behind the supported version window it is, who holds cluster-admin, and what actually happens when a node dies.",
+        "Upgrade it to a supported version straight away — running out of support is the biggest risk.",
         "Install a service mesh so you can see traffic between services before changing anything.",
         "Plan a migration to a managed container service so the cluster stops being your problem."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 3,
-      "explanation": "The version question matters, which is what makes the first option tempting — but upgrading a cluster you cannot rebuild is a one-way door, and half of these clusters have a manual step in them nobody remembers. Find out whether it is reproducible before you touch it; that answer determines whether the upgrade is routine or a project."
+      "explanation": "The version question matters, which is what makes the second option tempting — but upgrading a cluster you cannot rebuild is a one-way door, and half of these clusters have a manual step in them nobody remembers. Find out whether it is reproducible before you touch it; that answer determines whether the upgrade is routine or a project."
     }
   ]
 }

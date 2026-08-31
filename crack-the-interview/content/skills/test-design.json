@@ -37,11 +37,11 @@
       "prompt": "A transfer amount field accepts whole numbers from 1 to 50,000. You have time for about six cases. Which six?",
       "options": [
         "1, 10,000, 20,000, 30,000, 40,000, 50,000 — spread evenly across the range.",
-        "0, 1, 50,000, 50,001, one valid mid-range value, and one non-numeric input such as '1,000' or '-5'.",
         "Six random values generated inside the valid range.",
+        "0, 1, 50,000, 50,001, one valid mid-range value, and one non-numeric input such as '1,000' or '-5'.",
         "50,000 six times, since the maximum is where it will break."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "Bugs cluster at boundaries and at the edges of the valid class, not in the middle — 10,000 and 30,000 are the same equivalence class and the second one tells you nothing new. The evenly-spread option is tempting because it looks thorough and covers more of the range; it just covers the same class six times while never touching off-by-one or bad input."
     },
@@ -57,11 +57,11 @@
       "options": [
         "The full regression pack — cutting it is how bugs escape.",
         "Retest the reported bug on the fix build and sign off; the change was one line.",
-        "Verify the fix, run the smoke set over the critical journeys, then a targeted regression around authentication and anything sharing that code path — and state in writing what wasn't covered.",
-        "Skip testing and rely on the ability to roll back if something breaks."
+        "Skip testing and rely on the ability to roll back if something breaks.",
+        "Verify the fix, run the smoke set over the critical journeys, then a targeted regression around authentication and anything sharing that code path — and state in writing what wasn't covered."
       ],
-      "correct": 2,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "Risk-based selection is what regression testing is for when the clock is real: cover the blast radius of the change plus the paths that must never be broken, and make the uncovered part visible so the business owns the decision. Running the full pack is the tempting answer because it feels responsible, but a suite you can't finish before the deploy just means you ship untested and late."
     },
     {
@@ -137,12 +137,12 @@
       "type": "mcq",
       "prompt": "The business team is busy and asks you to run UAT on their behalf and sign it off. What's the right response?",
       "options": [
+        "Offer to prepare the scenarios, data and environment and sit with them while they run it, but keep the acceptance with the business owner.",
         "Agree — you know the product better than they do, so your sign-off is worth more.",
         "Refuse; UAT is not QA's job and the release should wait until they have time.",
-        "Offer to prepare the scenarios, data and environment and sit with them while they run it, but keep the acceptance with the business owner.",
         "Convert the UAT scripts into automated tests and report the pass rate as the sign-off."
       ],
-      "correct": 2,
+      "correct": 0,
       "eliminate": 3,
       "explanation": "UAT answers a different question from system testing — not 'does it behave as specified' but 'does this do the job we asked for' — and only the person accountable for that outcome can answer it. Running it yourself is tempting because it unblocks the release today; it just means the same team tested against the same understanding twice, and the gap between spec and intent goes to production untested. Facilitating hard is the useful middle: you remove every obstacle except the judgement."
     },
@@ -157,12 +157,12 @@
       "prompt": "Two weeks before release, a feature that was never in the test plan is added. The regression window doesn't move. What do you do?",
       "options": [
         "Spread the existing time thinner so everything still gets some coverage.",
-        "Re-plan against risk: cover the new feature and what it touches, name in writing the areas that will now get reduced or no coverage, and have the release owner accept that trade.",
         "Refuse to test the new feature since it wasn't in the agreed scope.",
-        "Ask the team to work the weekend so the original plan survives."
+        "Ask the team to work the weekend so the original plan survives.",
+        "Re-plan against risk: cover the new feature and what it touches, name in writing the areas that will now get reduced or no coverage, and have the release owner accept that trade."
       ],
-      "correct": 1,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "You can't create test time, so the only real decision is which risk to accept — and that decision belongs to whoever owns the release, in writing, before the fact. Thinning everything is the popular answer because nobody has to say no, but uniformly shallow coverage means the critical journeys are now as weakly tested as the cosmetic ones, and nobody knows it."
     }
   ]

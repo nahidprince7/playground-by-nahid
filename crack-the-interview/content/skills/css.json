@@ -17,12 +17,12 @@
         "content": "The Figma was a fixed 1440px layout with no mobile screens, so I built it at 1440. Responsive wasn't in the ticket, and if the designer wanted it they should have drawn it."
       },
       "options": [
-        "Building the page at a fixed 1440px width.",
         "Treating a gap in the design as permission to ship a desktop-only page, instead of going back to the designer with the one question that would have unblocked it.",
+        "Building the page at a fixed 1440px width.",
         "Not using a CSS framework's grid for the layout.",
         "Not writing the ticket in more detail themselves."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 3,
       "explanation": "Building to the design you were given is defensible; the sentence that lands badly is the last one. On a team where designers, product and engineers share a deadline, the expensive habit is answering an ambiguity alone and silently. Most of the traffic is on phones, so this is also a product failure with a clear owner."
     },
@@ -38,12 +38,12 @@
       "prompt": "A card grid should be four across on desktop, two on tablet and one on a phone — and the client keeps sending new device widths to support. Best approach?",
       "options": [
         "One media query per breakpoint, with a column-count modifier class for each.",
-        "Let the grid work it out: repeat(auto-fit, minmax(240px, 1fr)) so the column count follows the space available and a new device needs no new CSS.",
         "Measure the container in JavaScript on resize and set the column count from there.",
+        "Let the grid work it out: repeat(auto-fit, minmax(240px, 1fr)) so the column count follows the space available and a new device needs no new CSS.",
         "Use the framework's grid classes — col-lg-3 col-md-6 col-12 — one per breakpoint."
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 2,
+      "eliminate": 1,
       "explanation": "The framework grid is the tempting answer because it ships today and everyone can read it — it just hard-codes the same arithmetic against viewport widths, so the next device size is another edit in every template. Breakpoints are for design decisions the browser cannot make; column counts are arithmetic, and the browser is better at it than you are."
     },
     {
@@ -58,12 +58,12 @@
       "prompt": "On phones the page scrolls sideways by about thirty pixels. Nothing looks too wide in DevTools at desktop sizes. What do you do?",
       "options": [
         "Set overflow-x: hidden on the body and move on.",
-        "Find what is actually overflowing — a fixed-width image, an unbroken string, a negative margin — by comparing scrollWidth with clientWidth as you walk down the tree.",
         "Add width: 100% and box-sizing: border-box to every container.",
-        "Check that the viewport meta tag is present and correct."
+        "Check that the viewport meta tag is present and correct.",
+        "Find what is actually overflowing — a fixed-width image, an unbroken string, a negative margin — by comparing scrollWidth with clientWidth as you walk down the tree."
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 3,
+      "eliminate": 1,
       "explanation": "overflow-x: hidden is what most teams ship, and it is why nobody ever finds the cause: the element is still there, still wide, and now it also breaks position: sticky in some browsers. The viewport meta tag is worth a glance, but a missing one scales the whole page rather than overhanging it by thirty pixels."
     },
     {
@@ -82,12 +82,12 @@
         "content": ".card {\n  .header {\n    .title {\n      span { color: $blue; }\n    }\n  }\n  &.is-active .header .title span { color: $blue-dark !important; }\n}"
       },
       "options": [
-        "Nesting to match the markup compiles to .card .header .title span, so the only way to override it later is a longer selector or !important — which is exactly what the next line resorts to.",
         "The colours should be CSS custom properties rather than SASS variables, so themes can change at runtime.",
+        "Nesting to match the markup compiles to .card .header .title span, so the only way to override it later is a longer selector or !important — which is exactly what the next line resorts to.",
         "SASS does not allow & to be combined with a class in a nested selector.",
         "The rules should be split into partials, one file per component."
       ],
-      "correct": 0,
+      "correct": 1,
       "eliminate": 2,
       "explanation": "Nesting feels like structure and is actually specificity, compounding one level at a time. The tell is the !important on the very next line — the file has already started fighting itself. Custom properties are a real point and a good second comment, but that is about theming, not about why this stylesheet gets harder to change every week."
     },
@@ -103,12 +103,12 @@
       "prompt": "The design system says buttons are brand green with a 6px radius; the component library ships blue at 2px. The team is overriding it with .ant-btn { ... !important } in a global stylesheet. What should happen instead?",
       "options": [
         "Nothing — it is one file, it is obvious where to look, and it works.",
-        "Configure the library's theme once at the root — its design tokens, or its SASS variables set before the import — so components come out correct and its internal class names stay private.",
         "Fork the library and edit its stylesheet, so the defaults are simply right.",
-        "Wrap every button in a local component that re-declares the styles the design system requires."
+        "Wrap every button in a local component that re-declares the styles the design system requires.",
+        "Configure the library's theme once at the root — its design tokens, or its SASS variables set before the import — so components come out correct and its internal class names stay private."
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 3,
+      "eliminate": 1,
       "explanation": "The wrapper option is the near-miss: it works, and you repeat it for every component the library ships, and the two drift. Overriding by internal class name couples your styling to a name the library is free to rename in a patch release — and the upgrade that breaks all your buttons produces no error, just blue."
     },
     {
@@ -123,12 +123,12 @@
       "prompt": "A layout is pixel-perfect in Chrome and visibly broken in Safari on iOS. What is the most reliable way to work?",
       "options": [
         "Add vendor prefixes across the stylesheet until it renders.",
-        "Check support before using a feature, keep a real-device pass in the review checklist, and branch with @supports only where a fallback is genuinely needed.",
         "Detect Safari from the user agent string and serve it a separate stylesheet.",
+        "Check support before using a feature, keep a real-device pass in the review checklist, and branch with @supports only where a fallback is genuinely needed.",
         "Log it as a known issue and wait for the next Safari release."
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 2,
+      "eliminate": 1,
       "explanation": "Prefixing everything is the reflex, and a build-time autoprefixer already does it better than you will by hand — what it cannot do is tell you the feature is unsupported entirely. User-agent sniffing is the answer that gets remembered for the wrong reason: it breaks on every browser released after you wrote it."
     },
     {

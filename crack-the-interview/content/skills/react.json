@@ -14,11 +14,11 @@
       "prompt": "A React screen re-renders the entire order table on every keystroke in an unrelated search box. Most likely cause?",
       "options": [
         "React is just slow with big tables.",
-        "State that only one component needs was lifted too high, so the whole subtree re-renders.",
         "A missing key prop on the table rows.",
-        "The component isn't wrapped in a context provider."
+        "The component isn't wrapped in a context provider.",
+        "State that only one component needs was lifted too high, so the whole subtree re-renders."
       ],
-      "correct": 1,
+      "correct": 3,
       "eliminate": 0,
       "explanation": "State lives at the lowest common ancestor that needs it — no higher. Hoisting the input's value into a parent makes every sibling re-render on every character. Missing keys are a real bug, but they cause wrong reconciliation, not extra renders."
     },
@@ -38,13 +38,13 @@
         "content": "useEffect(() => {\n  fetch(`/api/orders?q=${query}`)\n    .then(r => r.json())\n    .then(setOrders);\n});"
       },
       "options": [
-        "No dependency array — it refetches after every render, and setOrders causes a render.",
         "It should use axios instead of fetch.",
         "The .then chain needs a .catch.",
+        "No dependency array — it refetches after every render, and setOrders causes a render.",
         "The URL should be absolute."
       ],
-      "correct": 0,
-      "eliminate": 1,
+      "correct": 2,
+      "eliminate": 0,
       "explanation": "Missing deps means the effect runs after every render; setting state re-renders; that runs the effect again. It's an infinite request loop that looks fine locally and turns into a denial of service on your own API in production. It needs [query]. The missing .catch is real but secondary."
     },
     {
@@ -57,12 +57,12 @@
       "type": "mcq",
       "prompt": "A table of 5,000 rows scrolls badly. Everything is already wrapped in useMemo. Now what?",
       "options": [
-        "Memoise more aggressively — the row component and every callback.",
         "Stop rendering 5,000 rows. Virtualise the list so only the visible window is in the DOM.",
+        "Memoise more aggressively — the row component and every callback.",
         "Move the table's state into Redux.",
         "Rewrite the table as class components."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 3,
       "explanation": "Memoisation stops unnecessary re-renders; it does nothing about 5,000 nodes the browser has to lay out and paint. Once the DOM itself is the bottleneck, the only real answer is to have less of it. Reaching for more useMemo here is the trap — it's the tool that worked last time."
     },
@@ -123,11 +123,11 @@
       "options": [
         "Keep it; memoization is always faster.",
         "Remove React and use direct DOM APIs.",
-        "Memoize only where referential stability prevents measured work or satisfies a dependency contract; memoization itself has complexity and runtime cost.",
-        "Replace every hook with global variables."
+        "Replace every hook with global variables.",
+        "Memoize only where referential stability prevents measured work or satisfies a dependency contract; memoization itself has complexity and runtime cost."
       ],
-      "correct": 2,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "Memoization is a trade-off, not a default style. It pays when it avoids meaningful recalculation or downstream rendering, but indiscriminate use adds dependencies, allocations, and harder-to-read code without evidence of benefit."
     },
     {
@@ -164,13 +164,13 @@
         "content": "const addTag = (tag) => {\n  tags.push(tag);\n  setTags(tags);\n};"
       },
       "options": [
-        "The tag is pushed onto the same array and that array is handed straight back, so React compares it with itself, sees no change, and does not re-render. It needs a new array: setTags([...tags, tag]).",
         "push should be unshift, so the newest tag appears first.",
+        "The tag is pushed onto the same array and that array is handed straight back, so React compares it with itself, sees no change, and does not re-render. It needs a new array: setTags([...tags, tag]).",
         "addTag should be wrapped in useCallback.",
         "setTags should be called inside a useEffect."
       ],
-      "correct": 0,
-      "eliminate": 1,
+      "correct": 1,
+      "eliminate": 0,
       "explanation": "This is the bug where the data is right and the screen is wrong, and it sometimes half-fixes itself when something else causes a render — which is what makes it so confusing. React compares state by reference, so mutating in place is invisible to it. useCallback is the tempting answer because this is a callback and that is a hook; it changes nothing here."
     },
     {
@@ -231,13 +231,13 @@
         "content": "function EditName({ user }) {\n  const [name, setName] = useState(user.name);\n  return (\n    <input value={name} onChange={e => setName(e.target.value)} />\n  );\n}"
       },
       "options": [
-        "useState's argument is only the initial value — it is read on the first render and ignored on every one after, so a new user prop never reaches the input.",
         "The input is uncontrolled and should use defaultValue instead of value.",
         "onChange should be onInput to catch every keystroke.",
-        "The component should be wrapped in React.memo."
+        "The component should be wrapped in React.memo.",
+        "useState's argument is only the initial value — it is read on the first render and ignored on every one after, so a new user prop never reaches the input."
       ],
-      "correct": 0,
-      "eliminate": 2,
+      "correct": 3,
+      "eliminate": 1,
       "explanation": "Copying a prop into state creates a second source of truth, and state survives the re-render that the new prop arrives on. Either stop copying and let the parent own the edit, or force a fresh component per person with key={user.id} so useState runs again. defaultValue is the tempting one because it sounds like the mirror image of the problem — it makes the input uncontrolled, which throws away the state you were keeping."
     },
     {
@@ -251,12 +251,12 @@
       "prompt": "You are asked to add one field to a 700-line component nobody currently on the team wrote. First move?",
       "options": [
         "Split it into smaller components first — the change will be much easier afterwards.",
-        "Make the smallest change that works, and say in the pull request which parts of the file you did not understand.",
         "Copy the component, change the copy, and point the route at the new one.",
+        "Make the smallest change that works, and say in the pull request which parts of the file you did not understand.",
         "Ask for the ticket to go to whoever knows that file best."
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 2,
+      "eliminate": 1,
       "explanation": "The rewrite is tempting because the file genuinely is too big — and it turns a one-line change into a week of review nobody asked for, with regressions nobody can trace. Small change first. The honest note about what you did not follow is the part that pays: it points the reviewer at exactly where you are unsure, and it is how the refactor eventually gets agreed rather than smuggled in."
     }
   ]

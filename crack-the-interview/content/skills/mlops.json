@@ -1,0 +1,147 @@
+{
+  "skill": "mlops",
+  "label": "MLOps: pipelines, versioning & models in production",
+  "questions": [
+    {
+      "id": "mlops-01",
+      "stage": "hr",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A candidate describes how their team retrains its production model. What should worry the interviewer?",
+      "subject": {
+        "kind": "quote",
+        "content": "Retraining is a notebook I run on the first of the month. It's about forty cells, you have to run them in order, and there's one you skip if the bucket already has that day's file. I know it well enough that it's never been a problem."
+      },
+      "options": [
+        "Monthly retraining is too infrequent for a model in production.",
+        "Notebooks should never be used for anything that touches production.",
+        "The intermediate file should be in a database rather than a bucket.",
+        "The process exists only in one person's head: nobody else can run it, nothing records what was run, and the month it breaks is the month they are on leave."
+      ],
+      "correct": 3,
+      "eliminate": 2,
+      "explanation": "'Notebooks are not production' is the answer that sounds right and is a rule rather than a reason — plenty of good teams start in a notebook and the tool is not the problem. The problem is the conditional cell you have to know about: it means the process cannot be described, only demonstrated, and 'it's never been a problem' is a statement about how recently they were lucky."
+    },
+    {
+      "id": "mlops-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Two engineers retrain the same model from the same commit a week apart and get materially different metrics. What is the most likely cause?",
+      "options": [
+        "Metrics are only comparable within a single training session.",
+        "Different random seeds between the two runs.",
+        "The data moved underneath them — 'the training table' is a live table, so each run trained on a different snapshot of it.",
+        "Different library versions in their two environments."
+      ],
+      "correct": 2,
+      "eliminate": 0,
+      "explanation": "Seeds and library versions are both real and both worth pinning, and neither usually accounts for a gap that size. Code is the part of an ML system people already know how to version; the dataset is the part that silently changes every night, which is why training reads a pinned snapshot with an identifier you can put in the model's metadata."
+    },
+    {
+      "id": "mlops-03",
+      "stage": "technical",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A deployed model's predictions cannot be checked against ground truth for several weeks. What is worth monitoring in the meantime?",
+      "options": [
+        "Request latency and error rate, which are the only signals available without labels.",
+        "The inputs and the outputs: feature distributions against training, the rate of missing or defaulted features, and the shape of the score distribution — drift shows there long before labels arrive.",
+        "Nothing meaningful; without labels, any alert would be a guess.",
+        "The training loss curve from the most recent run."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Latency and errors are necessary and are the ones that get wired up, because they come free with the service. They also stay perfectly green while an upstream team changes a units field and every feature silently defaults to zero — which is exactly the outage that ends up costing weeks, because the model kept answering the whole time."
+    },
+    {
+      "id": "mlops-04",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Training moves from one GPU to eight with the same script, and the loss curve gets worse rather than better. What changed?",
+      "options": [
+        "The effective batch size is eight times bigger, so each step averages away more gradient noise — the learning rate and its schedule have to scale with it, usually with warmup added.",
+        "Gradient synchronisation across devices loses numerical precision.",
+        "Eight devices need roughly eight times the epochs to see the same data.",
+        "Data loading is now the bottleneck and the GPUs are starved."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "Input starvation is the other thing that happens when you add GPUs, and it is the strong distractor because it is so common — it just costs throughput, not accuracy, so it cannot explain a worse curve. Data-parallel training changes the optimisation problem, not only the speed of it, and a script that was tuned for one device is not tuned for eight."
+    },
+    {
+      "id": "mlops-05",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "The retraining job, running nightly on a schedule.",
+      "subject": {
+        "kind": "code",
+        "language": "python",
+        "content": "model = train(load(\"s3://data/train.parquet\"))\nauc = evaluate(model, load(\"s3://data/test.parquet\"))\n\nmlflow.log_metric(\"auc\", auc)\nregistry.promote(model, stage=\"production\")"
+      },
+      "options": [
+        "The AUC should be logged after the promotion, so the metric matches the deployed version.",
+        "Promotion is unconditional: the metric is recorded and then ignored, so a night of bad data replaces a working model with a worse one on schedule.",
+        "load() reads the whole file into memory rather than streaming it.",
+        "The experiment tracker should be a database the team controls."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "The memory point is real and will matter as the dataset grows; it is not what makes this dangerous. A metric that nothing branches on is decoration — promotion needs a gate that compares against the model currently serving, on a held-out set, and refuses rather than warns. Automation without a gate is just a faster way to reach the same mistake every night."
+    },
+    {
+      "id": "mlops-06",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "A researcher hands you a notebook with a model that works. Walk us through getting it to something the mission can depend on.",
+      "modelAnswer": "The first thing I do is reproduce their number myself, on their data, before changing anything — if I cannot, that is the finding and everything else waits. Then I lift training out of the notebook into code that takes a pinned dataset version and an explicit config, so a run is describable rather than performable, and I keep the notebook around as the reference to check against. Evaluation gets its own held-out set that never enters training, and promotion becomes a gate: the candidate has to beat whatever is currently serving on that set, or it does not ship. Serving comes next, and the thing I care most about is that the feature code used at inference is the same code as in training, not a reimplementation — that single decision removes the most expensive class of bug in this whole area. Then a shadow deployment against real traffic to find the inputs and the latencies the offline set never had, and only after that a controlled comparison on a slice of traffic with a metric agreed beforehand. Around it: logged inputs and outputs so drift is observable before labels arrive, alerts on feature nulls and score distribution rather than only on latency, and rollback that is one step and has actually been tested. Finally the parts that are social rather than technical — who owns retraining, what triggers it, what the on-call is expected to do at 3am, and where that is written down. A model without a named owner degrades quietly, which is the worst way for it to fail.",
+      "keyPoints": [
+        "Reproduce the researcher's result before changing anything",
+        "Training as code with a pinned dataset version and explicit config",
+        "Held-out evaluation set, and promotion gated on beating the incumbent",
+        "The same feature code at training and serving — not a reimplementation",
+        "Shadow first, then a controlled comparison with a pre-agreed metric",
+        "Monitor inputs and outputs, not just latency and errors",
+        "Tested one-step rollback",
+        "A named owner, retraining triggers and an on-call runbook"
+      ],
+      "explanation": "Most answers here are a list of tools — a registry, a tracker, an orchestrator — which describes a stack rather than a system. The tell for someone who has actually operated a model is that they mention the human parts: who owns it, what makes it retrain, and what the person woken at 3am is meant to do. Tools are replaceable; those three questions are what stop a model rotting in place."
+    },
+    {
+      "id": "mlops-07",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A newly promoted model starts producing visibly worse decisions on a Friday evening. What decides how bad the weekend is?",
+      "options": [
+        "Whether the on-call engineer has access to GPU capacity for a retrain.",
+        "Whether there is enough logging to root-cause it before Monday.",
+        "Whether the previous model can be put back in one step — artefact, feature code and config still deployable together — because the diagnosis can wait and the decisions cannot.",
+        "Whether the training data is still sitting in the bucket."
+      ],
+      "correct": 2,
+      "eliminate": 0,
+      "explanation": "Logging is the strong distractor and it is what you want on Monday; on Friday it is what keeps you reading dashboards while the damage accrues. Rollback only counts if it has been rehearsed — plenty of teams find out during the incident that the old artefact needs a feature table that has already been migrated."
+    }
+  ]
+}

@@ -37,12 +37,12 @@
       },
       "options": [
         "avatarURL should be a String and converted later.",
-        "try? swallows the decoding error, then profile! crashes — so a server field going null takes the app down with no diagnostic.",
         "Profile should be a class.",
-        "JSONDecoder should be reused rather than created each time."
+        "JSONDecoder should be reused rather than created each time.",
+        "try? swallows the decoding error, then profile! crashes — so a server field going null takes the app down with no diagnostic."
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 3,
+      "eliminate": 1,
       "explanation": "This is the worst of both: the error is discarded where it could have told you exactly which key failed, and then force-unwrapped where it crashes. Either handle the error or let it throw. In client work the server changes without telling you, so every non-optional field is a promise someone else can break."
     },
     {
@@ -57,11 +57,11 @@
       "prompt": "The list flickers between cached and freshly fetched data. How should this be structured?",
       "options": [
         "Show only network data and drop the cache.",
-        "Make the database the single source of truth: the UI observes a Flow from Room, and the network writes into Room rather than into the UI.",
         "Hold the cache in memory in the ViewModel and merge manually.",
+        "Make the database the single source of truth: the UI observes a Flow from Room, and the network writes into Room rather than into the UI.",
         "Keep the UI on a loading spinner until the network returns."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 0,
       "explanation": "Flicker means two writers are racing to update one screen. With one source of truth there's only ever one place the UI reads from, so a network response is just a database write that the existing Flow picks up. It also gives you offline for free, which the manual-merge version never quite does."
     },
@@ -123,13 +123,13 @@
         "content": "const res = await fetch('/api/forms', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify(values),\n});\nconst form = await res.json();\nshowSuccess(`Created ${form.name}`);"
       },
       "options": [
-        "fetch only rejects when the network fails — a 422 or a 500 arrives here as an ordinary response, so a rejected submission is announced as a success. res.ok has to be checked before the body is treated as a result.",
         "The response should be read with res.text() and parsed, in case the body is not JSON.",
+        "fetch only rejects when the network fails — a 422 or a 500 arrives here as an ordinary response, so a rejected submission is announced as a success. res.ok has to be checked before the body is treated as a result.",
         "The request needs a timeout.",
         "The whole thing should be wrapped in try/catch."
       ],
-      "correct": 0,
-      "eliminate": 1,
+      "correct": 1,
+      "eliminate": 0,
       "explanation": "This is the single most common integration bug in a browser app: fetch resolves happily for 404 and 500 alike, and only a dropped connection rejects. The try/catch is worth adding and catches none of this — the request succeeded, the operation did not, and the difference between those two is the whole job of the status code."
     },
     {
@@ -143,12 +143,12 @@
       "prompt": "The API answers an invalid submission with 422 and a body naming the fields that failed. The UI shows 'Something went wrong. Please try again.' What should change?",
       "options": [
         "Retry the request a few times automatically before showing the message.",
-        "Show the server's per-field messages against the fields they belong to, and keep the generic message for failures you genuinely cannot explain.",
         "Log the response to the console so support can ask the user to read it out.",
-        "Change the API to return 200 with an error flag, so the client can read the body."
+        "Change the API to return 200 with an error flag, so the client can read the body.",
+        "Show the server's per-field messages against the fields they belong to, and keep the generic message for failures you genuinely cannot explain."
       ],
-      "correct": 1,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "'Try again' is advice that cannot work — nothing changes on a retry when the input is the reason, and the automatic retry spends the server's time proving it. The status code tells you whose problem it is: 4xx means the request has to change, 5xx means retrying might genuinely help. Rendering the body is the difference between a user fixing their own typo and a support ticket."
     },
     {
@@ -161,12 +161,12 @@
       "type": "mcq",
       "prompt": "A search box fires a request per keystroke. Users say the results sometimes belong to a shorter, earlier query. Best fix?",
       "options": [
-        "Debounce the input so far fewer requests go out.",
         "Debounce, and also ignore any response that is not for the query currently in the box — fewer requests makes this rarer, not impossible, because responses can still come back out of order.",
+        "Debounce the input so far fewer requests go out.",
         "Send the requests strictly one at a time, waiting for each before firing the next.",
         "Cache responses by query string."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 3,
       "explanation": "Debouncing alone is the answer most people give, and it is half of one: it cuts the number of racing requests without ordering them, so the bug survives, becomes rare, and turns into something QA cannot reproduce. Tracking the latest query — or aborting the previous request — is what actually makes the newest response the one that wins."
     },

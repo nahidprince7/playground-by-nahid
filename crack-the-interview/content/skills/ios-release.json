@@ -78,12 +78,12 @@
       "type": "mcq",
       "prompt": "An app is rejected under guideline 4.2, Minimum Functionality. What did it most likely do?",
       "options": [
-        "Collected user data without a privacy policy.",
         "Wrapped a website in a web view without adding anything native.",
+        "Collected user data without a privacy policy.",
         "Used a private API.",
         "Included a link to an external payment page."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 2,
       "explanation": "4.2 is the web-view wrapper rejection, and it's the one that hits client work hardest — the client wanted 'our site, as an app'. The others are all real rejections under different guidelines. Knowing which number maps to which failure is exactly the experience the posting is asking for when it says you've shipped apps yourself."
     },
@@ -99,11 +99,11 @@
       "prompt": "An urgent iOS fix is approved, but many devices will not receive it immediately. Which release reality must the design account for?",
       "options": [
         "App Store updates install synchronously on every device.",
-        "Multiple app versions will coexist, so backend contracts and feature flags must remain compatible during rollout.",
         "The backend should reject every older build immediately.",
+        "Multiple app versions will coexist, so backend contracts and feature flags must remain compatible during rollout.",
         "TestFlight automatically updates production users."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "Mobile clients update on user and platform schedules. Production therefore contains a version distribution, not one version, and server changes must tolerate supported older clients while rollout and adoption progress."
     }

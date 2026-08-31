@@ -13,11 +13,11 @@
       "prompt": "Order placement writes to SQL Server, then publishes to RabbitMQ so inventory can update. The publish fails after the DB commit. What's the failure mode?",
       "options": [
         "Nothing — RabbitMQ retries the publish.",
-        "The order exists but inventory never hears about it. You need an outbox, or something that covers both.",
         "The database write should have been async.",
+        "The order exists but inventory never hears about it. You need an outbox, or something that covers both.",
         "You should be using Kafka for this."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "Two systems, one logical operation, no shared transaction — this is the dual-write problem. The standard fix is the transactional outbox: write the order and the message to the same database in one transaction, and let a separate process publish from the outbox table. Swapping brokers doesn't touch the problem at all."
     },
@@ -31,12 +31,12 @@
       "type": "mcq",
       "prompt": "Customers occasionally receive the same message twice. The queue guarantees at-least-once delivery.",
       "options": [
-        "Move to a broker that offers exactly-once delivery.",
         "Make the consumer idempotent: a dedup key checked and recorded before the send, so a redelivery is a no-op.",
+        "Move to a broker that offers exactly-once delivery.",
         "Reduce the retry count so redeliveries are rarer.",
         "Acknowledge the message before processing it rather than after."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 3,
       "explanation": "At-least-once is the guarantee you get; idempotent consumers are how you live with it. Acking first converts duplicates into lost messages, which is worse and harder to notice. 'Exactly-once' at the broker level is mostly a marketing claim — end to end, someone still has to deduplicate, and it may as well be the code that knows what a duplicate means."
     },
@@ -50,11 +50,11 @@
       "prompt": "A downstream provider gets slow. Your queue depth climbs, memory grows, and the service dies. What was missing?",
       "options": [
         "A larger queue, so there's room to absorb the spike.",
-        "Backpressure — a bounded queue and a concurrency limit, so a slow downstream makes you slow instead of dead.",
         "More consumer instances to work through the backlog.",
-        "A shorter timeout with more retries."
+        "A shorter timeout with more retries.",
+        "Backpressure — a bounded queue and a concurrency limit, so a slow downstream makes you slow instead of dead."
       ],
-      "correct": 1,
+      "correct": 3,
       "eliminate": 0,
       "explanation": "An unbounded queue is a memory leak with good manners. Bounding it forces the decision — shed load, or slow the producer — at a point where you still can. Adding consumers or retrying harder both aim more traffic at something already struggling, which is how one slow dependency becomes a full outage."
     },

@@ -38,11 +38,11 @@
       },
       "options": [
         "FromSqlRaw is deprecated in current EF Core.",
-        "String-interpolated SQL — it's an injection hole, and it defeats query plan reuse.",
         "There's no null check on orders before returning.",
+        "String-interpolated SQL — it's an injection hole, and it defeats query plan reuse.",
         "It returns the entity instead of a DTO."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 0,
       "explanation": "Building SQL by interpolation is the bug, even though customerId is an int and looks safe today — the pattern is what gets copied to a string parameter tomorrow. Use FromSqlInterpolated, or parameters. Returning the entity instead of a DTO is a genuine second-order issue and a fair thing to mention after the injection."
     },
@@ -61,12 +61,12 @@
         "content": "foreach (var item in cart.Items)\n{\n    var product = _db.Products.First(p => p.Id == item.ProductId);\n    product.Stock -= item.Quantity;\n    _db.SaveChanges();\n}"
       },
       "options": [
-        "First should be FirstOrDefault.",
         "SaveChanges inside the loop — a round trip per item, and no single transaction across the cart.",
+        "First should be FirstOrDefault.",
         "Stock should be a decimal, not an int.",
         "The loop should run in parallel."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 3,
       "explanation": "Saving per iteration is both the performance bug and the correctness bug: fail on item four and items one to three are already committed, so stock is wrong and there's no order. Move SaveChanges out of the loop so the whole cart commits or none of it does. First vs FirstOrDefault is a real second finding — it throws instead of handling a missing product."
     },
@@ -81,12 +81,12 @@
       "prompt": "A read-only EF Core dashboard query tracks thousands of entities and memory climbs. What is the simplest appropriate change?",
       "options": [
         "Call SaveChanges after the query.",
-        "Use AsNoTracking for the read-only query and project only the fields the dashboard needs.",
         "Create a new database for dashboards.",
-        "Disable garbage collection during the request."
+        "Disable garbage collection during the request.",
+        "Use AsNoTracking for the read-only query and project only the fields the dashboard needs."
       ],
-      "correct": 1,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "Change tracking costs memory and CPU so EF can persist later mutations. A read-only projection does not need that machinery; no-tracking plus a narrow select reduces both retained state and transferred data."
     }
   ]

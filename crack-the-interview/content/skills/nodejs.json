@@ -55,14 +55,14 @@
       "type": "mcq",
       "prompt": "A rate limiter was added with app.use(limiter) near the bottom of the file, after the route definitions. It never triggers. Why?",
       "options": [
-        "Middleware runs in the order it is registered, and a matching route ends the chain — anything registered after that route never runs for it.",
         "The limiter needs to be an async function to intercept requests.",
         "Rate limiting has to be applied per router with router.use rather than app.use.",
-        "Express compiles the route table at startup, so middleware added later is ignored."
+        "Express compiles the route table at startup, so middleware added later is ignored.",
+        "Middleware runs in the order it is registered, and a matching route ends the chain — anything registered after that route never runs for it."
       ],
-      "correct": 0,
-      "eliminate": 3,
-      "explanation": "The third option is the plausible one — it is true that per-router registration is often better organisation, and it is not the reason this is broken. Express is a list of handlers checked top to bottom; position in the file is the behaviour, which is also why the error handler goes last and the body parser goes first."
+      "correct": 3,
+      "eliminate": 2,
+      "explanation": "The second option is the plausible one — it is true that per-router registration is often better organisation, and it is not the reason this is broken. Express is a list of handlers checked top to bottom; position in the file is the behaviour, which is also why the error handler goes last and the body parser goes first."
     },
     {
       "id": "nodejs-04",
@@ -74,13 +74,13 @@
       "type": "mcq",
       "prompt": "The frontend decodes the JWT, checks the role claim, and only then renders the admin actions. The API trusts that the button was only shown to admins. Is that enough?",
       "options": [
-        "No. Anything the browser decides can be changed by whoever holds the browser — the API has to authorise every request itself, and the frontend check exists only so users are not shown buttons that would fail.",
         "It is enough as long as the frontend verifies the token's signature before trusting the claim.",
         "It is enough while the admin routes are not linked anywhere a normal user would find them.",
+        "No. Anything the browser decides can be changed by whoever holds the browser — the API has to authorise every request itself, and the frontend check exists only so users are not shown buttons that would fail.",
         "It is enough for reads; the server only needs to re-check on destructive actions."
       ],
-      "correct": 0,
-      "eliminate": 2,
+      "correct": 2,
+      "eliminate": 1,
       "explanation": "Verifying the signature client-side is the answer that sounds most rigorous and changes nothing: the code doing the verifying is code the attacker controls and can simply skip. The last option is the near-miss worth naming — a read of someone else's account balance is a breach even though it deletes nothing."
     },
     {
@@ -94,12 +94,12 @@
       "prompt": "An export endpoint builds a 60MB CSV in memory before sending it. The container runs out of memory whenever two people export at once. Best fix?",
       "options": [
         "Raise the container's memory limit to cover the worst case.",
-        "Stream it: read with a cursor and pipe rows into the response, so peak memory is one row rather than the whole export.",
         "Compress the response so less data is held and sent.",
-        "Generate the file in the browser instead, from the raw records."
+        "Generate the file in the browser instead, from the raw records.",
+        "Stream it: read with a cursor and pipe rows into the response, so peak memory is one row rather than the whole export."
       ],
-      "correct": 1,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "Raising the limit is the tempting one because it is a one-line change that makes the alert stop — until three people export, or the dataset grows, and the ceiling is now expensive as well as temporary. Compression is the subtler miss: it shrinks what goes over the wire while you still assemble the entire export in memory first."
     },
     {

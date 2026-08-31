@@ -1,6 +1,32 @@
 {
   "jobs": [
     {
+      "slug": "laravel-fullstack-developer",
+      "title": "Laravel Full Stack Developer (PHP & Vue, 2-4 years)",
+      "stack": [
+        "Laravel",
+        "PHP",
+        "MySQL",
+        "Vue.js"
+      ],
+      "level": "mid",
+      "difficulty": 3,
+      "questionCount": 23
+    },
+    {
+      "slug": "ai-ml-engineer-senior",
+      "title": "Senior AI/ML Engineer (LLM, CV & MLOps, 5+ years)",
+      "stack": [
+        "PyTorch",
+        "LLM / RAG",
+        "MLOps",
+        "AWS"
+      ],
+      "level": "senior",
+      "difficulty": 5,
+      "questionCount": 24
+    },
+    {
       "slug": "senior-android-engineer",
       "title": "Sr. Software Engineer (Android, 3-6 years)",
       "stack": [

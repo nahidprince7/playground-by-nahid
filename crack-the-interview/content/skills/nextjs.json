@@ -34,12 +34,12 @@
       "prompt": "A product listing page has to be indexable by Google, and its prices change a few times a day. Which rendering strategy?",
       "options": [
         "Fetch the products in the browser after mount — Google executes JavaScript now, so it will still be indexed.",
-        "Pre-render the page and revalidate it on a timer, so crawlers and users get cached HTML that is at most a few minutes stale.",
         "Server-render on every request, so the price in the HTML is never stale.",
-        "Generate it once at build time and redeploy the site whenever a price changes."
+        "Generate it once at build time and redeploy the site whenever a price changes.",
+        "Pre-render the page and revalidate it on a timer, so crawlers and users get cached HTML that is at most a few minutes stale."
       ],
-      "correct": 1,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "Server-rendering every request is the tempting answer because it is never wrong — it just pays full server cost, on every crawler hit, for data that changes three times a day. Incremental revalidation gives you the same HTML from cache. Client-side fetching does get indexed eventually, but 'eventually' is a strange thing to gamble a product catalogue on."
     },
     {
@@ -53,12 +53,12 @@
       "type": "mcq",
       "prompt": "A developer hits a 'useState is not allowed in a Server Component' error, so they add 'use client' to the top of the shared layout. What did that just do?",
       "options": [
-        "Only that file became a client component; the components it renders are unaffected.",
         "Everything imported below it in that tree is now client code — it ships in the browser bundle, and any server-only work it did moves to the browser with it.",
+        "Only that file became a client component; the components it renders are unaffected.",
         "Nothing at runtime; it is a hint the compiler is free to ignore.",
         "It disabled server rendering for the route, so the page is blank until JavaScript loads."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 2,
       "explanation": "The directive marks a boundary, not a file. The reason it matters is that people apply it at the highest place the error appears rather than the lowest place the state is needed, and the bundle quietly grows back to a client-rendered app. The last option is a real fear but wrong: client components still render on the server for the first paint."
     },
@@ -79,12 +79,12 @@
       },
       "options": [
         "The effect closes over userId but does not list it, so switching user leaves the old rows on screen.",
-        "A server-only data module is imported into a client component, so the database layer — and whatever connection string it reads — is pulled toward the browser bundle.",
         "rows should be typed rather than inferred from an empty array.",
+        "A server-only data module is imported into a client component, so the database layer — and whatever connection string it reads — is pulled toward the browser bundle.",
         "Data fetching in an effect should use a caching library instead."
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 2,
+      "eliminate": 1,
       "explanation": "The missing dependency is a genuine bug and a fair second finding, but it is a stale-UI bug. Importing the data layer across the client boundary is the one that leaks credentials or breaks the build in a way nobody understands. Query on the server and pass the rows down, or put the query behind a route handler."
     },
     {
@@ -99,13 +99,13 @@
       "prompt": "A component picks its layout by reading window.innerWidth. The page renders, flickers, and React logs a hydration mismatch. Best fix?",
       "options": [
         "Guard the read with typeof window !== 'undefined' so the server render does not crash.",
-        "Move the width read into an effect and render a neutral placeholder on the first pass.",
         "Express the breakpoint in CSS, so the server and the browser emit the same markup and the layout choice happens at paint.",
+        "Move the width read into an effect and render a neutral placeholder on the first pass.",
         "Set suppressHydrationWarning on the wrapper so the console stops complaining."
       ],
-      "correct": 2,
+      "correct": 1,
       "eliminate": 3,
-      "explanation": "The second option is the honest JavaScript fix and it does work — at the cost of a flash and a layout shift on every load. The mismatch exists because a layout decision was made in JavaScript at all; a media query is the same decision made where it costs nothing and where the server has no opinion. The typeof guard is the popular one, and it only stops the crash — the server still renders desktop and the client still renders mobile."
+      "explanation": "The third option is the honest JavaScript fix and it does work — at the cost of a flash and a layout shift on every load. The mismatch exists because a layout decision was made in JavaScript at all; a media query is the same decision made where it costs nothing and where the server has no opinion. The typeof guard is the popular one, and it only stops the crash — the server still renders desktop and the client still renders mobile."
     },
     {
       "id": "nextjs-06",
@@ -175,14 +175,14 @@
       "type": "mcq",
       "prompt": "A team has put 'use client' at the root of the app and treats Next.js as a React SPA with file-based routing. What is the best review response?",
       "options": [
+        "Ask what each route actually needs: keep the client boundary as low as it can go and justify server rendering per route by what it saves users, otherwise you are paying for the framework's complexity and getting none of its benefit.",
         "Leave it — it is simpler, and the team already knows client-side React.",
         "Block it and convert the app to server components before the next release.",
-        "Ask what each route actually needs: keep the client boundary as low as it can go and justify server rendering per route by what it saves users, otherwise you are paying for the framework's complexity and getting none of its benefit.",
         "Ship it and revisit after launch — rendering strategy is a performance detail."
       ],
-      "correct": 2,
+      "correct": 0,
       "eliminate": 3,
-      "explanation": "The first option is the honest one and worth saying out loud: if nothing renders on the server, a simpler build tool would do. What makes the third answer better is that it is per route — a marketing page and an internal dashboard have different answers, and treating rendering as one global switch is how teams end up in this position."
+      "explanation": "The second option is the honest one and worth saying out loud: if nothing renders on the server, a simpler build tool would do. What makes the first answer better is that it is per route — a marketing page and an internal dashboard have different answers, and treating rendering as one global switch is how teams end up in this position."
     }
   ]
 }

@@ -1,0 +1,78 @@
+{
+  "slug": "ai-ml-engineer-senior",
+  "title": "Senior AI/ML Engineer (LLM, CV & MLOps, 5+ years)",
+  "level": "senior",
+  "difficulty": 5,
+  "platform": "cloud",
+  "stack": ["PyTorch", "LLM / RAG", "MLOps", "AWS"],
+  "briefing": {
+    "summary": "An end-to-end seat: the same person trains the model, wraps it in a service, and is there when it behaves differently in the field than it did in the notebook. Expect the modelling questions to be about judgement rather than architectures — which metric the operating constraint actually implies, why an offline number did not survive contact with production, what a result means when the labels are thin — across NLP and LLM pipelines, computer vision and ordinary supervised work. The other half is software engineering that happens to serve models: Python that holds up under load, APIs and microservices, data pipelines that can be re-run, and enough MLOps that a retrain is a described process rather than an afternoon. Deployment is into environments you cannot casually reach, so versioning, evaluation gates, rollback and observability get asked about as seriously as accuracy does. Grounding, evaluation and hallucination mitigation come up wherever generative models are involved, and the recurring theme is a system somebody has to trust when you are not in the room.",
+    "requirements": [
+      "Model development across NLP, LLMs, computer vision and deep learning, with the evaluation judgement to match",
+      "LLM pipelines: retrieval, grounding, prompt-injection surface, and how you prove a change is an improvement",
+      "MLOps — dataset and model versioning, promotion gates, retraining, drift monitoring, rollback",
+      "Python and the scientific stack under production constraints: memory, the GIL, and blocking work in a service",
+      "Production-grade APIs, microservices and distributed systems, with observability built in",
+      "AWS, containers and CI/CD for deploying models into environments you cannot debug interactively"
+    ]
+  },
+  "topics": [
+    {
+      "id": "modelling",
+      "label": "Model development, evaluation & deployment",
+      "skills": ["machine-learning"]
+    },
+    {
+      "id": "genai",
+      "label": "LLMs, RAG & generative AI",
+      "skills": ["llm"]
+    },
+    {
+      "id": "mlops",
+      "label": "MLOps: pipelines, versioning & monitoring",
+      "skills": ["mlops"]
+    },
+    {
+      "id": "python",
+      "label": "Python & scientific computing at scale",
+      "skills": ["python"]
+    },
+    {
+      "id": "services",
+      "label": "Microservices, APIs & production reliability",
+      "skills": ["microservices", "api-integration", "observability"]
+    },
+    {
+      "id": "platform",
+      "label": "AWS, containers & delivery",
+      "skills": ["aws", "kubernetes", "cicd"]
+    }
+  ],
+  "rounds": [
+    {
+      "id": "hr",
+      "name": "HR Screen",
+      "interviewer": { "name": "Marta", "role": "Technical Recruiter" },
+      "count": 5
+    },
+    {
+      "id": "technical",
+      "name": "Technical Screen",
+      "interviewer": { "name": "Devesh", "role": "Staff ML Engineer" },
+      "count": 7
+    },
+    {
+      "id": "deepdive",
+      "name": "Deep Dive",
+      "interviewer": { "name": "Ren", "role": "Principal Engineer, ML Platform" },
+      "count": 7
+    },
+    {
+      "id": "ask",
+      "name": "The Ask",
+      "interviewer": { "name": "Colette", "role": "Director of Engineering" },
+      "count": 5
+    }
+  ],
+  "extra": []
+}

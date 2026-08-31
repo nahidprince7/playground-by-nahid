@@ -13,12 +13,12 @@
       "prompt": "You hold a reference to an element of a Vec and then push to that Vec. The borrow checker rejects it. A colleague says it's being pedantic — the vector has spare capacity, so nothing can move.",
       "options": [
         "Nothing is really at stake at runtime; it's a compile-time formality, so an unsafe block here is harmless.",
-        "push may reallocate the backing buffer and move every element, so the reference would dangle. Spare capacity today is a property of one run, not of the type — take an index, or split the borrow.",
         "The Vec needs to be behind a Mutex before two borrows of it can coexist.",
-        "Clone the element into an Rc so the reference and the push can both hold it."
+        "Clone the element into an Rc so the reference and the push can both hold it.",
+        "push may reallocate the backing buffer and move every element, so the reference would dangle. Spare capacity today is a property of one run, not of the type — take an index, or split the borrow."
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 3,
+      "eliminate": 1,
       "explanation": "The checker rejects the possibility, not the observed run — and it is right to, because capacity is not part of anyone's contract. The tempting move is to reach for unsafe and 'prove' the capacity by hand; that proof breaks the first time someone changes the growth policy or the caller. An index is free and keeps the compiler in the loop."
     },
     {
@@ -80,11 +80,11 @@
       "prompt": "Your protocol decoder returns Frame<'a>, borrowing straight out of the read buffer — zero copies, and it shows in the numbers. Now those frames also need to go down a channel to a logging thread.",
       "options": [
         "Give the frame type a 'static lifetime so it is allowed to cross the thread boundary.",
-        "The borrow ties each frame to a buffer you are about to overwrite on the next read, so anything that outlives the read has to own its data. Convert to an owned frame at the channel boundary and keep the borrowed path for what you decode in place.",
         "Wrap the frame in an Arc so the buffer is kept alive for as long as any frame refers to it.",
+        "The borrow ties each frame to a buffer you are about to overwrite on the next read, so anything that outlives the read has to own its data. Convert to an owned frame at the channel boundary and keep the borrowed path for what you decode in place.",
         "Add an unsafe impl Send for Frame<'a> — the data is only read, so it is safe in practice."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "'static is not a switch you flip; it is a promise about how long the data lives, and this data lives until the next read overwrites it. Arc is the near-miss worth naming: Arc<Frame<'a>> still carries 'a, so it extends nothing. The real design question is where the zero-copy region ends, and the answer is almost always 'at the point the data escapes the loop that owns the buffer'."
     },
@@ -121,14 +121,14 @@
       "type": "mcq",
       "prompt": "You're wrapping a vendor's C driver library in Rust. Where does unsafe belong, and what does your wrapper owe the rest of the codebase?",
       "options": [
+        "Keep the unsafe blocks as small as you can inside a safe API that upholds the library's invariants for the caller — handle lifetime, thread affinity, buffer sizes, initialisation order — and document each invariant next to the block that relies on it.",
         "Mark every function that reaches the driver as unsafe fn, so callers can see what they are dealing with.",
         "unsafe is only needed around raw pointer dereferences — calls into extern \"C\" functions are ordinary safe calls.",
-        "Keep the unsafe blocks as small as you can inside a safe API that upholds the library's invariants for the caller — handle lifetime, thread affinity, buffer sizes, initialisation order — and document each invariant next to the block that relies on it.",
         "Put #![allow(unsafe_code)] at the top of the module and rely on code review to catch misuse."
       ],
-      "correct": 2,
-      "eliminate": 1,
-      "explanation": "A wrapper exists so that misuse becomes impossible from safe code; pushing unsafe up to every caller is the abdication version of the same work. The first option is the honest answer only when you genuinely cannot uphold an invariant — if the caller must guarantee the device is initialised and you cannot check it, unsafe fn is the correct signature and the docs must say why. That distinction is the whole question."
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "A wrapper exists so that misuse becomes impossible from safe code; pushing unsafe up to every caller is the abdication version of the same work. The second option is the honest answer only when you genuinely cannot uphold an invariant — if the caller must guarantee the device is initialised and you cannot check it, unsafe fn is the correct signature and the docs must say why. That distinction is the whole question."
     },
     {
       "id": "rust-07",

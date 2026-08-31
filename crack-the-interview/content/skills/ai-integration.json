@@ -37,11 +37,11 @@
       },
       "options": [
         "The model call is not streamed.",
-        "The prompt is not stored in a separate file.",
         "Unvalidated model output is being converted and posted directly to the ledger with no schema check, confidence gate, or human review.",
+        "The prompt is not stored in a separate file.",
         "The function should use Promise.all."
       ],
-      "correct": 2,
+      "correct": 1,
       "eliminate": 3,
       "explanation": "An LLM response is untrusted input, even when it looks numeric. Money-moving workflows need schema validation, deterministic business rules, an audit trail, and a human review path for uncertain results. Streaming and prompt location are irrelevant to the core risk."
     }

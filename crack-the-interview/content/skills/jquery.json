@@ -1,0 +1,116 @@
+{
+  "skill": "jquery",
+  "label": "jQuery, Ajax & the legacy DOM",
+  "questions": [
+    {
+      "id": "jquery-01",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "Table rows are added by Ajax after the page loads. $('.delete').on('click', handler) works on the rows that were there at load and does nothing on the new ones. Why?",
+      "options": [
+        "The handler needs re-binding after every Ajax call.",
+        "on() bound the handler to the elements that existed at that moment; rows created afterwards were never bound. Delegating from a parent that is always on the page — $('#table').on('click', '.delete', handler) — binds once and covers everything.",
+        "The rows returned by Ajax are missing the delete class.",
+        "click should be mousedown, which fires on elements added later."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "Re-binding is the near-miss: it does work, and it is why this bug often survives review. It also binds a second handler to every row that was already bound, so after three refreshes one click deletes three times — a bug that looks nothing like the first one. Delegation attaches to a node that never goes away and lets the event bubble up to it."
+    },
+    {
+      "id": "jquery-02",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "platform": "web",
+      "type": "red-flag",
+      "prompt": "The comments list on a public product page.",
+      "subject": {
+        "kind": "code",
+        "language": "javascript",
+        "content": "$.get('/api/comments', function (data) {\n  data.forEach(function (c) {\n    $('#comments').append('<li>' + c.body + '</li>');\n  });\n});"
+      },
+      "options": [
+        "Comment bodies are concatenated into HTML, so a comment containing a script tag runs in the browser of every visitor who loads the page.",
+        "$.get has no error handler, so a failed request leaves the list silently empty.",
+        "append should be prepend so the newest comment appears first.",
+        "The loop should build one string and append once, rather than appending in a loop."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "The missing error handler is a genuine finding and the one most reviewers stop at; the append-in-a-loop point is real too on a long list. But this is stored XSS on a public page: the content came from users, and .html()-style insertion asks the browser to run it. .text() — or $('<li>').text(c.body) — escapes it, and it costs nothing."
+    },
+    {
+      "id": "jquery-03",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "red-flag",
+      "prompt": "Search-as-you-type on a customer list. It is fine on the office wifi and wrong on a phone.",
+      "subject": {
+        "kind": "code",
+        "language": "javascript",
+        "content": "$('#search').on('keyup', function () {\n  $.get('/search?q=' + $(this).val(), function (res) {\n    $('#results').html(render(res));\n  });\n});"
+      },
+      "options": [
+        "The query is not URL-encoded, so a search containing & or # breaks.",
+        "keyup fires after the value changes; keydown would be more responsive.",
+        "A request per keystroke, and nothing keeps them in order — the response for 'ra' can arrive after the one for 'rafiq' and overwrite it, which is exactly what a slow connection makes likely.",
+        "render() is called on the result without checking that it is an array."
+      ],
+      "correct": 2,
+      "eliminate": 1,
+      "explanation": "The missing encodeURIComponent is a true bug and worth fixing in the same commit — it is the one people find, because it reproduces on the first try. The out-of-order responses are what the phone exposed: they are invisible when every request takes 20ms and constant when they take 800ms. Debounce so most keystrokes never become requests, then ignore any response whose query is no longer what the box says."
+    },
+    {
+      "id": "jquery-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "A page renders its list with Vue, and an older script clears it with $('#list').empty() before a refresh. Rows start appearing twice. What is the cause?",
+      "options": [
+        "The v-for is missing a :key, so Vue cannot tell the rows apart.",
+        "empty() removes the nodes but leaves jQuery's event handlers attached to them.",
+        "The legacy script runs before Vue has mounted, so it clears an empty container.",
+        "Two things now own that DOM: Vue's next patch is computed against the tree it believes is there, not the one jQuery left behind, so it re-inserts nodes that were removed underneath it."
+      ],
+      "correct": 3,
+      "eliminate": 1,
+      "explanation": "The missing key is the answer that gets given, because duplicated rows is what a bad key normally looks like — and it is good advice that will not fix this. The rule worth taking away is that whichever layer rendered a node is the only one allowed to mutate it; if legacy code must clear the list, it should do it by changing the data Vue renders from."
+    },
+    {
+      "id": "jquery-05",
+      "stage": "ask",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "The app has jQuery throughout and the team is arguing about removing it. What is the honest case for leaving it where it is?",
+      "options": [
+        "jQuery still smooths over browser differences that the native DOM API does not.",
+        "jQuery's selector engine is faster than querySelectorAll.",
+        "It works, the team can read it, and a rewrite spends weeks arriving at the same screens — so new work can use the framework while the old pages stay as they are.",
+        "A rewrite is only worth doing once the bundle passes a megabyte."
+      ],
+      "correct": 2,
+      "eliminate": 1,
+      "explanation": "The browser-differences argument was the whole point of jQuery and has mostly expired, which is why quoting it in an interview dates you. The real trade is boring and defensible: rewrites are risk with no feature at the end, so you stop the codebase growing and let the old parts age out with the pages they live on."
+    }
+  ]
+}

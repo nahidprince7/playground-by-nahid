@@ -32,11 +32,11 @@
       "prompt": "Two threads both run count++ on a shared int. What's actually wrong, and what's the cheapest correct fix?",
       "options": [
         "Nothing — int operations are atomic on the JVM.",
-        "count++ is a read-modify-write, so increments get lost. AtomicInteger fixes it, or LongAdder if contention is high.",
         "Mark count volatile — that makes the increment atomic.",
-        "A synchronized block is the only correct answer."
+        "A synchronized block is the only correct answer.",
+        "count++ is a read-modify-write, so increments get lost. AtomicInteger fixes it, or LongAdder if contention is high."
       ],
-      "correct": 1,
+      "correct": 3,
       "eliminate": 0,
       "explanation": "volatile is the tempting wrong answer: it guarantees visibility, not atomicity, so two threads can still read the same value and both write back the same increment. synchronized is correct but heavier than needed. LongAdder trades exact-at-any-instant reads for far less contention, which is usually the right trade for a counter."
     },
@@ -80,13 +80,13 @@
         "content": "try {\n    deliveryService.send(message);\n} catch (Exception e) {\n    log.error(\"send failed\");\n}"
       },
       "options": [
-        "The exception is never logged — no stack trace, no cause, no message id. At 3am this line tells you something broke and nothing else.",
         "It should catch Throwable to be safe.",
         "log.error should be log.warn since it's recoverable.",
+        "The exception is never logged — no stack trace, no cause, no message id. At 3am this line tells you something broke and nothing else.",
         "send() should return a boolean instead of throwing."
       ],
-      "correct": 0,
-      "eliminate": 2,
+      "correct": 2,
+      "eliminate": 1,
       "explanation": "log.error(\"send failed\", e) is the entire fix and it's the difference between a five-minute diagnosis and a five-hour one. Catching Exception broadly is a second, quieter problem: it swallows InterruptedException too, so the thread's cancellation is lost. And the message keeps going as if nothing happened, which is worse than crashing."
     },
     {

@@ -14,11 +14,11 @@
       "prompt": "A director tells you in a corridor that the site 'feels slow'. There is no ticket and no data. What do you do first?",
       "options": [
         "Start on the biggest JavaScript bundle — that is usually what it turns out to be.",
-        "Ask which page, on what device and where, then measure that journey on a throttled mid-range phone before changing anything.",
         "Explain that the Lighthouse score is 92, so the site is not actually slow.",
+        "Ask which page, on what device and where, then measure that journey on a throttled mid-range phone before changing anything.",
         "Add a loading skeleton so the wait feels shorter while you look into it."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "The Lighthouse answer is the one that ends careers quietly: it is technically true, it contradicts a real experience, and it teaches the business not to tell engineering when something is wrong. 'Slow' is a symptom with half a dozen causes, and the two questions that separate them take thirty seconds to ask."
     },
@@ -79,12 +79,12 @@
       },
       "options": [
         "offsetHeight should be read once before the loop and cached in a variable.",
-        "Every read follows a write, so the browser has to lay the page out again before it can answer — the loop forces a synchronous layout per element. Batch the reads, then apply the writes.",
         "Setting style.height inline should be a class change so the styles stay in the stylesheet.",
-        "forEach is slower than a plain for loop over an array of this size."
+        "forEach is slower than a plain for loop over an array of this size.",
+        "Every read follows a write, so the browser has to lay the page out again before it can answer — the loop forces a synchronous layout per element. Batch the reads, then apply the writes."
       ],
-      "correct": 1,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "Layout thrash is invisible in the code and obvious in a performance trace, which is why it survives review. The first option is the right instinct with the wrong mechanism — the cost is not the property access, it is that a pending style change makes the answer unknowable until the browser recomputes. Moving to a class is good practice and would also happen to fix it."
     },
     {
@@ -97,12 +97,12 @@
       "type": "mcq",
       "prompt": "The main bundle is 1.8MB. 700KB of it is a charting library used on one admin page, plus every locale of a date library. Best first move?",
       "options": [
-        "Turn on Brotli compression — that kind of code compresses extremely well.",
         "Split the chart page behind a route-level dynamic import and replace the date library with one that ships only what is used; compression shrinks the download, not the parse and execute.",
+        "Turn on Brotli compression — that kind of code compresses extremely well.",
         "Raise the cache headers so returning visitors do not download it again.",
         "Accept it — most of the traffic is on Wi-Fi anyway."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 3,
       "explanation": "Compression is the tempting answer because the number moves a lot and the change takes an afternoon — but the browser still parses and executes the full 1.8MB, and on a mid-range phone that is where the seconds are. Caching has the same shape of flaw: it does nothing for the first visit, which is the one you are being judged on."
     },

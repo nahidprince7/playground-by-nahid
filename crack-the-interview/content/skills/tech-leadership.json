@@ -34,11 +34,11 @@
       },
       "options": [
         "Rejecting a junior's pull request at all",
-        "A verdict with no reasoning — and 'the way I would have done it' isn't a standard anyone can apply, so the next PR is another guess",
         "Not pairing on it instead of reviewing",
+        "A verdict with no reasoning — and 'the way I would have done it' isn't a standard anyone can apply, so the next PR is another guess",
         "Reviewing a junior's work personally rather than delegating"
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 0,
       "explanation": "Rejecting is fine; rejecting without a transferable reason is what makes review feel arbitrary. The reason has to point at something outside your own preference — a constraint, a failure mode, a convention that's written down. Otherwise you've taught them to predict you, which doesn't scale and doesn't survive you leaving."
     },
@@ -52,11 +52,11 @@
       "prompt": "You have forty minutes and a 900-line pull request in front of you.",
       "options": [
         "Skim it and approve — the author is experienced and the sprint is ending.",
-        "Ask for it to be split, and meanwhile review the part that changes behaviour rather than the part that moves code around.",
         "Review every line properly and take however long it takes.",
-        "Approve with comments, and trust the follow-ups get done."
+        "Approve with comments, and trust the follow-ups get done.",
+        "Ask for it to be split, and meanwhile review the part that changes behaviour rather than the part that moves code around."
       ],
-      "correct": 1,
+      "correct": 3,
       "eliminate": 0,
       "explanation": "A 900-line review is not a review; past a few hundred lines, defect detection collapses and everyone knows it. Asking for a split is the unpopular answer and the correct one. Approving with follow-up comments is how 'we'll fix it later' becomes the codebase — the leverage is at the gate, not after it."
     },
@@ -87,13 +87,13 @@
       "type": "mcq",
       "prompt": "You've decided to put a cache in front of an expensive query. How does the team find out?",
       "options": [
-        "They see it in the diff — it's an implementation detail.",
         "A short written record: the problem, the options considered, what you chose, what it costs, and what would make you revisit it.",
+        "They see it in the diff — it's an implementation detail.",
         "You explain it at the next standup.",
         "A comment above the cache explaining why it's there."
       ],
-      "correct": 1,
-      "eliminate": 0,
+      "correct": 0,
+      "eliminate": 1,
       "explanation": "A cache is a correctness decision wearing a performance costume — you've just accepted stale reads somewhere, and six months from now nobody will remember that was deliberate. 'What would make me revisit this' is the line that separates a decision record from documentation: it tells the next person when the trade-off has expired."
     },
     {

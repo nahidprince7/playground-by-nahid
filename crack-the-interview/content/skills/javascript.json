@@ -18,11 +18,11 @@
       },
       "options": [
         "Using console.log instead of the debugger.",
-        "The setTimeout: it makes the symptom go away without ever finding out what the race was, so it comes back on a slower device or a slower network.",
         "Not writing a failing test before fixing.",
+        "The setTimeout: it makes the symptom go away without ever finding out what the race was, so it comes back on a slower device or a slower network.",
         "Not asking a senior engineer for help sooner."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "console.log is fine; plenty of strong engineers debug that way. The problem is 'usually clears up' — a timing fix that is not understood is a bug you have rescheduled, not removed, and it reappears in production on the exact devices your customers have. Interviewers listen for whether someone stops at 'it works now'."
     },
@@ -37,14 +37,14 @@
       "type": "mcq",
       "prompt": "A click handler runs a 400ms transform over a large JSON payload. Users report the whole page freezes — even the loading spinner stops spinning. What actually fixes it?",
       "options": [
-        "Wrap the transform in a Promise — asynchronous code doesn't block.",
         "It runs on the same thread as rendering, so move it to a Web Worker, or chunk it and hand the thread back between slices.",
+        "Wrap the transform in a Promise — asynchronous code doesn't block.",
         "Run it inside a requestAnimationFrame callback so it is scheduled together with painting.",
         "Turn off StrictMode so the work only happens once."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 3,
-      "explanation": "The first option is the misconception the whole question is built on: a Promise changes when your code runs, never where. A 400ms synchronous body blocks paint whether or not it is wrapped in one, which is why the spinner — a CSS animation driven by the same main thread — stops dead. requestAnimationFrame is worse, not better; it books the block right before a frame."
+      "explanation": "The second option is the misconception the whole question is built on: a Promise changes when your code runs, never where. A 400ms synchronous body blocks paint whether or not it is wrapped in one, which is why the spinner — a CSS animation driven by the same main thread — stops dead. requestAnimationFrame is worse, not better; it books the block right before a frame."
     },
     {
       "id": "javascript-03",
@@ -59,12 +59,12 @@
       "prompt": "Why is the Virtual DOM faster than manipulating the DOM directly?",
       "options": [
         "It batches all changes and applies them in one pass, so it always beats hand-written DOM code.",
-        "It isn't inherently faster. It is a diffing layer that makes 'describe the whole UI as a function of state' cheap enough to be practical, and it removes the accidental thrash that hand-written updates tend to accumulate.",
         "It runs in a separate thread, so layout never blocks the UI.",
-        "It keeps a copy of the DOM in memory, so reads like offsetHeight don't cost anything."
+        "It keeps a copy of the DOM in memory, so reads like offsetHeight don't cost anything.",
+        "It isn't inherently faster. It is a diffing layer that makes 'describe the whole UI as a function of state' cheap enough to be practical, and it removes the accidental thrash that hand-written updates tend to accumulate."
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 3,
+      "eliminate": 1,
       "explanation": "This is asked to see whether you repeat the marketing line. Careful hand-written DOM updates beat a diff every time — the diff is overhead you accept in exchange for never having to work out which nodes changed. Saying that plainly reads as someone who knows what the framework is buying them; the first option reads as someone who has only heard it described."
     },
     {
@@ -103,13 +103,13 @@
       "type": "mcq",
       "prompt": "A dashboard awaits five independent API calls one after another and takes four seconds to load. What is the right change?",
       "options": [
-        "Start them together and await them as a group — nothing depends on anything else, so serialising them costs the sum instead of the slowest one.",
         "Move the awaits into a for loop so the runtime can batch them.",
         "Use Promise.race so the fastest response renders first.",
+        "Start them together and await them as a group — nothing depends on anything else, so serialising them costs the sum instead of the slowest one.",
         "Cache the responses so the next load is instant."
       ],
-      "correct": 0,
-      "eliminate": 2,
+      "correct": 2,
+      "eliminate": 1,
       "explanation": "Caching is the tempting one because it is genuinely useful — and it does nothing for the first visit, which is the one that decides whether someone stays. Worth adding in the same breath: use allSettled rather than all, or one failing widget blanks a dashboard where the other four were fine."
     },
     {
@@ -123,13 +123,13 @@
       "type": "mcq",
       "prompt": "A table renders 3,000 rows, each with its own click handler closing over that row. Initial render is slow and memory is high. Best fix?",
       "options": [
-        "Put one listener on the table body and read the row id off the event target — one closure instead of three thousand.",
         "Wrap each row's handler in useCallback so the functions are stable.",
         "Debounce the click handlers.",
-        "Use onMouseDown instead of onClick to skip the click delay."
+        "Use onMouseDown instead of onClick to skip the click delay.",
+        "Put one listener on the table body and read the row id off the event target — one closure instead of three thousand."
       ],
-      "correct": 0,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "useCallback is the reflex and it makes this worse: you keep all three thousand closures and add three thousand cache entries to hold them. Delegation works because events bubble, which is also how React attaches its own listeners at the root — one handler at the container is both the cheap answer and the idiomatic one."
     },
     {
@@ -181,12 +181,12 @@
       "type": "mcq",
       "prompt": "getForm is an async function. `const form = getForm(id); console.log(form.name)` prints undefined, and no error appears anywhere. Why?",
       "options": [
-        "The API response has no name field.",
         "An async function returns a Promise immediately, so form is the Promise and not the data — reading .name off it gives undefined. It needs await, or .then.",
+        "The API response has no name field.",
         "console.log runs before the assignment, because it is hoisted.",
         "getForm is missing a return statement."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 2,
       "explanation": "The silence is what makes this cost an afternoon: reading a property that does not exist on an object is not an error in JavaScript, it is undefined. Learn the shape of it — a result you used without waiting for it looks exactly like an API that returned nothing, and you can burn a morning in the network tab where the response was fine all along."
     },
@@ -200,13 +200,13 @@
       "type": "mcq",
       "prompt": "A field renders the fallback 'Not set' whenever the stored value is 0. The code is `value || 'Not set'`. What is the right fix?",
       "options": [
-        "Use `value ?? 'Not set'` so only null and undefined fall through — || also catches 0, '' and false, which are real values here.",
         "Convert it with String(value) before the check.",
         "Use `value === undefined ? 'Not set' : value`.",
-        "Store the value as a string so it can never be falsy."
+        "Store the value as a string so it can never be falsy.",
+        "Use `value ?? 'Not set'` so only null and undefined fall through — || also catches 0, '' and false, which are real values here."
       ],
-      "correct": 0,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "|| asks 'is this falsy', and 0, empty string and false are all falsy and all legitimate answers a user gave you. ?? asks the question you meant: is there a value at all. The explicit undefined check is close enough to pass review and leaves the bug in place for every endpoint that returns null instead — which is most of them."
     },
     {
@@ -248,13 +248,13 @@
         "content": "function SubmissionTable({ rows }) {\n  const newest = rows.sort((a, b) => b.createdAt - a.createdAt);\n  return <Table rows={newest} />;\n}"
       },
       "options": [
-        "sort reorders the array in place and hands back the same array, so this rearranges the caller's rows — the prop, and the state it came from.",
         "The comparator is backwards; it should be a.createdAt - b.createdAt.",
         "The sort should happen in a useEffect rather than during render.",
+        "sort reorders the array in place and hands back the same array, so this rearranges the caller's rows — the prop, and the state it came from.",
         "The sort should be wrapped in useMemo so it does not run on every render."
       ],
-      "correct": 0,
-      "eliminate": 1,
+      "correct": 2,
+      "eliminate": 0,
       "explanation": "Almost every array method you reach for returns a new array; sort and reverse are the two that do not. Mutating a prop means mutating something a parent still holds and believes nobody touched, which is precisely the assumption React's rendering rests on. [...rows].sort(…) costs one copy and removes the whole class of bug. Memoising is a fair thought that does nothing about the mutation."
     },
     {
@@ -268,12 +268,12 @@
       "type": "mcq",
       "prompt": "A form with a real <form> and a submit button flashes, reloads the page, and the fetch never finishes. What is going on?",
       "options": [
-        "The submit handler never calls preventDefault, so the browser performs its own form submission — a navigation, which throws away the page and the request in flight with it.",
         "The button needs type='button'.",
+        "The submit handler never calls preventDefault, so the browser performs its own form submission — a navigation, which throws away the page and the request in flight with it.",
         "The fetch is not being awaited.",
         "The form is missing an action attribute."
       ],
-      "correct": 0,
+      "correct": 1,
       "eliminate": 3,
       "explanation": "The default action of a submit button inside a form is to submit that form to the current URL, and a navigation cancels everything the page was doing. type='button' does stop the reload, which is why it is such a common fix, and it quietly kills pressing Enter in a text field — which is how a lot of people submit forms, and how nobody tests them. preventDefault keeps both."
     }

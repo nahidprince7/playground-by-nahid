@@ -13,11 +13,11 @@
       "prompt": "There's an index on (campaign_id, sent_at). A query that filters only on sent_at is slow. Why?",
       "options": [
         "The index needs rebuilding.",
-        "Composite indexes are usable left to right — a query that skips the leading column can't seek into it.",
         "sent_at is the wrong column type for an index.",
+        "Composite indexes are usable left to right — a query that skips the leading column can't seek into it.",
         "MySQL only uses one index per table."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "Think of it as a phone book sorted by surname then first name: searching for everyone called 'Rafi' means reading the whole book. Either add an index leading with sent_at, or reorder the existing one if no query needs campaign_id first. This is the single most common reason an index someone added 'didn't help'."
     },
@@ -55,13 +55,13 @@
         "content": "SELECT * FROM messages\nWHERE campaign_id = ?\nORDER BY sent_at DESC\nLIMIT 50 OFFSET 2000000;"
       },
       "options": [
-        "Deep OFFSET makes the server walk and throw away two million rows to return fifty — the cost grows with the page number.",
         "ORDER BY ... DESC can't use an index.",
         "LIMIT and OFFSET can't be combined on an indexed column.",
-        "SELECT * is the only issue here."
+        "SELECT * is the only issue here.",
+        "Deep OFFSET makes the server walk and throw away two million rows to return fifty — the cost grows with the page number."
       ],
-      "correct": 0,
-      "eliminate": 2,
+      "correct": 3,
+      "eliminate": 1,
       "explanation": "Keyset pagination fixes it: remember the last row's sent_at and ask for rows older than that, so every page costs the same. It's also more correct — offset paging skips or repeats rows when new messages arrive mid-scroll. SELECT * is a real secondary point on a wide table."
     },
     {
@@ -98,12 +98,12 @@
       "prompt": "A composite index is defined on (tenant_id, created_at). Which query benefits most directly from its leftmost order?",
       "options": [
         "WHERE created_at > ? with no tenant filter",
-        "WHERE tenant_id = ? AND created_at BETWEEN ? AND ?",
         "WHERE status = ?",
-        "ORDER BY created_at across every tenant"
+        "ORDER BY created_at across every tenant",
+        "WHERE tenant_id = ? AND created_at BETWEEN ? AND ?"
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 3,
+      "eliminate": 1,
       "explanation": "The index is ordered first by tenant and then by time within each tenant. Equality on the leading column followed by a range on the second lets MySQL scan a narrow contiguous portion of the index."
     }
   ]
