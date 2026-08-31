@@ -1,0 +1,115 @@
+{
+  "slug": "devops-engineer-paymentology",
+  "title": "DevOps Engineer (AWS + Kubernetes, 7+ years)",
+  "level": "senior",
+  "difficulty": 5,
+  "platform": "cloud",
+  "stack": [
+    "AWS",
+    "Terraform",
+    "Kubernetes",
+    "Kafka"
+  ],
+  "briefing": {
+    "summary": "Card issuing infrastructure — the platform banks and fintechs run their card programmes on, so an outage is somebody's declined transaction at a till. Everything is AWS: EC2, RDS, VPC, EKS and MSK, described in Terraform and shipped by pipelines, with Kafka carrying the transaction events between services. The posting asks for seven years and it means it — this is the person who owns the cluster upgrade, the topic that must not lose a message, and the pipeline that deploys to production without anyone holding their breath. Expect the interview to spend as much time on how you keep it running — observability, incidents, on-call, security through the pipeline — as on how you build it, and to ask how you use AI-assisted tools without letting them near production unreviewed.",
+    "requirements": [
+      "7+ years in DevOps, SRE or infrastructure engineering, on systems that take real money",
+      "AWS in practice: EC2, S3, IAM, RDS, VPC, EKS and MSK, and what each costs to run badly",
+      "Infrastructure as code in Terraform — state, modules, drift and blast radius",
+      "Deploying, upgrading and troubleshooting Kubernetes clusters and the workloads on them",
+      "Kafka and Amazon MSK: brokers, topics, partitions, consumer groups, replication, ACLs and lag",
+      "CI/CD pipelines that build once, test, and promote the same artefact to production",
+      "Bash and Python automation, and comfort debugging a Linux host from first principles",
+      "Observability and incident response — SLOs, actionable alerting, blameless reviews",
+      "Security and compliance carried through the pipeline and the infrastructure, not bolted on",
+      "Effective, reviewed use of AI-assisted tools for routine engineering, planning and troubleshooting"
+    ]
+  },
+  "topics": [
+    {
+      "id": "cloud",
+      "label": "AWS & cloud infrastructure",
+      "skills": [
+        "aws"
+      ]
+    },
+    {
+      "id": "iac",
+      "label": "Terraform & infrastructure as code",
+      "skills": [
+        "terraform"
+      ]
+    },
+    {
+      "id": "containers",
+      "label": "Kubernetes, Docker & orchestration",
+      "skills": [
+        "kubernetes"
+      ]
+    },
+    {
+      "id": "streaming",
+      "label": "Kafka, MSK & event-driven systems",
+      "skills": [
+        "kafka",
+        "microservices"
+      ]
+    },
+    {
+      "id": "delivery",
+      "label": "CI/CD, scripting & AI-assisted automation",
+      "skills": [
+        "cicd",
+        "linux-automation",
+        "ai-workflow"
+      ]
+    },
+    {
+      "id": "reliability",
+      "label": "Observability, incidents & SRE practice",
+      "skills": [
+        "observability",
+        "incident-response"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "id": "hr",
+      "name": "HR Screen",
+      "interviewer": {
+        "name": "Tahmina",
+        "role": "Talent Partner"
+      },
+      "count": 5
+    },
+    {
+      "id": "technical",
+      "name": "Technical Screen",
+      "interviewer": {
+        "name": "Rayhan",
+        "role": "Senior DevOps Engineer"
+      },
+      "count": 7
+    },
+    {
+      "id": "deepdive",
+      "name": "Deep Dive",
+      "interviewer": {
+        "name": "Ayesha",
+        "role": "Principal SRE"
+      },
+      "count": 7
+    },
+    {
+      "id": "ask",
+      "name": "The Ask",
+      "interviewer": {
+        "name": "Kamrul",
+        "role": "Head of Platform Engineering"
+      },
+      "count": 5
+    }
+  ],
+  "extra": []
+}
