@@ -7,8 +7,23 @@
     lifelines:{ repeat:2, thinkAloud:3, dontKnow:1 }, eliminated:[], timeLeft:45,
     history:[], timer:null, speakTimer:null, gateTimer:null, speaking:false, locked:false, jobs:[],
     currentLifelines:[], questionStartConfidence:60, orderItems:[], orderChosen:null,
-    dragId:null, briefingLeft:30, lastError:""
+    dragId:null, briefingLeft:30, lastError:"",
+    catalogue:[], customLevel:"mid", customSkills:[], customTitle:""
   };
+
+  // Custom mode: the candidate writes the posting themselves.
+  const CUSTOM_SKILLS = 5, REVISE_MAX = 3;
+  const LEVELS = [
+    { id:"junior", name:"Junior", note:"0-2 yrs" },
+    { id:"mid",    name:"Mid",    note:"2-5 yrs" },
+    { id:"senior", name:"Senior", note:"5+ yrs" }
+  ];
+  const CUSTOM_ROUNDS = [
+    { id:"hr",        name:"HR Screen",        interviewer:{ name:"Nadia",  role:"Talent Partner"     }, want:5 },
+    { id:"technical", name:"Technical Screen", interviewer:{ name:"Tobias", role:"Senior Engineer"    }, want:7 },
+    { id:"deepdive",  name:"Deep Dive",        interviewer:{ name:"Priya",  role:"Staff Engineer"     }, want:6 },
+    { id:"ask",       name:"The Ask",          interviewer:{ name:"Daniel", role:"Engineering Manager"}, want:5 }
+  ];
 
   const el = id => document.getElementById(id);
   const screens = [...document.querySelectorAll("[data-screen]")];
@@ -59,14 +74,18 @@
     if(q.type==="open"&&(!q.modelAnswer||!Array.isArray(q.keyPoints))) throw new Error(`${source}/${q.id}: incomplete open answer`);
   }
 
-  function validateLoaded(job,skills) {
-    if(job.topics?.length!==6||job.rounds?.length!==4) throw new Error(`${job.slug}: expected 6 topics and 4 rounds`);
+  function validateBanks(job,skills) {
     const required=new Set([...job.topics.flatMap(t=>t.skills),"behavioral"]);
     required.forEach(skill=>{
       if(!skills[skill]?.questions) throw new Error(`Missing skill bank: ${skill}.json`);
       skills[skill].questions.forEach(q=>validateQuestion(q,`skills/${skill}.json`));
     });
     (job.extra||[]).forEach(q=>validateQuestion(q,`${job.slug}/extra`));
+  }
+
+  function validateLoaded(job,skills) {
+    if(job.topics?.length!==6||job.rounds?.length!==4) throw new Error(`${job.slug}: expected 6 topics and 4 rounds`);
+    validateBanks(job,skills);
   }
 
   function assemblePlan(job,skills) {
@@ -78,7 +97,7 @@
     (job.extra||[]).forEach(question=>candidates.push({question,skill:"extra",topic:null}));
     const used=new Set(), plan=[];
     job.rounds.forEach((round,index)=>{
-      const pool=candidates.filter(({question:q})=>q.stage===round.id&&q.levels.includes(job.level)&&(!q.platform||q.platform===job.platform)&&!used.has(q.id));
+      const pool=candidates.filter(({question:q})=>q.stage===round.id&&q.levels.includes(job.level)&&(!q.platform||job.platform==="any"||q.platform===job.platform)&&!used.has(q.id));
       shuffle(pool).slice(0,round.count).forEach(item=>{
         used.add(item.question.id); plan.push({...item,round:{...round,index}});
       });
@@ -101,10 +120,107 @@
   }
 
   function renderJobs() {
-    el("pick-status").textContent=`${state.jobs.length} roles open · every interview is shuffled fresh`;
-    el("job-grid").innerHTML=state.jobs.map(job=>`<button class="job-card" data-job="${escapeHtml(job.slug)}"><span class="job-top"><span><span class="job-kicker">${escapeHtml(job.level)} role</span><h2>${escapeHtml(job.title)}</h2></span><span class="arrow">↗</span></span><span class="tags">${job.stack.map(x=>`<span class="tag">${escapeHtml(x)}</span>`).join("")}</span><span class="job-foot"><span>${job.questionCount} questions</span><span>Difficulty <span class="dots">${Array.from({length:5},(_,i)=>`<span class="dot ${i<job.difficulty?"on":""}"></span>`).join("")}</span></span></span></button>`).join("");
+    el("pick-status").textContent=`${state.jobs.length} roles open · every interview is shuffled fresh · or write the posting yourself`;
+    const build=`<button class="job-card build" data-custom><span class="job-top"><span><span class="job-kicker">your call</span><h2>Customize your interview</h2></span><span class="arrow">+</span></span><span class="tags"><span class="tag">Pick 5 skills</span><span class="tag">Pick your level</span></span><span class="job-foot"><span>Any combination</span><span>Assembled on the spot</span></span></button>`;
+    el("job-grid").innerHTML=build+state.jobs.map(job=>`<button class="job-card" data-job="${escapeHtml(job.slug)}"><span class="job-top"><span><span class="job-kicker">${escapeHtml(job.level)} role</span><h2>${escapeHtml(job.title)}</h2></span><span class="arrow">↗</span></span><span class="tags">${job.stack.map(x=>`<span class="tag">${escapeHtml(x)}</span>`).join("")}</span><span class="job-foot"><span>${job.questionCount} questions</span><span>Difficulty <span class="dots">${Array.from({length:5},(_,i)=>`<span class="dot ${i<job.difficulty?"on":""}"></span>`).join("")}</span></span></span></button>`).join("");
   }
 
+
+  // ---------------------------------------------------------------- custom mode
+  function skillCatalogue() {
+    const files=window.CTI_CONTENT?.files||{};
+    return Object.keys(files).filter(path=>path.startsWith("content/skills/")).map(path=>files[path])
+      .filter(bank=>bank.skill!=="behavioral")
+      .map(bank=>({id:bank.skill,label:bank.label,bank}))
+      .sort((a,b)=>a.label.localeCompare(b.label));
+  }
+  const bankFor = id => loadJson(`content/skills/${id}.json`);
+  const askable = (bank,level,stage) => bank.questions.filter(q=>q.levels.includes(level)&&(!stage||q.stage===stage)).length;
+
+  function customRounds(ids,level) {
+    const banks=[...ids,"behavioral"].map(bankFor);
+    return CUSTOM_ROUNDS.map(round=>{
+      const have=banks.reduce((total,bank)=>total+askable(bank,level,round.id),0);
+      return {id:round.id,name:round.name,interviewer:round.interviewer,count:Math.min(round.want,have)};
+    }).filter(round=>round.count>0);
+  }
+
+  function buildCustomJob() {
+    const level=state.customLevel, ids=state.customSkills;
+    const skills=Object.fromEntries([...ids,"behavioral"].map(id=>[id,bankFor(id)]));
+    const topics=ids.map(id=>({id,label:skills[id].label,skills:[id]}));
+    const rounds=customRounds(ids,level);
+    const levelName=LEVELS.find(l=>l.id===level).name.toLowerCase();
+    const job={
+      slug:"custom", custom:true, level, platform:"any",
+      title:state.customTitle.trim()||`Your own interview · ${levelName} level`,
+      stack:topics.map(t=>t.label),
+      briefing:{
+        summary:`No company behind this one — you wrote the posting. Five skills at ${levelName} level, four rounds, and a panel that takes your list at face value. Everything you put on it is fair game, and the behavioural questions come along regardless: nobody has ever skipped the HR screen. Revise three of your five and go.`,
+        requirements:[...topics.map(t=>`${t.label} — ${askable(skills[t.id],level)} questions in the bank at this level`),
+                      "Motivation, teamwork and disagreement — always in play, never revisable"]
+      },
+      topics, rounds, extra:[]
+    };
+    return {job,skills};
+  }
+
+  function startCustom() {
+    if(state.customSkills.length!==CUSTOM_SKILLS) return;
+    setScreen("loading");
+    try{
+      const {job,skills}=buildCustomJob();
+      validateBanks(job,skills);
+      if(!job.rounds.length) throw new Error("Those five skills have no questions at this level. Pick different skills, or change the level.");
+      state.job=job; state.skills=skills; state.plan=assemblePlan(job,skills);
+      if(!state.plan.length) throw new Error("Nothing in those banks matched that level.");
+      logPlan(); startBriefing();
+    }catch(error){ showError(error); }
+  }
+
+  function showCustom() {
+    try{
+      if(!state.catalogue.length) state.catalogue=skillCatalogue();
+      setScreen("custom"); renderCustom();
+    }catch(error){ showError(error); }
+  }
+
+  function renderCustom() {
+    const level=state.customLevel;
+    el("level-seg").innerHTML=LEVELS.map(l=>`<button class="${l.id===level?"on":""}" data-level="${l.id}">${l.name}<small>${l.note}</small></button>`).join("");
+    const full=state.customSkills.length>=CUSTOM_SKILLS;
+    el("skill-grid").innerHTML=state.catalogue.map(skill=>{
+      const have=askable(skill.bank,level), on=state.customSkills.includes(skill.id);
+      return `<button class="skill-chip ${on?"selected":""}" data-skill="${escapeHtml(skill.id)}" ${!have||(full&&!on)?"disabled":""}><span>${escapeHtml(skill.label)}</span><span class="skill-count">${have}</span></button>`;
+    }).join("");
+    el("skill-status").textContent=`Skills · ${state.customSkills.length} of ${CUSTOM_SKILLS}`;
+    el("custom-hint").textContent=full ? "That is your five, and they count as your revision — the first question comes straight away. Deselect one to swap it out."
+      : `The number on each skill is how many questions it can ask a ${LEVELS.find(l=>l.id===level).name.toLowerCase()} candidate. Greyed-out skills have none at this level.`;
+    renderPlanPreview();
+    el("custom-start").disabled=!full;
+  }
+
+  function renderPlanPreview() {
+    if(!state.customSkills.length){ el("plan-preview").innerHTML=""; return; }
+    const rounds=customRounds(state.customSkills,state.customLevel);
+    const total=rounds.reduce((sum,round)=>sum+round.count,0);
+    const pills=[`<span class="plan-pill lead">${total} questions</span>`,`<span class="plan-pill lead">${rounds.length} of 4 rounds</span>`,
+                 ...rounds.map(round=>`<span class="plan-pill">${escapeHtml(round.name)} ${round.count}</span>`)];
+    if(state.customSkills.length===CUSTOM_SKILLS&&total<14) pills.push(`<span class="plan-pill warn">thin pool · replays will repeat</span>`);
+    el("plan-preview").innerHTML=pills.join("");
+  }
+
+  function setCustomLevel(level) {
+    state.customLevel=level;
+    state.customSkills=state.customSkills.filter(id=>askable(bankFor(id),level));
+    renderCustom();
+  }
+
+  function toggleSkill(id) {
+    if(state.customSkills.includes(id)) state.customSkills=state.customSkills.filter(x=>x!==id);
+    else if(state.customSkills.length<CUSTOM_SKILLS) state.customSkills.push(id);
+    renderCustom();
+  }
 
   async function startJob(slug) {
     setScreen("loading");
@@ -122,22 +238,36 @@
   }
 
   function startBriefing() {
-    resetRun(); setScreen("briefing");
+    resetRun();
+    if(state.job.custom) return skipBriefing();
+    setScreen("briefing");
     el("brief-title").textContent=state.job.title; el("brief-summary").textContent=state.job.briefing.summary;
     el("requirements").innerHTML=state.job.briefing.requirements.map(x=>`<li>${escapeHtml(x)}</li>`).join("");
     renderTopics(); renderBriefClock();
     state.timer=setInterval(()=>{ state.briefingLeft=Math.max(0,state.briefingLeft-1); renderBriefClock(); if(!state.briefingLeft) beginInterview(); },1000);
   }
 
+  const reviseTarget = () => Math.min(REVISE_MAX,state.job.topics.length);
+
+  // You already chose five skills on the builder. Choosing three of them again is
+  // the same decision twice, so a custom run counts all five as revised and opens
+  // on the first question.
+  function skipBriefing() {
+    state.revised=state.job.topics.map(t=>t.id);
+    setScreen("interview"); startInterviewTimer(); renderQuestion();
+  }
+
   function renderTopics() {
-    el("topic-grid").innerHTML=state.job.topics.map(t=>`<button class="topic-chip ${state.revised.includes(t.id)?"selected":""}" data-topic="${t.id}" ${state.revised.length===3&&!state.revised.includes(t.id)?"disabled":""}>${escapeHtml(t.label)}</button>`).join("");
-    el("selection-copy").textContent=`${state.revised.length} of 3 selected${state.revised.length===0?" · going in cold is legal":""}`;
-    el("start-interview").disabled=state.revised.length!==3;
+    const target=reviseTarget();
+    el("revise-instruction").textContent=`Pick exactly ${target} of your ${state.job.topics.length} topics to revise`;
+    el("topic-grid").innerHTML=state.job.topics.map(t=>`<button class="topic-chip ${state.revised.includes(t.id)?"selected":""}" data-topic="${t.id}" ${state.revised.length===target&&!state.revised.includes(t.id)?"disabled":""}>${escapeHtml(t.label)}</button>`).join("");
+    el("selection-copy").textContent=`${state.revised.length} of ${target} selected${state.revised.length===0?" · going in cold is legal":""}`;
+    el("start-interview").disabled=state.revised.length!==target;
   }
 
   function toggleTopic(id) {
     if(state.revised.includes(id)) state.revised=state.revised.filter(x=>x!==id);
-    else if(state.revised.length<3) state.revised.push(id);
+    else if(state.revised.length<reviseTarget()) state.revised.push(id);
     renderTopics();
   }
   function renderBriefClock(){ el("brief-clock").textContent=`0:${String(state.briefingLeft).padStart(2,"0")}`; }
@@ -201,7 +331,7 @@
     state.orderItems=item.question.type==="order"?shuffle(item.question.items):[];
     const inRound=state.plan.slice(0,state.cursor+1).filter(x=>x.round.id===item.round.id).length;
     const roundTotal=state.plan.filter(x=>x.round.id===item.round.id).length;
-    el("round-label").innerHTML=`Round ${item.round.index+1} of 4<strong>${escapeHtml(item.round.name)}</strong>`;
+    el("round-label").innerHTML=`Round ${item.round.index+1} of ${state.job.rounds.length}<strong>${escapeHtml(item.round.name)}</strong>`;
     el("progress-label").innerHTML=`Question<strong>${state.cursor+1} of ${state.plan.length}</strong>`;
     el("question-number").textContent=`Question ${inRound} / ${roundTotal}`; el("question-type").textContent=item.question.type;
     el("interviewer-name").textContent=item.round.interviewer.name; el("interviewer-role").textContent=item.round.interviewer.role; el("avatar").textContent=initials(item.round.interviewer.name); el("prompt").textContent=item.question.prompt;
@@ -337,15 +467,24 @@
     const lifeNames={repeat:"Repeat",thinkAloud:"Think out loud",dontKnow:"Honest skip"}, life=[];
     Object.keys(lifeNames).forEach(kind=>{const used=histories.filter(h=>h.lifeline.includes(kind));if(used.length)life.push(`${lifeNames[kind]}: ${used.length} used · ${used.filter(h=>h.correct===true||kind==="dontKnow").length} paid off`);});
     const revised=state.job.topics.filter(t=>state.revised.includes(t.id));
+    const revisionTitle=state.job.custom?"What you asked to be asked":"Revision vs. reality";
     const revisionHtml=revised.length?revised.map(t=>`<li>${escapeHtml(t.label)} — ${histories.filter(h=>h.topic===t.id).length} asked</li>`).join(""):"<li>You went in without revising any topic.</li>";
-    el("debrief").innerHTML=`<div class="debrief-grid"><section class="debrief-card wide"><h2>Confidence across all four rounds</h2><svg class="confidence-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="Confidence history"><line x1="${pad}" y1="${height-pad}" x2="${width-pad}" y2="${height-pad}" stroke="#263751"/><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${height-pad}" stroke="#263751"/>${roundMarks}<polyline points="${xy}" fill="none" stroke="#818cf8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><text x="3" y="${pad+3}" class="chart-label">100</text><text x="8" y="${height-pad+3}" class="chart-label">0</text></svg></section><section class="debrief-card"><h2>Weakest topic</h2>${weakest?`<p><strong>${escapeHtml(weakest.label)}</strong> · ${weakest.wrong.length} wrong of ${weakest.total}</p>${weakest.wrong.map(q=>`<p>• ${escapeHtml(q)}</p>`).join("")}`:"<p>No topic-specific misses to report.</p>"}</section><section class="debrief-card"><h2>Lifelines</h2>${life.length?`<ul>${life.map(x=>`<li>${x}</li>`).join("")}</ul>`:"<p>You used no lifelines.</p>"}</section><section class="debrief-card wide"><h2>Revision vs. reality</h2><ul>${revisionHtml}</ul></section></div>`;
+    el("debrief").innerHTML=`<div class="debrief-grid"><section class="debrief-card wide"><h2>Confidence across all four rounds</h2><svg class="confidence-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="Confidence history"><line x1="${pad}" y1="${height-pad}" x2="${width-pad}" y2="${height-pad}" stroke="#263751"/><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${height-pad}" stroke="#263751"/>${roundMarks}<polyline points="${xy}" fill="none" stroke="#818cf8" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/><text x="3" y="${pad+3}" class="chart-label">100</text><text x="8" y="${height-pad+3}" class="chart-label">0</text></svg></section><section class="debrief-card"><h2>Weakest topic</h2>${weakest?`<p><strong>${escapeHtml(weakest.label)}</strong> · ${weakest.wrong.length} wrong of ${weakest.total}</p>${weakest.wrong.map(q=>`<p>• ${escapeHtml(q)}</p>`).join("")}`:"<p>No topic-specific misses to report.</p>"}</section><section class="debrief-card"><h2>Lifelines</h2>${life.length?`<ul>${life.map(x=>`<li>${x}</li>`).join("")}</ul>`:"<p>You used no lifelines.</p>"}</section><section class="debrief-card wide"><h2>${escapeHtml(revisionTitle)}</h2><ul>${revisionHtml}</ul></section></div>`;
   }
 
   function replay(){state.plan=assemblePlan(state.job,state.skills);logPlan();startBriefing();}
   function showPick(){state.job=null;state.skills={};state.plan=[];setScreen("pick");if(!state.jobs.length)loadJobs();}
   function showError(error){state.lastError=error?.message||String(error);el("error-detail").textContent=state.lastError;setScreen("error");}
 
-  el("job-grid").addEventListener("click",e=>{const b=e.target.closest("[data-job]");if(b)startJob(b.dataset.job);});
+  el("job-grid").addEventListener("click",e=>{
+    if(e.target.closest("[data-custom]")) return showCustom();
+    const b=e.target.closest("[data-job]");if(b)startJob(b.dataset.job);
+  });
+  el("level-seg").addEventListener("click",e=>{const b=e.target.closest("[data-level]");if(b)setCustomLevel(b.dataset.level);});
+  el("skill-grid").addEventListener("click",e=>{const b=e.target.closest("[data-skill]");if(b)toggleSkill(b.dataset.skill);});
+  el("custom-title").addEventListener("input",e=>{state.customTitle=e.target.value;});
+  el("custom-start").addEventListener("click",startCustom);
+  el("custom-back").addEventListener("click",showPick);
   el("topic-grid").addEventListener("click",e=>{const b=e.target.closest("[data-topic]");if(b)toggleTopic(b.dataset.topic);});
   el("start-interview").addEventListener("click",beginInterview);
   el("options").addEventListener("click",e=>{const b=e.target.closest("[data-option]");if(b)optionAnswer(Number(b.dataset.option));});
@@ -355,7 +494,7 @@
   el("order-list").addEventListener("dragstart",e=>{const b=e.target.closest("[data-order]");if(b)state.dragId=b.dataset.order;});
   el("order-list").addEventListener("dragover",e=>e.preventDefault());
   el("order-list").addEventListener("drop",e=>{e.preventDefault();const b=e.target.closest("[data-order]");if(b)dropOrder(b.dataset.order);});
-  el("next-button").addEventListener("click",nextQuestion); el("replay-button").addEventListener("click",replay); el("roles-button").addEventListener("click",showPick); el("error-roles").addEventListener("click",showPick); el("error-retry").addEventListener("click",()=>state.job?startJob(state.job.slug):loadJobs());
+  el("next-button").addEventListener("click",nextQuestion); el("replay-button").addEventListener("click",replay); el("roles-button").addEventListener("click",showPick); el("error-roles").addEventListener("click",showPick); el("error-retry").addEventListener("click",()=>state.job?.custom?startCustom():state.job?startJob(state.job.slug):loadJobs());
   window.addEventListener("keydown",e=>{if(state.screen==="interview"&&!state.locked&&["1","2","3","4"].includes(e.key)&&["mcq","red-flag"].includes(current().question.type))optionAnswer(Number(e.key)-1);});
   loadJobs();
 })();
