@@ -42,20 +42,29 @@ These are settled. Codex should not re-litigate them.
 
 ## Content so far
 
-92 questions across 24 skills, feeding 4 job titles. Run `python3 validate.py` from the project folder after any content change — it
+314 questions across 47 skills, feeding 9 job titles. Run `python3 validate.py` from the project folder after any content change — it
 checks the banks can still fill every round, then regenerates `content.js`, which
 is the file the browser actually reads.
 
 | Job title | Level | Questions per play |
 |---|---|---|
+| ReactJS Developer (React & Realtime, 1-2 years) | junior | 22 |
 | Software Engineer (.NET, 2-4 years) | mid | 24 |
-| Sr. Software Engineer (iOS, 7+ years) | senior | 21 |
+| Software Engineer (Frontend, 3-5 years) | mid | 24 |
+| Software Quality Assurance Engineer (2-5 years) | mid | 24 |
+| DevOps Engineer (AWS + Kubernetes, 7+ years) | senior | 24 |
+| Rust Software Engineer (Industrial, 5+ years) | senior | 23 |
 | Sr. Software Engineer (Android, 3-6 years) | senior | 22 |
 | Sr. Software Engineer (Java + React, 5+ years) | senior | 23 |
+| Sr. Software Engineer (iOS, 7+ years) | senior | 21 |
+
+Every skill bank is also selectable on its own through **Customize your
+interview**, which builds a job out of any five of them at any level.
 
 ## Still open
 
-- [ ] Thin spots the validator warns about — iOS technical, .NET deep dive and
-      The Ask draw from a pool barely bigger than the round. More JDs fix this.
+- [x] Thin spots the validator warns about. Five job descriptions added on
+      2026-08-31 widened every pool; the validator now runs with no warnings at
+      all. Junior is the shallowest level and the one to watch.
 - [ ] Do we log plays with a copy of `log.php` like the DevOps game does?
 - [ ] OG image (`assets/og-interview.png`) — needs designing before launch
