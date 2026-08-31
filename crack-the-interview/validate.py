@@ -49,6 +49,29 @@ for f in sorted((ROOT / "skills").glob("*.json")):
         if q["type"] == "open" and not q.get("keyPoints"):
             errors.append(f"{where}: open question needs keyPoints")
 
+# Where the correct answer sits. Left alone, authoring drifts: the plausible-but-
+# wrong option gets written first and the real one lands in slot B every time,
+# and a player who always picks B scores without reading the question.
+slots = [q["correct"] for d in skills.values() for q in d["questions"]
+         if q["type"] in ("mcq", "red-flag")]
+if slots:
+    spread = {i: slots.count(i) for i in range(4)}
+    print("correct answer sits at  " + "  ".join(
+        f"{'abcd'[i]} {n:3d} ({n / len(slots):.0%})" for i, n in spread.items()))
+    for i, n in spread.items():
+        if n / len(slots) > 0.35:
+            errors.append(f"{n} of {len(slots)} answers are option {'abcd'[i]} — "
+                          f"spread them across the four slots")
+        elif n == 0:
+            errors.append(f"option {'abcd'[i]} is never the correct answer")
+
+for sid, d in sorted(skills.items()):
+    own = [q["correct"] for q in d["questions"] if q["type"] in ("mcq", "red-flag")]
+    if len(own) >= 4 and max(own.count(i) for i in range(4)) > len(own) * 0.75:
+        warnings.append(f"{sid}: {max(own.count(i) for i in range(4))} of {len(own)} "
+                        f"answers share one slot — obvious to anyone who plays it twice")
+
+
 def pool(job, stage):
     """Every question this job could ask in this stage. behavioral is always in play."""
     ids = {s for t in job["topics"] for s in t["skills"]} | {"behavioral"}

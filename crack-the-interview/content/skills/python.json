@@ -1,0 +1,122 @@
+{
+  "skill": "python",
+  "label": "Python for data and production services",
+  "questions": [
+    {
+      "id": "python-01",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A CPU-bound preprocessing step takes 40 minutes. A colleague wraps it in a ThreadPoolExecutor with 16 workers and it takes 40 minutes. Why?",
+      "options": [
+        "CPU-bound Python holds the GIL, so the threads take turns rather than run at once — processes, or work pushed into a library that releases the GIL, is what actually parallelises it.",
+        "Sixteen workers is more than the machine has cores, so they contend.",
+        "The work is I/O-bound, and threads cannot help with I/O.",
+        "ThreadPoolExecutor has been superseded by asyncio for this kind of work."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "The core-count answer is the one that sounds like performance tuning: it would explain a modest disappointment, not zero improvement. Threads are for waiting — sockets, disks, subprocesses — and the reason NumPy-heavy code sometimes does speed up with threads is that the heavy loop is C that drops the GIL while it runs."
+    },
+    {
+      "id": "python-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A feature step that is slow on a million rows and occasionally produces an all-null column.",
+      "subject": {
+        "kind": "code",
+        "language": "python",
+        "content": "for i, row in df.iterrows():\n    if row[\"score\"] > 0.9:\n        df.loc[i, \"label\"] = \"high\"\n        df[\"norm\"][i] = row[\"score\"] / df[\"score\"].max()"
+      },
+      "options": [
+        "iterrows should be itertuples, which is considerably faster.",
+        "df[\"norm\"][i] is chained indexing — it may write into a temporary copy and silently do nothing — and the maximum is recomputed on every row. Both lines are one vectorised expression.",
+        "The comparison should use .gt() so that nulls are handled explicitly.",
+        "The loop should use enumerate rather than unpacking the index."
+      ],
+      "correct": 1,
+      "eliminate": 3,
+      "explanation": "itertuples is real advice and makes a slow loop into a slightly less slow loop, which is why it is the popular answer. The one that costs you a day is the chained assignment: whether it writes through depends on the frame's internal layout, so it works on the sample and produces a column of nulls on the real data — with no error either time."
+    },
+    {
+      "id": "python-03",
+      "stage": "technical",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A job loads a 30 GB parquet file with pandas on a 32 GB machine and is killed by the OOM killer. Which change addresses the cause rather than postponing it?",
+      "options": [
+        "Add swap so the allocation can succeed.",
+        "Move to a larger instance with more memory.",
+        "Read only the columns needed, in row-group batches, so peak memory is a function of the batch size rather than the file size.",
+        "Cast the float64 columns to float32 to halve the footprint."
+      ],
+      "correct": 2,
+      "eliminate": 0,
+      "explanation": "The float32 cast is the strong distractor: it is genuinely worth doing, it halves the memory, and it buys you until the file doubles. Anything whose memory scales with the input eventually meets an input that is too big — column projection and batching are the versions that keep working, and parquet is designed for exactly that access pattern."
+    },
+    {
+      "id": "python-04",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "An inference API is written with async handlers. Under load, latency spikes to seconds while one CPU core sits at 100%. What is happening?",
+      "options": [
+        "There are not enough worker processes for the traffic.",
+        "The event loop's default thread pool is too small for the request volume.",
+        "async handlers carry more overhead than plain synchronous ones.",
+        "The synchronous model call runs inside the event loop, so while it computes, nothing else on that loop makes progress — including requests that have already been accepted."
+      ],
+      "correct": 3,
+      "eliminate": 2,
+      "explanation": "Adding workers is the near-miss: it does raise throughput and is usually part of the fix, and it leaves each worker still stalling every co-resident request whenever a prediction runs. async is a way of waiting efficiently, not of computing concurrently — CPU work belongs off the loop, in a thread pool, a process pool, or a separate inference service."
+    },
+    {
+      "id": "python-05",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "What is worth unit-testing in a training pipeline, given that model quality is not deterministic?",
+      "options": [
+        "Assert in CI that the trained model reaches a minimum accuracy.",
+        "Nothing useful — ML code is validated by its metrics, not by tests.",
+        "Mock the model and assert that fit and predict were called with the right shapes.",
+        "Everything around the model: feature code on known inputs, that the split does not leak, that saving and loading round-trips, and that the whole pipeline runs on a tiny fixture — with the quality threshold as a separate gate rather than a unit test."
+      ],
+      "correct": 3,
+      "eliminate": 2,
+      "explanation": "The accuracy assertion in CI is the answer that seems most serious about quality, and it produces a slow test that fails for reasons no one can reproduce — that belongs in the promotion gate, on a fixed evaluation set, not in the suite that runs on every commit. Almost all the bugs that reach production in ML code are in the plumbing around the model, and the plumbing is ordinary deterministic software."
+    },
+    {
+      "id": "python-06",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "What does a generator give you over building the list, in a data pipeline?",
+      "options": [
+        "It yields one item at a time, so memory scales with the item rather than the dataset — and downstream work can start before the source is exhausted.",
+        "It can be iterated more than once without recomputing.",
+        "It runs faster because the loop is executed in C.",
+        "It parallelises the work across cores automatically."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "The re-iteration option is the common misconception in the opposite direction — a generator is exhausted after one pass, which is the sharp edge people meet when they hand one to two consumers and the second gets nothing. Streaming also changes the failure mode for the better: a pipeline that crashes at row 900,000 has already produced 899,999 rows of work rather than nothing."
+    }
+  ]
+}

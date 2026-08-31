@@ -61,10 +61,10 @@
       "options": [
         "`instance_class` is hard-coded rather than taken from a variable, so the same module cannot be reused for staging.",
         "`skip_final_snapshot = true` means a destroy leaves you with no snapshot to recover from.",
-        "`publicly_accessible = true` puts the cardholder database on the public internet, and the password is committed to the repository — where it also lands in state and in every plan output.",
-        "`engine_version` is not pinned, so a future apply could upgrade the engine."
+        "`engine_version` is not pinned, so a future apply could upgrade the engine.",
+        "`publicly_accessible = true` puts the cardholder database on the public internet, and the password is committed to the repository — where it also lands in state and in every plan output."
       ],
-      "correct": 2,
+      "correct": 3,
       "eliminate": 0,
       "explanation": "Two of these are real findings and you would raise both, but only one is an open door: a routable database plus a credential in version control is a breach waiting for someone to grep GitHub. The final-snapshot answer is the best distractor because it is true, serious and the kind of thing reviewers do catch — it just costs you during a destroy you control, not during an attack you do not."
     },
@@ -78,12 +78,12 @@
       "type": "mcq",
       "prompt": "Every team's stack references your shared modules as `source = \"git::ssh://.../modules//vpc\"` with no ref. What goes wrong?",
       "options": [
-        "Nothing, as long as `terraform init -upgrade` is run before every plan.",
         "There is no such thing as a stable plan: a merge to the module repo's default branch changes what everyone's next apply does, and nobody's change and the module's change can be told apart in the diff.",
+        "Nothing, as long as `terraform init -upgrade` is run before every plan.",
         "Module lookups will be slow because Terraform clones the repository on every init.",
         "Terraform will refuse to init without a version constraint."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 3,
       "explanation": "An unpinned module means the blast radius of a module change is 'everyone, at a time of their choosing, without reading it'. Pin to a tag or a registry version and let teams upgrade deliberately. The `-upgrade` answer is the tempting one — it sounds like taking control — but it does the opposite: it forces the latest module in, every time."
     },
@@ -96,12 +96,12 @@
       "type": "mcq",
       "prompt": "One root module holds the VPC, the EKS cluster, the databases and every application resource. A plan takes twenty minutes and everyone is nervous about applying anything.",
       "options": [
-        "Split it into layered states — network, platform, applications — each with its own lifecycle, its own permissions, and data lookups or remote state between the layers.",
         "Keep the single configuration but use a Terraform workspace per environment so state is separated.",
         "Raise `-parallelism` and set up a faster runner so plans finish sooner.",
+        "Split it into layered states — network, platform, applications — each with its own lifecycle, its own permissions, and data lookups or remote state between the layers.",
         "Adopt `-target` as the normal way to apply changes to a specific resource."
       ],
-      "correct": 0,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "The problem is not speed, it is blast radius: one apply can currently take out the VPC on the way to changing a tag. Splitting by rate of change also splits who is allowed to apply what. Workspaces are the seductive answer because people conflate them with environments — but every workspace shares the same configuration and the same all-or-nothing apply, so the twenty-minute plan and the blast radius both survive."
     },

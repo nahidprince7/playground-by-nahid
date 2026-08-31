@@ -1,0 +1,132 @@
+{
+  "skill": "vue",
+  "label": "Vue.js components, state & reactivity",
+  "questions": [
+    {
+      "id": "vue-01",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "A v-for over editable rows uses :key=\"index\". Deleting the second row leaves the wrong text sitting in the inputs below it. Why?",
+      "options": [
+        "The delete mutates the array in place instead of replacing it.",
+        "v-model needs the .lazy modifier inside a v-for.",
+        "Inputs cannot be used inside v-for without a wrapper component.",
+        "The key changes meaning when the list shifts, so Vue reuses the existing DOM node — and the input state inside it — for a different item."
+      ],
+      "correct": 3,
+      "eliminate": 2,
+      "explanation": "A key is a promise that this node is that item. Index breaks the promise the moment anything is inserted or removed, and the symptom is always the same: the parts of the DOM the framework does not control — typed text, focus, scroll position, a half-open dropdown — stay behind while the data moves on. Key on the row's id and the bug is structurally impossible."
+    },
+    {
+      "id": "vue-02",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "platform": "web",
+      "type": "red-flag",
+      "prompt": "A profile card that saves the edited name.",
+      "subject": {
+        "kind": "code",
+        "language": "javascript",
+        "content": "props: ['user'],\nmethods: {\n  save() {\n    this.user.name = this.draft;\n    axios.put('/api/users/' + this.user.id, this.user);\n  }\n}"
+      },
+      "options": [
+        "props should be declared with types and a default rather than as an array of names.",
+        "The child writes into the parent's object, so the screen shows the new name before the request is even sent — and keeps showing it if the save fails.",
+        "this.user.id should be passed as its own prop.",
+        "The put is not awaited, so a rejected request is an unhandled promise."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "The unhandled promise is the finding most reviewers make, and adding await plus a try/catch is right — but on its own it just means you now catch an error while the UI still displays a name the server rejected. The direction of data is the actual bug: emit the new value, let whoever owns the user apply it once the save comes back, and the failure case takes care of itself."
+    },
+    {
+      "id": "vue-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "A component fetches on mount and renders v-for over orders. QA reports a blank white panel whenever the API is slow or down. What is missing?",
+      "options": [
+        "There are three states, not one — loading, loaded and failed — and an empty array renders identically for all of them, so a pending request and a 500 look the same to the user and to whoever reads the bug report.",
+        "orders should start as null rather than an empty array.",
+        "The v-for needs a v-if on orders.length so an empty list can be handled.",
+        "The fetch belongs in the parent component, which can show the error."
+      ],
+      "correct": 0,
+      "eliminate": 1,
+      "explanation": "The v-if on length is the half-answer: it gets you an empty state, which is real progress and still shows 'no orders' to a customer whose orders exist and whose request failed. Every screen that talks to a network has the same four cases — loading, empty, loaded, failed — and the reason interviewers ask is that the last one is the one that reaches customers and the one nobody builds."
+    },
+    {
+      "id": "vue-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "A filtered list is stored in data and recalculated inside a watcher on the search box. What does moving it to a computed property actually buy?",
+      "options": [
+        "Computed properties are evaluated asynchronously, so the input stays responsive.",
+        "A watcher can only observe one source, so it misses changes to the underlying list.",
+        "The value becomes derived rather than stored — there is no second copy to fall out of date when the underlying list is changed by something other than the search box.",
+        "Computed properties bypass the reactivity system and are therefore cheaper."
+      ],
+      "correct": 2,
+      "eliminate": 0,
+      "explanation": "Caching is the answer people give and it is a side benefit; the reason to prefer it is that duplicated state is the bug. The watcher version is correct until a row is deleted somewhere else on the page, at which point the filtered copy still contains it and nobody can see why. Watchers earn their place for effects — firing a request, writing to storage — not for values you can compute."
+    },
+    {
+      "id": "vue-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "platform": "web",
+      "type": "open",
+      "prompt": "Two components that are not parent and child need the same cart total. Talk us through the options and what you would pick.",
+      "modelAnswer": "My first question is where the total actually lives, because most of the time the answer is that it is derived from the cart items and there is no total to share at all — only the items. If the two components have a common ancestor anywhere reasonable, I would lift the cart into it and pass down what each child needs, because that keeps one owner and the data flow stays readable to whoever opens the file next. If they are genuinely far apart, or a third and fourth component will want it next month, that is what a store is for: Pinia, or a small reactive module exported from one file, so there is one place the cart is changed and one place to look when it is wrong. What I would avoid is an event bus, which is the tempting middle option because it is five lines and touches nothing — it also leaves no record of who is listening, so a year later the total changes and nobody can find the code that did it. I would also ask whether the server should be the source of truth, since a cart usually is one; then the components read a fetched value and the interesting problem becomes when to refetch rather than how to share. Whatever I pick, the total itself stays computed rather than stored, so the two views cannot disagree.",
+      "keyPoints": [
+        "Ask what is actually shared — usually the items, with the total derived",
+        "Lift to the nearest common ancestor first; props down, events up",
+        "A store (Pinia or a shared reactive module) when it is genuinely app-wide",
+        "Avoid the event bus: no record of who listens, unfindable a year later",
+        "Consider the server as the source of truth, and the refetch question that follows",
+        "Keep the total computed, never stored in two places"
+      ],
+      "explanation": "The answer that sounds senior and is not is 'I'd put it in the store' as the opening move, because a store used for everything is a global variable with better tooling. What interviewers are listening for is the escalation — smallest thing that works, and a reason to go bigger — and for the observation that a total is derived, which quietly removes the whole problem."
+    },
+    {
+      "id": "vue-06",
+      "stage": "ask",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "platform": "web",
+      "type": "mcq",
+      "prompt": "When is v-show the better choice than v-if?",
+      "options": [
+        "When the block is toggled often and is cheap to leave in the DOM — v-show only flips a display style, while v-if creates and destroys the element and its component each time.",
+        "When the block should react to data changes; v-if is evaluated once at render.",
+        "They behave identically; v-show is the older spelling.",
+        "When the hidden block should also stop making its own requests."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "The trade is which cost you would rather pay: v-if pays on every toggle and nothing while hidden, v-show pays once and leaves the markup — and any component inside it, still alive and still polling — sitting in the page. That last part is the catch worth remembering: hiding a component with v-show does not stop it working."
+    }
+  ]
+}

@@ -13,13 +13,13 @@
       "type": "mcq",
       "prompt": "So — why are you looking to leave your current job?",
       "options": [
-        "My manager kept blocking my promotion and I was done waiting.",
         "I've been shipping the same CRUD screens for two years. I want to work somewhere the architecture actually matters.",
+        "My manager kept blocking my promotion and I was done waiting.",
         "The salary is low and I want more money.",
         "Honestly, I'm just exploring what's out there."
       ],
-      "correct": 1,
-      "eliminate": 0,
+      "correct": 0,
+      "eliminate": 1,
       "explanation": "Every version of this answer is true for somebody. The one that works points forward at the work, not backward at a grievance. Money is a fine reason to move and a terrible reason to lead with — it invites them to solve for you with the smallest number that works."
     },
     {
@@ -38,11 +38,11 @@
       },
       "options": [
         "Saying the codebase was messy",
-        "Rewriting shared code without telling anyone — on a team of 40 that's the expensive part",
         "Working alone on a big change",
+        "Rewriting shared code without telling anyone — on a team of 40 that's the expensive part",
         "Not mentioning whether there were tests"
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 0,
       "explanation": "Calling a codebase messy is fine; every codebase is. What lands badly is unilateral rewriting. In an ERP that 33 outlets depend on, the question behind every question is 'will this person break something without telling us first' — and that sentence answers it."
     },
@@ -78,11 +78,11 @@
       "prompt": "The recruiter asks your expected salary before you've spoken to anyone technical. Best move?",
       "options": [
         "Name one number well above market and say it's not negotiable.",
-        "Give a researched range, and say you're flexible on how the whole package is put together.",
         "Say 'whatever the company policy is'.",
-        "Refuse to discuss numbers until they make an offer."
+        "Refuse to discuss numbers until they make an offer.",
+        "Give a researched range, and say you're flexible on how the whole package is put together."
       ],
-      "correct": 1,
+      "correct": 3,
       "eliminate": 0,
       "explanation": "A range keeps you in the process; a hard number ends the conversation in one direction or the other. Deferring entirely to company policy sounds agreeable and quietly hands over your entire negotiating position — recruiters remember the number you didn't give."
     },
@@ -135,13 +135,13 @@
       "type": "mcq",
       "prompt": "Seven years in. Why move now?",
       "options": [
-        "The projects got boring and management wouldn't listen to anyone.",
         "I've taken two apps from nothing to the store and maintained them for years. I want that at a bigger scale, on more than one product.",
+        "The projects got boring and management wouldn't listen to anyone.",
         "I've been at the same salary band for three years.",
         "A friend told me you were hiring."
       ],
-      "correct": 1,
-      "eliminate": 0,
+      "correct": 0,
+      "eliminate": 1,
       "explanation": "At seven years the question underneath is 'why aren't you a lead yet, or why are you still moving?' The answer that works reframes the years as accumulated shipping, then points at what's next. The friend answer isn't fatal but it wastes the one question where you get to set the frame."
     },
     {
@@ -156,12 +156,12 @@
       "prompt": "The role is on-site in Dhaka. You've worked fully remote for three years and would rather keep some of that. It comes up in the HR call.",
       "options": [
         "Say on-site is fine and raise it after you have the offer.",
-        "Say on-site works, and ask what the team's actual pattern looks like day to day.",
         "Say you'll only consider it if they allow three days remote.",
-        "Don't mention it — see if it becomes flexible later."
+        "Don't mention it — see if it becomes flexible later.",
+        "Say on-site works, and ask what the team's actual pattern looks like day to day."
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 3,
+      "eliminate": 1,
       "explanation": "The posting says on-site, so leading with a hard condition ends the call. Accepting and then asking a genuine question gets you the real answer — most on-site teams have an unwritten pattern — without spending leverage you don't have yet. Agreeing and reopening it after the offer is how people start a job already resented."
     },
     {
@@ -194,12 +194,12 @@
       "prompt": "This is a multi-country service provider — you'd be on calls with overseas clients. HR asks how comfortable you are working in English.",
       "options": [
         "Say you're fluent and move on quickly.",
-        "Say yes, and give one concrete example — a client demo you ran, a spec you wrote, a standup you led in English.",
         "Say your written English is strong but you're shy on calls.",
-        "Say you'd prefer written communication where possible."
+        "Say you'd prefer written communication where possible.",
+        "Say yes, and give one concrete example — a client demo you ran, a spec you wrote, a standup you led in English."
       ],
-      "correct": 1,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "Claiming fluency is what everyone does, so it carries no information. One concrete instance of having already done the thing does — and it's the same technique that works for every skill claim in an interview. The honest-about-shyness answer is admirable and will cost you a client-facing role."
     },
     {
@@ -215,12 +215,12 @@
         "content": "I've been on the same app for six of my seven years. Mostly bug fixes and small feature requests from the client — I didn't set up the project or handle releases, that was the lead."
       },
       "options": [
-        "Six years on one app is too long",
         "Seven years of tenure, but no architecture decisions and no release ownership — it may be one year repeated seven times",
+        "Six years on one app is too long",
         "Only doing bug fixes",
         "Not naming the client"
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 3,
       "explanation": "Staying on one product for six years can be a real strength — you see the consequences of decisions. What's missing here is ownership: never having set up a project or shipped a release means the depth the posting asks for may not be there. If this is your history, the fix is to lead with the hardest thing you owned, however small."
     },
@@ -273,11 +273,11 @@
       "prompt": "You have been stuck on the same bug for two hours. What is the right move?",
       "options": [
         "Keep going — asking this early makes it look like you cannot work on your own.",
-        "Ask in the team channel: what you are trying to do, what you have already tried, and where it stops.",
         "Ask a senior to drop what they are doing and screen-share until it is solved.",
+        "Ask in the team channel: what you are trying to do, what you have already tried, and where it stops.",
         "Rewrite the whole section from scratch and hope it does not come back."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "Teams do not mind being asked; they mind being asked with nothing attached. The version with what-you-tried costs a minute of someone's time rather than twenty, and writing it out solves the problem before you press send often enough to be worth doing anyway. Two hours is a sensible ceiling to agree with your lead — what juniors regret is the two days, not the two hours."
     },
@@ -330,12 +330,12 @@
       "prompt": "An interviewer asks about a tool on the job description that you have never used. Best answer?",
       "options": [
         "Describe roughly what you have read about it and hope the follow-up does not come.",
-        "Say you have not used it, name the nearest thing you have used and what you would expect to carry over, and ask how it is used here.",
         "Say you are a fast learner and can pick anything up in a week.",
-        "Move the conversation to something you do know well."
+        "Move the conversation to something you do know well.",
+        "Say you have not used it, name the nearest thing you have used and what you would expect to carry over, and ask how it is used here."
       ],
-      "correct": 1,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "Everyone knows a short CV has gaps; what the interview is finding out is how you behave at the edge of what you know. 'I learn fast' is not wrong so much as empty — it is what everyone says and gives them nothing to assess. Naming the nearest neighbour shows you can map a new thing onto an old one, which is the skill actually being tested, and the question at the end turns it into a conversation."
     },
     {

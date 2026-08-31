@@ -12,13 +12,13 @@
       "type": "mcq",
       "prompt": "In Angular, three components each need the same reference data, so the same HTTP call fires three times on page load. Cleanest fix?",
       "options": [
-        "Put the call in a base class the three components extend.",
         "Move it into a service and share one result — shareReplay, or a store.",
+        "Put the call in a base class the three components extend.",
         "Cache the response in localStorage.",
         "Fetch once in AppComponent and thread it down through @Input chains."
       ],
-      "correct": 1,
-      "eliminate": 0,
+      "correct": 0,
+      "eliminate": 1,
       "explanation": "This is what services are for. shareReplay(1) on the observable means one request, and every subscriber — now or later — gets the same value. Inheritance gives all three their own call, and prop-drilling from the root couples every component in between to data they don't use."
     },
     {
@@ -38,12 +38,12 @@
       },
       "options": [
         "ngOnInit cannot call a service.",
-        "The component creates a subscription with no teardown; repeated mounts can leak the component and duplicate work. Use the async pipe or lifecycle-aware unsubscription.",
         "Observable names must not end with a dollar sign.",
-        "The callback must be async."
+        "The callback must be async.",
+        "The component creates a subscription with no teardown; repeated mounts can leak the component and duplicate work. Use the async pipe or lifecycle-aware unsubscription."
       ],
-      "correct": 1,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "A long-lived observable can retain a destroyed component and keep delivering values. The async pipe, takeUntilDestroyed, or another lifecycle-bound strategy prevents duplicate subscriptions and memory leaks."
     }
   ]

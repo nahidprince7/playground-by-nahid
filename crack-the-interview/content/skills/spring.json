@@ -13,11 +13,11 @@
       "prompt": "A @Transactional method called from another method in the same class doesn't roll back. Why?",
       "options": [
         "@Transactional only works on methods declared in an interface.",
-        "Spring's proxy sits outside the object — a self-call goes straight to the target and never passes through the advice.",
         "The transaction manager isn't configured.",
+        "Spring's proxy sits outside the object — a self-call goes straight to the target and never passes through the advice.",
         "Rollback only happens for checked exceptions."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 0,
       "explanation": "Proxy-based AOP is invisible to the object itself. The fix is to move the transactional method into another bean, or self-inject. The checked-exception option is the good distractor — it's a real gotcha, but backwards: Spring rolls back on unchecked exceptions by default and leaves checked ones alone."
     },
@@ -32,12 +32,12 @@
       "prompt": "Listing 1,000 campaigns fires 1,001 queries. The entity has a @OneToMany collection.",
       "options": [
         "@OneToMany defaults to EAGER, so each row loads its collection.",
-        "The collection is lazy and something touches it once per row — a join fetch or an entity graph collapses it to one query.",
         "The entity is missing @Cacheable.",
-        "MySQL can't join on this relationship."
+        "MySQL can't join on this relationship.",
+        "The collection is lazy and something touches it once per row — a join fetch or an entity graph collapses it to one query."
       ],
-      "correct": 1,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "@OneToMany is LAZY by default, so the N+1 comes from the code that iterates and reads. Serialising entities straight to JSON is the classic trigger — the serialiser touches every collection. Fetch what you need in one query, or project into a DTO so nothing lazy is reachable."
     },
     {
@@ -55,12 +55,12 @@
         "content": "@Service\npublic class CampaignService {\n    @Autowired private MessageRepository repo;\n    @Autowired private DeliveryClient delivery;\n\n    public void run(long campaignId) { /* ... */ }\n}"
       },
       "options": [
-        "Field injection: the object can exist in an invalid state, the dependencies are invisible from the constructor, and unit-testing it needs reflection or a running container.",
         "@Service should be @Component.",
+        "Field injection: the object can exist in an invalid state, the dependencies are invisible from the constructor, and unit-testing it needs reflection or a running container.",
         "The injected fields should be static.",
         "run() is missing @Transactional."
       ],
-      "correct": 0,
+      "correct": 1,
       "eliminate": 2,
       "explanation": "Constructor injection makes dependencies explicit and lets the fields be final. The practical tell is testing: a constructor takes fakes in one line, whereas field injection means the test has to reach in and set them. It also hides growth — a class quietly acquiring its eighth @Autowired field would have been obvious as an eight-argument constructor."
     },
@@ -73,12 +73,12 @@
       "type": "mcq",
       "prompt": "You own a service sending billions of messages a month. What do you put in place before you need it?",
       "options": [
-        "A runbook for the on-call engineer.",
         "Metrics on what actually fails — queue depth, delivery latency percentiles, error rate broken down by downstream provider — and alerts on symptoms users feel rather than on CPU.",
+        "A runbook for the on-call engineer.",
         "More logging around the delivery path.",
         "Headroom: run bigger instances than you need."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 3,
       "explanation": "Operational ownership means knowing something is wrong before a customer tells you, and knowing where. Alerting on CPU produces pages nobody can act on; alerting on p99 delivery latency and per-provider error rate points at the problem. A runbook is genuinely valuable and it's the second thing — it's no use if nothing wakes you."
     },
@@ -98,12 +98,12 @@
       },
       "options": [
         "Transactions cannot call repositories.",
-        "The internal self-call bypasses the proxy that applies @Transactional, so saveBatch may execute without the intended transaction boundary.",
         "RuntimeException never triggers rollback.",
-        "The annotation belongs on the repository interface only."
+        "The annotation belongs on the repository interface only.",
+        "The internal self-call bypasses the proxy that applies @Transactional, so saveBatch may execute without the intended transaction boundary."
       ],
-      "correct": 1,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "Proxy-based transaction advice runs when a call crosses the proxy. A method calling another method on the same instance does not cross it. Move the boundary to an externally invoked method or another bean, and test the actual rollback behavior."
     }
   ]

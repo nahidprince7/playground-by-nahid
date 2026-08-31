@@ -38,11 +38,11 @@
       },
       "options": [
         "The shebang should be `#!/bin/sh` for portability across hosts.",
-        "There is no `set -euo pipefail` and nothing is quoted, so an unset `APP_NAME` turns the first command into `rm -rf /var/backups/*`, and every later failure is ignored — the script still exits 0 and prints 'backup done'.",
         "Tarring a live PostgreSQL data directory does not produce a restorable backup; it needs `pg_dump` or a filesystem snapshot with the database quiesced.",
-        "`aws s3 cp` should be `aws s3 sync` so unchanged files are not re-uploaded."
+        "`aws s3 cp` should be `aws s3 sync` so unchanged files are not re-uploaded.",
+        "There is no `set -euo pipefail` and nothing is quoted, so an unset `APP_NAME` turns the first command into `rm -rf /var/backups/*`, and every later failure is ignored — the script still exits 0 and prints 'backup done'."
       ],
-      "correct": 1,
+      "correct": 3,
       "eliminate": 0,
       "explanation": "The unquoted, unset variable is the one that destroys data tonight, and the missing `set -e` is what guarantees nobody finds out — cron sees exit 0 and the monitoring, if any, sees a successful job. The PostgreSQL answer is an excellent second finding and you would raise it in the same review: a tar of a running data directory usually restores into a corrupt cluster, so this backup is also a lie. Two silent failures, one script."
     },
@@ -57,11 +57,11 @@
       "prompt": "An application host is crawling. `top` shows load average around 30 on 8 cores, CPU mostly idle, and several processes in D state.",
       "options": [
         "The box is CPU-starved — the load average says so. It needs more cores.",
-        "The processes are blocked in uninterruptible I/O, which Linux counts in the load average. Check iowait, the disk or the network filesystem it is waiting on, and whether it is swapping.",
         "A memory leak in the application — restart it and watch whether the load falls.",
+        "The processes are blocked in uninterruptible I/O, which Linux counts in the load average. Check iowait, the disk or the network filesystem it is waiting on, and whether it is swapping.",
         "Too many threads: lower the worker count until the load average drops below the core count."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 0,
       "explanation": "Linux load average is not a CPU queue — it counts uninterruptible sleep too, which is why a stuck NFS mount or a saturated EBS volume produces a load of 30 with an idle CPU. The memory-leak answer is the good distractor because a host deep into swap shows exactly this shape, and checking swap is part of the correct diagnosis; the difference is that you check before restarting, because a restart destroys the evidence."
     },

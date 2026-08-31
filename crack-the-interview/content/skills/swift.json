@@ -14,12 +14,12 @@
       "prompt": "A view controller holds a network client, and passes a closure to it that updates self.tableView. The screen is dismissed but never deallocates. Why?",
       "options": [
         "The table view is holding a reference to its data source.",
-        "The closure captures self strongly, the client holds the closure, and self holds the client — a cycle.",
         "dismiss(animated:) doesn't release view controllers.",
+        "The closure captures self strongly, the client holds the closure, and self holds the client — a cycle.",
         "The network request is still in flight."
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 2,
+      "eliminate": 1,
       "explanation": "Escaping closures capture strongly by default. [weak self] in the capture list breaks it, and then guard let self else { return } inside. The in-flight request answer is the good distractor — it delays deallocation, it doesn't prevent it, and the difference between 'late' and 'never' is what Instruments is for."
     },
     {
@@ -52,13 +52,13 @@
       "type": "mcq",
       "prompt": "You're migrating a completion-handler networking layer to async/await. What does marking the view model @MainActor actually buy you?",
       "options": [
-        "It makes the network calls run on the main thread.",
         "The compiler enforces that its state and UI updates happen on the main actor, so you stop hand-writing DispatchQueue.main.async.",
+        "It makes the network calls run on the main thread.",
         "It makes the class thread-safe for any access from any thread.",
         "It's only needed for SwiftUI."
       ],
-      "correct": 1,
-      "eliminate": 0,
+      "correct": 0,
+      "eliminate": 1,
       "explanation": "@MainActor is a compile-time guarantee about where code runs, not a lock and not a threading change for the awaited work. Your awaits still suspend and the network still happens off-main; you just come back to the main actor automatically. It's the whole reason the migration is worth doing — the class of bug in the previous question stops compiling."
     },
     {
@@ -78,12 +78,12 @@
       },
       "options": [
         "reloadData should be called on the main thread.",
-        "self is captured strongly by a closure the loader owns, and the controller owns the loader.",
         "loader should be lazy var, not let.",
-        "onUpdate should be a delegate, not a closure."
+        "onUpdate should be a delegate, not a closure.",
+        "self is captured strongly by a closure the loader owns, and the controller owns the loader."
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 3,
+      "eliminate": 1,
       "explanation": "Controller → loader → closure → controller. The controller never deallocates, and on a screen users push repeatedly that's a leak per visit. [weak self] fixes it. Thread safety is worth raising as a second point — you can't tell from this snippet which queue onUpdate fires on, and 'which queue does this call back on' is a good senior question to ask out loud."
     },
     {
@@ -102,12 +102,12 @@
         "content": "URLSession.shared.dataTask(with: url) { data, _, _ in\n    guard let data else { return }\n    self.items = try! JSONDecoder().decode([Item].self, from: data)\n    self.activityIndicator.stopAnimating()\n    self.tableView.reloadData()\n}.resume()"
       },
       "options": [
-        "Two problems: UIKit is being touched off the main thread, and try! crashes the app on any malformed response.",
         "dataTask should be uploadTask.",
         "The errors are being ignored with underscores.",
+        "Two problems: UIKit is being touched off the main thread, and try! crashes the app on any malformed response.",
         "resume() should be called before the closure is set."
       ],
-      "correct": 0,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "URLSession calls back on a background queue, so every UIKit line here is undefined behaviour that happens to work sometimes — the worst kind of bug. And try! turns a bad server response into a crash your users see rather than an error you handle. Ignoring the error parameters is the third finding, and worth mentioning."
     },

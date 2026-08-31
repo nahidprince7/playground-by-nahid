@@ -18,12 +18,12 @@
       },
       "options": [
         "They should escalate straight to the engineering manager, who can overrule the developer.",
-        "They're settling a question about intended behaviour by seniority rather than by going to the requirement and the person who owns it.",
         "They're admitting they don't read code, which is disqualifying for an SQA role.",
-        "Closing a defect at all is a decision only the person who raised it should make."
+        "Closing a defect at all is a decision only the person who raised it should make.",
+        "They're settling a question about intended behaviour by seniority rather than by going to the requirement and the person who owns it."
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 3,
+      "eliminate": 1,
       "explanation": "'Is this a bug?' is a question about what the product is supposed to do, and the developer's opinion is one input, not the answer — the spec, the designs and the PM are. Escalating is the tempting alternative because it looks assertive, but reaching for a manager on the first disagreement burns the working relationship this job depends on; you go to the requirement first, and only escalate when the requirement genuinely doesn't say."
     },
     {
@@ -41,11 +41,11 @@
       },
       "options": [
         "The priority should have been set by the product manager, not by the tester.",
-        "There's no build, environment, account, payment method, steps, actual result, expected result or evidence — nothing a developer can act on, so the round trip costs two days before any work starts.",
         "The title is too short and doesn't name the module.",
+        "There's no build, environment, account, payment method, steps, actual result, expected result or evidence — nothing a developer can act on, so the round trip costs two days before any work starts.",
         "It should have been raised in a chat message first so the developer sees it sooner."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "A defect report is a set of instructions for recreating a failure; this one is a complaint. The priority point is a fair second finding — a tester proposing priority without impact evidence tends to get ignored — but even a perfectly triaged ticket is unworkable if nobody can get the system into the failing state. The cheapest minute you will ever spend is the one adding the build number and the exact steps."
     },
@@ -60,14 +60,14 @@
       "type": "mcq",
       "prompt": "Two defects, one release. (A) The company name is misspelled in the checkout header on every page. (B) An admin report used once a quarter crashes on export. How should these be classified?",
       "options": [
-        "A is low severity but high priority; B is high severity but lower priority.",
         "A is low severity and low priority; B is high severity and high priority.",
+        "A is low severity but high priority; B is high severity but lower priority.",
         "Both are high priority, since a crash and a customer-visible error are equally urgent.",
         "Severity and priority should always match, otherwise the fields contradict each other."
       ],
-      "correct": 0,
+      "correct": 1,
       "eliminate": 3,
-      "explanation": "Severity is how badly the product is broken; priority is how soon it must be fixed — and they come apart exactly here. The typo breaks nothing but is seen by every customer and takes five minutes, so it goes now. The crash is severe but hits one person once a quarter, who has a workaround, so it can wait for the next sprint. Answer B is the tempting one because severity is the loudest signal in the room and people let it drive the schedule."
+      "explanation": "Severity is how badly the product is broken; priority is how soon it must be fixed — and they come apart exactly here. The typo breaks nothing but is seen by every customer and takes five minutes, so it goes now. The crash is severe but hits one person once a quarter, who has a workaround, so it can wait for the next sprint. Answer A is the tempting one because severity is the loudest signal in the room and people let it drive the schedule."
     },
     {
       "id": "defect-management-04",
@@ -79,12 +79,12 @@
       "type": "mcq",
       "prompt": "You've hit a checkout failure once in about twenty attempts and you cannot make it happen on demand. Release is in four days. What do you do?",
       "options": [
-        "Hold off on filing until you can reproduce it reliably, so you don't send the developer on a hunt.",
         "File it now as intermittent, with the frequency you observed, the exact build, timestamps, request and response, logs from that attempt and what differed between the runs that failed and the ones that passed.",
+        "Hold off on filing until you can reproduce it reliably, so you don't send the developer on a hunt.",
         "File it as a low-severity defect, since it only happens 5% of the time.",
         "Mention it verbally in standup and move on to the planned test cases."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 3,
       "explanation": "Timestamps are the whole point: with them a developer can find your one failure in the server logs, and a rare bug in payments is usually a race or a timeout that is far more frequent under production load than under one tester. Waiting for a clean reproduction is the tempting answer because it's what good practice usually demands — but the evidence you have decays as builds roll and logs rotate, and 'five percent of checkouts' is a severe defect, not a minor one."
     },
@@ -160,11 +160,11 @@
       "prompt": "The bug backlog has grown to 400 open tickets and nobody looks at it any more. What's the useful move?",
       "options": [
         "Bulk-close everything older than six months; if it mattered, someone will raise it again.",
-        "Ask for a dedicated bug-fixing sprint to clear the whole list.",
         "Run a timeboxed triage where every ticket gets one of three outcomes — fix now with an owner, fix by a named date, or won't-fix and closed with the reason — and keep new bugs triaged weekly so it never rebuilds.",
+        "Ask for a dedicated bug-fixing sprint to clear the whole list.",
         "Leave it; a large backlog is normal for any mature product and closing tickets doesn't improve quality."
       ],
-      "correct": 2,
+      "correct": 1,
       "eliminate": 3,
       "explanation": "A backlog only has value if it's a list of decisions; 400 undecided items is noise that hides the ten tickets that matter. The bulk-close is tempting because it's honest about the fact nobody will read them, but it throws away real reproduction steps unread and teaches people that filing bugs is pointless. A bug sprint is the second-best answer — it clears the list once, then it fills right back up because the intake was never fixed."
     }

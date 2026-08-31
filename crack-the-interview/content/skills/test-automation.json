@@ -17,13 +17,13 @@
         "content": "We automated one hundred percent of our test cases — every manual case became a Selenium script. It took a year, and by the end nobody had to test anything by hand."
       },
       "options": [
-        "Selenium is outdated; a modern team would have used Playwright or Cypress.",
         "A year of engineering went into scripting cases regardless of whether they were worth automating, and 'nobody tests by hand' means exploratory testing stopped — the suite now only ever asks the questions someone thought of a year ago.",
+        "Selenium is outdated; a modern team would have used Playwright or Cypress.",
         "One hundred percent coverage is impossible, so the candidate is exaggerating.",
         "They didn't say how long the suite takes to run."
       ],
-      "correct": 1,
-      "eliminate": 0,
+      "correct": 0,
+      "eliminate": 1,
       "explanation": "Automation is regression protection — it re-asks known questions cheaply. It has never found a bug nobody anticipated, which is what exploratory testing is for, so a team that stops doing it by hand has traded away its only source of new findings. The runtime point is a genuine second concern and worth raising, but the deeper problem is treating a coverage percentage as the goal rather than the maintenance cost of every script that will now need updating forever."
     },
     {
@@ -42,11 +42,11 @@
       },
       "options": [
         "The sleep is too short — five seconds isn't enough for a CI machine, so it should be raised to fifteen.",
-        "The absolute XPath breaks the moment anyone adds a wrapper div, and the fixed sleep is both slower than necessary on a good run and still a race on a slow one — it should be a stable test id plus an explicit wait on the condition being asserted.",
         "The assertion is too broad: matching anywhere in the page source would pass on an unrelated 'Success' string elsewhere on the page.",
+        "The absolute XPath breaks the moment anyone adds a wrapper div, and the fixed sleep is both slower than necessary on a good run and still a race on a slow one — it should be a stable test id plus an explicit wait on the condition being asserted.",
         "Selenium can't assert on page content directly; this needs a page object."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "A fixed sleep encodes a guess about someone else's machine, so it makes the suite slow when things are fast and flaky when things are slow — an explicit wait for the element or text is faster and more reliable at the same time. The broad assertion is a real second finding worth fixing in the same pass; it's tempting as the answer because it's true, but it explains a false pass, not the intermittent failure you were asked about."
     },
@@ -61,12 +61,12 @@
       "prompt": "Your suite is green when run one test at a time, but once CI runs it with four parallel workers, a handful of tests fail differently on every run. Most likely cause?",
       "options": [
         "The CI machines are underpowered, so the timeouts need raising.",
-        "The tests share mutable state — the same login account, the same seeded records, the same coupon — so parallel workers overwrite each other's data.",
         "Parallel execution isn't supported by most browser drivers and the suite should be run serially.",
-        "The browser version in CI differs from the local one."
+        "The browser version in CI differs from the local one.",
+        "The tests share mutable state — the same login account, the same seeded records, the same coupon — so parallel workers overwrite each other's data."
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 3,
+      "eliminate": 1,
       "explanation": "'Different tests fail each run' is the signature of tests racing over shared data rather than any single test being wrong — the fix is that each test creates its own user and its own records, usually through the API, and doesn't care what else is running. Raising timeouts is the tempting first move because it sometimes turns the build green for a week, which is the worst possible outcome: the race is still there and now it's slower to notice."
     },
     {
@@ -184,11 +184,11 @@
       "prompt": "The nightly automation report has been going out for six months. Nobody reads it and failures sit unlooked-at for days. What actually fixes this?",
       "options": [
         "Send the report to the engineering manager as well, so there's accountability for ignoring it.",
-        "Move the suite onto every pull request so a failure belongs to a change someone just made, make each failure ship its trace and the owning test, and delete or fix the tests nobody trusts.",
         "Add a dashboard showing pass rate over time so the trend is visible to everyone.",
+        "Move the suite onto every pull request so a failure belongs to a change someone just made, make each failure ship its trace and the owning test, and delete or fix the tests nobody trusts.",
         "Run the suite twice nightly to confirm which failures are real before reporting them."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 0,
       "explanation": "Feedback gets acted on when it arrives attached to a specific change and a specific person, which nightly runs destroy by batching a day of commits into one red report nobody owns. The dashboard is the tempting answer because visibility feels like the missing ingredient — but a chart of a number people already distrust changes nothing; the trust problem is that a share of those failures are the suite's own fault, and until those are gone every report is noise."
     }

@@ -32,12 +32,12 @@
       "prompt": "Someone calls an async method with .Result to keep a method signature synchronous. What's the actual risk?",
       "options": [
         "Nothing — it's the same thing with extra steps.",
-        "Thread-pool starvation and deadlocks once the endpoint is under load.",
         "It adds a fixed ~200ms to every call.",
+        "Thread-pool starvation and deadlocks once the endpoint is under load.",
         "Exceptions get swallowed silently."
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 2,
+      "eliminate": 1,
       "explanation": "Blocking on .Result holds a thread hostage while it waits. One or two are invisible; a few hundred concurrent requests and the pool has nothing left to schedule with. The exception answer is half true — they get wrapped in an AggregateException, not swallowed — which is exactly why it's a tempting wrong answer."
     },
     {
@@ -51,13 +51,13 @@
       "type": "mcq",
       "prompt": "Your Web API returns 200 with an empty body when the posted model is invalid, instead of a 400 with the validation errors. What's most likely missing?",
       "options": [
-        "The [ApiController] attribute on the controller",
         "app.UseRouting() in the pipeline",
         "A try/catch around the action body",
-        "[Required] doesn't work outside Razor Pages"
+        "[Required] doesn't work outside Razor Pages",
+        "The [ApiController] attribute on the controller"
       ],
-      "correct": 0,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "[ApiController] is what wires up automatic model-state validation and the ProblemDetails 400 response. Without it, ModelState is populated but nobody checks it, so the action runs on garbage input and returns whatever it returns."
     },
     {
@@ -75,12 +75,12 @@
         "content": "public IActionResult GetReport()\n{\n    var data = _client.GetStringAsync(_url).Result;\n    return Ok(data);\n}"
       },
       "options": [
-        "Ok cannot return a string.",
         "Blocking on asynchronous I/O ties up request threads and can cause thread-pool starvation; make the action async and await the call.",
+        "Ok cannot return a string.",
         "HttpClient cannot be used in a controller.",
         "The method needs the static keyword."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 3,
       "explanation": "Sync-over-async blocks a worker while the network is idle. Under concurrency those blocked workers accumulate, latency rises, and the pool struggles to serve new requests. Async all the way preserves request capacity."
     }

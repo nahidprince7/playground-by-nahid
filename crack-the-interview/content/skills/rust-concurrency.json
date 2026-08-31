@@ -33,11 +33,11 @@
       "options": [
         "Raise the worker thread count until the stalls stop happening.",
         "Wrap the call in an async block — that makes it non-blocking.",
-        "A blocking call occupies a runtime worker for its whole duration, and every task queued behind it waits. Move it to spawn_blocking, or to a dedicated thread that talks to the runtime through a channel, so the async workers stay free to poll.",
-        "Call futures::executor::block_on inside the task so the runtime knows to wait."
+        "Call futures::executor::block_on inside the task so the runtime knows to wait.",
+        "A blocking call occupies a runtime worker for its whole duration, and every task queued behind it waits. Move it to spawn_blocking, or to a dedicated thread that talks to the runtime through a channel, so the async workers stay free to poll."
       ],
-      "correct": 2,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "async fn does not create a thread and an async block does not make anything non-blocking — it only wraps code in a future that, once polled, still runs to completion on the worker. More workers is the tempting answer because it genuinely does reduce the stalls, right up to the load where it doesn't; you have bought headroom, not fixed the design. The rule is simple: an async task must always be able to reach its next await point quickly."
     },
     {
@@ -92,12 +92,12 @@
       "type": "mcq",
       "prompt": "A task reads frames in a tokio::select! against a shutdown signal. After a shutdown that was started and then aborted, the device stream comes back permanently garbled.",
       "options": [
-        "select! drops the losing future, so a read that was part-way through consuming bytes loses them and the stream is left out of frame sync. The read was not cancellation-safe. Keep the partial state outside the future — own the buffered reader, or move the read into its own task that feeds a channel.",
         "The device needs a longer read timeout so the shutdown branch doesn't win the race.",
         "Put a mutex around the stream so the two select branches cannot interleave their reads.",
+        "select! drops the losing future, so a read that was part-way through consuming bytes loses them and the stream is left out of frame sync. The read was not cancellation-safe. Keep the partial state outside the future — own the buffered reader, or move the read into its own task that feeds a channel.",
         "Use futures::join! instead of select! so neither branch is cancelled."
       ],
-      "correct": 0,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "The mutex is the tempting answer because the symptom smells like a race — but both branches are in one task, so nothing runs concurrently and nothing is corrupted concurrently. State was thrown away, not fought over. Cancellation safety is the thing to look up before putting any read in select!: some combinators guarantee it, most hand-rolled reads do not, and the bug surfaces only on the rare path where the other branch wins."
     },
@@ -112,11 +112,11 @@
       "options": [
         "Relaxed is never acceptable in production code — use SeqCst and stop thinking about it.",
         "With Relaxed the reader may never observe the store at all, so the loop can spin forever.",
-        "For a lone flag that guards nothing else, Relaxed is fine and the loop will see the store. It stops being fine the moment data is published alongside the flag: then the writer needs Release and the reader Acquire, or the reader can see the flag set and the data it refers to not yet written.",
-        "Wrap it in a Mutex<bool> — atomics are for counters, not for flags."
+        "Wrap it in a Mutex<bool> — atomics are for counters, not for flags.",
+        "For a lone flag that guards nothing else, Relaxed is fine and the loop will see the store. It stops being fine the moment data is published alongside the flag: then the writer needs Release and the reader Acquire, or the reader can see the flag set and the data it refers to not yet written."
       ],
-      "correct": 2,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "The second option is the good misconception: memory orderings constrain the ordering of operations, not the timeliness of propagation, so a Relaxed store does become visible — it just carries no promise about what else is visible with it. SeqCst-everywhere is defensible as a default and is what most codebases should do, but 'never think about it' is the wrong reason; the moment you publish a pointer or a buffer next to the flag, Acquire/Release is the thing you actually need to have understood."
     },
     {

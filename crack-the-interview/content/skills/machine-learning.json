@@ -1,0 +1,166 @@
+{
+  "skill": "machine-learning",
+  "label": "Model development, evaluation & deployment",
+  "questions": [
+    {
+      "id": "machine-learning-01",
+      "stage": "hr",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A candidate describes the first model they shipped. What should worry the interviewer?",
+      "subject": {
+        "kind": "quote",
+        "content": "We had a fraud model up in the first week — 99.4% accuracy on the historical data. Everyone was happy, so we put it in front of the real queue on the Friday."
+      },
+      "options": [
+        "Shipping in a week, with no time for design review.",
+        "99.4% accuracy on a rare event is roughly what you get by answering 'not fraud' every time — the number describes the class balance, and nobody asked what it beat.",
+        "Not measuring on a held-out test set.",
+        "Putting it in front of real users without a controlled comparison."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "The controlled comparison is the right objection and the one worth having second — but you can run a perfect A/B test on a model that is doing nothing at all, and this one might be. On an imbalanced problem the first question is always what the trivial baseline scores, because a headline metric that a constant answer also achieves is not evidence of anything."
+    },
+    {
+      "id": "machine-learning-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A model ranks scanned documents for human review. There are 50,000 a day and reviewers can get through about 200. Which metric should drive the decision?",
+      "options": [
+        "Precision within the top 200 ranked documents — capacity is fixed, so the only question is what fraction of what actually gets looked at was worth looking at.",
+        "F1, because it balances the two kinds of error.",
+        "Recall, because a missed document is the expensive error.",
+        "Overall accuracy, so the model is right as often as possible."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "Recall is the answer worth arguing for, because it is what the mission actually cares about — but you cannot bank recall you have no capacity to act on, and raising it below the cut-off changes nothing that happens in the building. Whenever a human queue is the bottleneck, the metric has an @k in it, and the interesting design question becomes how to buy more k."
+    },
+    {
+      "id": "machine-learning-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "A notebook that reports 0.94 and cannot be reproduced by anyone else at that number.",
+      "subject": {
+        "kind": "code",
+        "language": "python",
+        "content": "X = df.drop(columns=[\"label\"])\ny = df[\"label\"]\n\nX = StandardScaler().fit_transform(X)\n\nX_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)\nmodel.fit(X_tr, y_tr)\nprint(model.score(X_te, y_te))"
+      },
+      "options": [
+        "score() returns accuracy, which may be the wrong metric for this problem.",
+        "A fixed random_state hides how much the result varies between splits.",
+        "The scaler is fitted before the split, so the test set's mean and variance are baked into every training feature — the score is reporting on a model that has already been told something about its test data.",
+        "test_size of 0.2 is too small to estimate performance reliably."
+      ],
+      "correct": 2,
+      "eliminate": 3,
+      "explanation": "The metric point and the fixed seed are both fair and neither explains the number. Leakage is the failure that flatters you all the way to production and then disappears, and the scaler is its most common form because it looks like preprocessing rather than like training. Fit inside the split — or better, inside a Pipeline, so the split is the only thing that can see everything."
+    },
+    {
+      "id": "machine-learning-04",
+      "stage": "technical",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A defect-detection model trained on 4,000 labelled images performs well in evaluation and misses defects on the line. The line's camera was replaced last month. What is the most likely explanation?",
+      "options": [
+        "The learning rate was too high, so the model never converged properly.",
+        "The training labels were noisier than anyone realised.",
+        "Overfitting — the model memorised the training images rather than learning the defect.",
+        "The inputs no longer resemble the training data: a different sensor means different lighting, colour response and compression, so it is being asked about a kind of image it has never seen."
+      ],
+      "correct": 3,
+      "eliminate": 0,
+      "explanation": "Overfitting is the reflex answer and the reason it is wrong here is the date — the model did not change, the world did. This is why anything vision-shaped needs the acquisition hardware treated as part of the dataset: a camera swap, a firmware update or a new lighting rig is a silent retraining trigger, and nobody files a ticket for it."
+    },
+    {
+      "id": "machine-learning-05",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Offline the model scores 0.91 AUC. In production it barely beats the rules it replaced, and the weights are identical. What do you look at first?",
+      "options": [
+        "Retrain on more recent data, since the distribution has probably drifted.",
+        "Increase the model's capacity, since it is clearly underfitting reality.",
+        "Recalibrate the decision threshold against production traffic.",
+        "Whether the features at serving time are computed the same way, and from the same moment in time, as the ones in training — the usual cause is a training feature built from data that does not exist yet when the prediction has to be made."
+      ],
+      "correct": 3,
+      "eliminate": 1,
+      "explanation": "Drift is the answer everyone gives and it is worth checking second; it just does not usually explain a gap that is there on day one. Train/serve skew is the boring, expensive answer: two implementations of the same feature, or a training row assembled with hindsight the serving path does not have. The fix that lasts is one implementation used by both, not two that are carefully kept in agreement."
+    },
+    {
+      "id": "machine-learning-06",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A new model is ready to replace one already serving. What does a shadow deployment give you that offline evaluation does not?",
+      "options": [
+        "A statistically valid comparison of the outcomes the business cares about.",
+        "Twice the training data, since production requests can be labelled later.",
+        "Real traffic through the real serving path — the inputs as they actually arrive, the latency under production load, and the failures no offline set contained — with no consequence to anyone, because the output is logged rather than used.",
+        "Confidence that the new model's metrics will hold, since it sees the same distribution as the old one."
+      ],
+      "correct": 2,
+      "eliminate": 1,
+      "explanation": "Calling it a statistically valid comparison of business outcomes describes an A/B test instead, and conflating the two is the most common muddle in this area: shadow answers 'does it work here', A/B answers 'is it better'. Shadow catches the things that never show up in a notebook — a feature that is null 4% of the time in the wild, a p99 that breaks the caller's timeout, an input encoding nobody documented."
+    },
+    {
+      "id": "machine-learning-07",
+      "stage": "deepdive",
+      "levels": [
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "A team asks for a model to flag something they currently judge by eye. There is no labelled data. Talk us through how you would take that on.",
+      "modelAnswer": "I would start away from the model entirely, with the decision: what happens differently when something is flagged, who acts on it, and what it costs when the flag is wrong in each direction. That tells me the metric, the operating point and whether the thing is worth building at all. Then labels: I would look for decisions already being recorded somewhere — a queue, a case system, an email trail — because those are proxy labels that exist, and I would be explicit about their bias, since they only cover what people already looked at. In parallel I would have a small gold set annotated deliberately, by more than one person, and measure the agreement between them; if two experts agree only 60% of the time, that is the ceiling and the project's real problem is a definition, not a model. Before training anything I would build the dumbest baseline the domain allows — a handful of rules, or the operators' own heuristic written down — and score it, because that is the number the model has to beat to be worth its maintenance. Then the smallest model that could work, evaluated on the gold set, held out and never trained on. I would plan for the labels to keep arriving: a feedback path from the operators, so the flagged items get adjudicated and the evaluation set grows rather than ages. And I would keep the option of reporting that it is not feasible yet, with the annotation disagreement as the evidence — that is a cheaper outcome than a model nobody trusts.",
+      "keyPoints": [
+        "Start from the decision and the cost of each error, not the model",
+        "Mine existing operator decisions as proxy labels — and name their bias",
+        "Build a small gold set with multiple annotators; measure their agreement",
+        "Low inter-annotator agreement means the definition is the problem",
+        "A rules baseline scored first, as the bar the model must clear",
+        "Hold the gold set out; never train on it",
+        "A feedback path so labels keep arriving after launch",
+        "Willingness to report 'not feasible yet' with evidence"
+      ],
+      "explanation": "The answer that sounds productive and is not starts with 'I'd label a few thousand examples and fine-tune something'. It skips the two questions that decide whether the project survives contact with reality: what the model has to beat, and whether the humans supplying the labels even agree with each other. Senior candidates almost always mention annotator agreement, because they have been burned by a dataset where the labels were the noise."
+    },
+    {
+      "id": "machine-learning-08",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "What makes a model result reproducible six months later?",
+      "options": [
+        "The data snapshot, the code, the parameters and the environment versioned together as one artefact — a model whose training inputs cannot be reconstructed is a number you have to take on trust.",
+        "Setting and recording the random seed.",
+        "Storing the trained weights in object storage with the date in the filename.",
+        "Writing the metrics into the experiment tracker as soon as the run finishes."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "The seed is the answer people give and it is the smallest part; it makes a run repeatable given identical everything else, which is exactly the thing that has changed. The question worth being able to answer in an incident is 'what was this model trained on', and it has to be answerable without the person who trained it."
+    }
+  ]
+}

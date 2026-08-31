@@ -1,0 +1,111 @@
+{
+  "slug": "laravel-fullstack-developer",
+  "title": "Laravel Full Stack Developer (PHP & Vue, 2-4 years)",
+  "level": "mid",
+  "difficulty": 3,
+  "platform": "web",
+  "stack": [
+    "Laravel",
+    "PHP",
+    "MySQL",
+    "Vue.js"
+  ],
+  "briefing": {
+    "summary": "A full stack seat on a web application that is already live, where the same person writes the Eloquent query, the Blade or Vue template above it, and the CSS that makes it look like the design. Most of the day is ordinary Laravel work done properly — validated input, a query that does not multiply by the number of rows on the page, work that belongs on a queue actually put there — so expect to be asked why something behaves badly rather than to recite what a facade is. The front end is mixed the way real applications are: newer screens in Vue, older ones still held together by jQuery and Ajax, and both of them talking to the same endpoints. Schema and SQL come up as often as PHP does, because the slow page is nearly always a query. The rest is about being easy to work with — commits and pull requests other people can follow, and a progress update that arrives while there is still time to do something about it.",
+    "requirements": [
+      "Laravel in a codebase you did not start: Eloquent relations, validation, queued jobs",
+      "PHP fundamentals — the per-request lifecycle, comparison rules, and trusting no input",
+      "MySQL schema design and queries you can explain, including why one is slow",
+      "HTML5, CSS3 and JavaScript that survives a second developer reading it",
+      "Vue components alongside legacy jQuery and Ajax on the same pages",
+      "GitHub as a way of working: small commits, honest messages, reviewable pull requests"
+    ]
+  },
+  "topics": [
+    {
+      "id": "laravel",
+      "label": "Laravel, Eloquent & queued work",
+      "skills": [
+        "laravel"
+      ]
+    },
+    {
+      "id": "php",
+      "label": "PHP & handling untrusted input",
+      "skills": [
+        "php"
+      ]
+    },
+    {
+      "id": "database",
+      "label": "MySQL, schema design & querying",
+      "skills": [
+        "mysql"
+      ]
+    },
+    {
+      "id": "frontend",
+      "label": "HTML5, CSS3, JavaScript & jQuery",
+      "skills": [
+        "css",
+        "javascript",
+        "jquery"
+      ]
+    },
+    {
+      "id": "spa",
+      "label": "Vue.js, Angular.js & Ajax calls",
+      "skills": [
+        "vue",
+        "angular",
+        "api-integration"
+      ]
+    },
+    {
+      "id": "collaboration",
+      "label": "GitHub, code review & keeping people informed",
+      "skills": [
+        "git-workflow"
+      ]
+    }
+  ],
+  "rounds": [
+    {
+      "id": "hr",
+      "name": "HR Screen",
+      "interviewer": {
+        "name": "Rumana",
+        "role": "Recruiter"
+      },
+      "count": 5
+    },
+    {
+      "id": "technical",
+      "name": "Technical Screen",
+      "interviewer": {
+        "name": "Imtiaz",
+        "role": "Senior Laravel Engineer"
+      },
+      "count": 7
+    },
+    {
+      "id": "deepdive",
+      "name": "Deep Dive",
+      "interviewer": {
+        "name": "Shaila",
+        "role": "Tech Lead"
+      },
+      "count": 6
+    },
+    {
+      "id": "ask",
+      "name": "The Ask",
+      "interviewer": {
+        "name": "Arif",
+        "role": "Engineering Manager"
+      },
+      "count": 5
+    }
+  ],
+  "extra": []
+}

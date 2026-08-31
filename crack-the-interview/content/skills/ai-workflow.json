@@ -14,12 +14,12 @@
       "prompt": "We're an AI-native engineering team — agentic IDEs, coding assistants, the lot. How do you feel about that?",
       "options": [
         "I prefer writing everything myself. If I didn't type it, I don't really understand it.",
-        "I use them daily — tests, migrations, first drafts, unfamiliar APIs — and I review every line before it goes in.",
         "Great. I let the assistant write the feature and then fix whatever breaks.",
-        "I look things up with a chatbot sometimes."
+        "I look things up with a chatbot sometimes.",
+        "I use them daily — tests, migrations, first drafts, unfamiliar APIs — and I review every line before it goes in."
       ],
-      "correct": 1,
-      "eliminate": 2,
+      "correct": 3,
+      "eliminate": 1,
       "explanation": "They're screening for two failure modes at once: refusal, and abdication. The answer that works names specific uses and then names the boundary. 'Fix whatever breaks' is the one that ends the conversation on a team that has to keep an app stable for hundreds of thousands of users."
     },
     {
@@ -32,12 +32,12 @@
       "type": "mcq",
       "prompt": "Your team's coding agent keeps producing code that ignores the project's architecture. Cheapest thing that fixes it?",
       "options": [
-        "Write longer, more detailed prompts each time.",
         "Commit the conventions to a context file in the repo, so every engineer's session starts with the same house rules.",
+        "Write longer, more detailed prompts each time.",
         "Move everyone to a larger model.",
         "Stop using the agent for feature work."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 2,
       "explanation": "This is what context engineering means in practice. Rules that live in one person's prompt history help one person once; rules committed next to the code help everyone forever and get reviewed like any other shared config. Reaching for a bigger model to fix a missing-context problem is expensive and doesn't work."
     },

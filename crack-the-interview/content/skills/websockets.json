@@ -17,12 +17,12 @@
       },
       "options": [
         "Using WebSockets at all instead of polling the API.",
-        "Reconnecting on a timer without checking whether a connection is already open — duplicate sockets stack up, so every message arrives several times and the server pays for all of them.",
         "Not using a library like Socket.IO instead of the raw WebSocket API.",
-        "Not saying how many users the feature had."
+        "Not saying how many users the feature had.",
+        "Reconnecting on a timer without checking whether a connection is already open — duplicate sockets stack up, so every message arrives several times and the server pays for all of them."
       ],
-      "correct": 1,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "The phrase that costs them is 'the server didn't seem to mind' — it did, they just had no way to see it. What an interviewer is listening for is whether someone reconnects deliberately, on close, or blindly on a clock. Choosing WebSockets over polling was fine; the reconnect around it was not."
     },
     {
@@ -36,11 +36,11 @@
       "prompt": "A dashboard needs to show new form submissions as they land. They arrive less than once a minute, and the browser never sends anything back up the same channel. What fits best?",
       "options": [
         "A WebSocket, because anything live means a WebSocket.",
-        "Polling the list endpoint every thirty seconds.",
         "Server-Sent Events — one long-lived HTTP response, server to browser only, with reconnection already handled by the browser.",
+        "Polling the list endpoint every thirty seconds.",
         "A WebSocket per browser tab, kept awake with a ping every second."
       ],
-      "correct": 2,
+      "correct": 1,
       "eliminate": 3,
       "explanation": "WebSockets earn their extra machinery when the browser also sends — chat, cursors, collaborative editing. One-way and infrequent is what SSE is for, and EventSource reconnects on its own. Polling is the honest second-best: it works, it is simpler than either, and it costs a request per client per interval to say 'nothing new' most of the time."
     },
@@ -59,12 +59,12 @@
         "content": "function Submissions() {\n  const [rows, setRows] = useState([]);\n  const socket = new WebSocket('wss://api.example.com/feed');\n  socket.onmessage = (e) => setRows(r => [...r, JSON.parse(e.data)]);\n  return <List rows={rows} />;\n}"
       },
       "options": [
-        "JSON.parse is not wrapped in a try/catch, so one malformed message kills the handler.",
         "The socket is opened in the component body, so every render opens another one — and each message sets state, which renders, which opens another. Nothing ever closes them.",
+        "JSON.parse is not wrapped in a try/catch, so one malformed message kills the handler.",
         "The handler should be assigned with addEventListener rather than onmessage.",
         "rows should be held in a ref, because a socket handler cannot see state."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 2,
       "explanation": "Anything with a lifetime — a socket, a timer, a subscription — belongs in a useEffect with a cleanup that closes it, keyed on what it depends on. Locally you open a handful and never notice; in production it is one new connection per render per user. The missing try/catch is a real bug and would have been the answer on a quieter day."
     },
@@ -79,11 +79,11 @@
       "prompt": "The live feed dies on hotel wifi and does not come back until the user reloads the page. What is the right fix?",
       "options": [
         "Reconnect immediately in the onclose handler and keep retrying in a tight loop until it succeeds.",
-        "Reconnect on close, but wait longer after each failed attempt — with a little randomness — and only tell the user once several attempts have failed.",
         "Show a 'connection lost, please refresh' banner and leave it to the user.",
+        "Reconnect on close, but wait longer after each failed attempt — with a little randomness — and only tell the user once several attempts have failed.",
         "Raise the connection timeout on the server."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "The immediate loop is tempting because it feels responsive, and it is the same code running in every browser at once: when the outage is the server's, thousands of clients retrying every 50ms is what turns a restart into an outage. Backoff spreads the load, the randomness stops everyone retrying on the same tick, and the banner is what you show after backoff gives up — not instead of it."
     },
@@ -153,13 +153,13 @@
       "type": "mcq",
       "prompt": "The realtime feed works perfectly for you and dies after about a minute for the one client whose office sits behind a corporate proxy. Most likely cause?",
       "options": [
-        "The proxy is closing the connection because nothing has travelled over it — many proxies and load balancers cut idle connections after a fixed timeout.",
         "That client's browser does not support WebSockets.",
         "The messages are larger than the proxy will forward.",
-        "The proxy blocks wss:// traffic on port 443."
+        "The proxy blocks wss:// traffic on port 443.",
+        "The proxy is closing the connection because nothing has travelled over it — many proxies and load balancers cut idle connections after a fixed timeout."
       ],
-      "correct": 0,
-      "eliminate": 1,
+      "correct": 3,
+      "eliminate": 0,
       "explanation": "'Works, then dies' is the clue. Anything that blocks WebSockets outright fails at the handshake — the connection would never open, not open and then go quiet. A connection with no traffic on it looks abandoned to every box between you and the server, so a ping every 30 seconds or so keeps it alive and, as a bonus, tells you within one interval when it has genuinely gone."
     },
     {

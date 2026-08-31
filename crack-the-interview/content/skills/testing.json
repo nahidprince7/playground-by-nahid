@@ -13,11 +13,11 @@
       "prompt": "The team practices TDD, but the suite takes 25 minutes and people have quietly stopped running it locally. What's the real problem?",
       "options": [
         "TDD doesn't scale past a certain codebase size.",
-        "Most of those 'unit' tests touch a database or the network. Split them: a genuinely fast suite that runs on every save, and the slow ones in CI.",
         "The CI machines need to be faster.",
+        "Most of those 'unit' tests touch a database or the network. Split them: a genuinely fast suite that runs on every save, and the slow ones in CI.",
         "There are simply too many tests — some should be deleted."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 0,
       "explanation": "A test suite you don't run has no value, so speed is a correctness property, not a nicety. Almost always the cause is I/O smuggled into unit tests through a shared Spring context or a test container. The fix isn't fewer tests, it's tests that know which layer they're in."
     },
@@ -55,11 +55,11 @@
       "prompt": "Limited time to add tests to a service sending billions of messages. Where do they go?",
       "options": [
         "Chase line coverage until it's high enough to be a meaningful number.",
-        "On the logic that decides who gets which message, and on the idempotency and retry paths — where a bug is both expensive and silent.",
         "End-to-end tests only, since those are the closest thing to reality.",
-        "On the controllers, since every request goes through them."
+        "On the controllers, since every request goes through them.",
+        "On the logic that decides who gets which message, and on the idempotency and retry paths — where a bug is both expensive and silent."
       ],
-      "correct": 1,
+      "correct": 3,
       "eliminate": 0,
       "explanation": "Test where failure is expensive and invisible. A crash gets noticed in minutes; sending the wrong segment the wrong offer, or delivering a message twice because a retry wasn't idempotent, gets noticed by the customer. Coverage as a target optimises for the easy half of the codebase."
     },
@@ -122,11 +122,11 @@
       "prompt": "A web app and a mobile app share one backend API. How should the functional test effort be split?",
       "options": [
         "Run the same full functional matrix through both user interfaces, so each platform is equally covered.",
-        "Test the business rules and error handling once at the API level, then test each client for what only it can get wrong — rendering, navigation, offline and background behaviour, permissions, and how it handles the API's error responses.",
         "Test through the web UI only; anything found there will be the same on mobile since the backend is shared.",
+        "Test the business rules and error handling once at the API level, then test each client for what only it can get wrong — rendering, navigation, offline and background behaviour, permissions, and how it handles the API's error responses.",
         "Test through the mobile app only, since it's the more constrained environment and covers the harder cases."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "Running the same matrix twice pays double for the same finding and still misses the client-specific failures, which is where the interesting mobile bugs live — a request retried after the app was backgrounded, a partial state after connectivity dropped. The web-only option is tempting when time is short, and it's the right compromise for a shared rule; it just can't tell you what the mobile client does with a 500 response."
     },
@@ -160,13 +160,13 @@
       "type": "mcq",
       "prompt": "Release is tomorrow morning. Three medium-severity defects are open and there's no time to fix them. You're asked for QA sign-off. What do you do?",
       "options": [
+        "Write up each one as who is affected, how often, and what the workaround is, state clearly that they are unfixed, and put the go/no-go decision to the release owner with that in front of them.",
         "Withhold sign-off and block the release — quality isn't negotiable, and signing off on known defects makes the sign-off meaningless.",
         "Sign off; they're only medium severity, and every release ships with some known issues.",
-        "Write up each one as who is affected, how often, and what the workaround is, state clearly that they are unfixed, and put the go/no-go decision to the release owner with that in front of them.",
         "Sign off on the condition that the three defects are committed to the next sprint."
       ],
-      "correct": 2,
-      "eliminate": 1,
+      "correct": 0,
+      "eliminate": 2,
       "explanation": "QA's job is to make the risk visible and legible, not to make the business decision — a tester who can veto releases stops being consulted honestly, and one who waves things through stops being useful at all. Blocking is the tempting answer because it sounds principled, and it's exactly right for data loss or a security hole; for three mediums it substitutes your risk appetite for the person accountable for the release. Option D is close and often what actually happens, but a promise about next sprint doesn't change tomorrow's risk."
     }
   ]

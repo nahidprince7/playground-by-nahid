@@ -13,13 +13,13 @@
       "type": "mcq",
       "prompt": "A composable re-executes on every frame of an animation happening elsewhere on the screen. What do you look at first?",
       "options": [
-        "Whether it reads a State it doesn't actually need — reading state is what scopes recomposition.",
         "Whether the list items are missing a key.",
         "Whether the Compose compiler plugin is enabled.",
-        "Whether you can wrap more of it in remember."
+        "Whether you can wrap more of it in remember.",
+        "Whether it reads a State it doesn't actually need — reading state is what scopes recomposition."
       ],
-      "correct": 0,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "Compose recomposes the smallest scope that read a changed state. If a composable is recomposing too often, it's almost always reading something too high up — an animation value, or a whole ViewModel state object where it needed one field. Sprinkling remember treats the symptom and hides the cause."
     },
     {
@@ -34,12 +34,12 @@
       "type": "mcq",
       "prompt": "State survives recomposition fine but resets every time the device rotates. What's wrong?",
       "options": [
-        "It's in remember, which doesn't survive configuration change — it needs rememberSaveable, or to live in the ViewModel.",
         "The composable is missing a key.",
+        "It's in remember, which doesn't survive configuration change — it needs rememberSaveable, or to live in the ViewModel.",
         "Nothing — Compose state is not meant to survive rotation.",
         "Configuration changes should be disabled in the manifest."
       ],
-      "correct": 0,
+      "correct": 1,
       "eliminate": 3,
       "explanation": "remember survives recomposition; rememberSaveable survives process-level recreation by writing to the saved-instance bundle. Anything bigger than a scroll position or a toggle belongs in the ViewModel instead. Locking rotation in the manifest is the answer that gets a follow-up question you won't enjoy."
     },
@@ -59,13 +59,13 @@
         "content": "@Composable\nfun OrderList(repo: OrderRepo) {\n    var orders by remember { mutableStateOf(emptyList<Order>()) }\n    orders = repo.loadOrders()\n    LazyColumn {\n        items(orders) { OrderRow(it) }\n    }\n}"
       },
       "options": [
-        "A side effect in the composable body — it runs on every recomposition, and it blocks the frame while it does.",
         "items() is missing its key parameter.",
         "remember should be rememberSaveable.",
+        "A side effect in the composable body — it runs on every recomposition, and it blocks the frame while it does.",
         "OrderRow needs to be marked @Stable."
       ],
-      "correct": 0,
-      "eliminate": 2,
+      "correct": 2,
+      "eliminate": 1,
       "explanation": "A composable body can run many times per frame and must stay pure. Loading belongs in a LaunchedEffect, or better, in a ViewModel the screen collects from. The missing key is a real second finding worth mentioning — without it, LazyColumn reuses the wrong items when the list changes."
     },
     {
@@ -79,12 +79,12 @@
       "type": "mcq",
       "prompt": "A Compose screen starts a network request directly in the composable body. What can go wrong?",
       "options": [
-        "Composable functions cannot call Kotlin functions.",
         "Recomposition can trigger the side effect repeatedly; launch it from a lifecycle-aware effect or, preferably, state ownership such as a ViewModel.",
+        "Composable functions cannot call Kotlin functions.",
         "Compose automatically caches every network response.",
         "The request must run on the main thread."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 2,
       "explanation": "Composable bodies may execute many times and must be safe to re-run. Side effects need explicit lifecycle semantics through effect APIs or a state holder that survives and governs the work."
     }

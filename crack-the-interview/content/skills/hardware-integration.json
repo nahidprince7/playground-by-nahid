@@ -15,11 +15,11 @@
       "options": [
         "The register addresses are off by one — the protocol numbers registers from one and the code numbers them from zero.",
         "Raise the response timeout until it stops happening.",
-        "A late reply to a request you already timed out is still sitting in the receive buffer, so every following read is answered by the previous request's response. After a timeout the port has to be drained and resynchronised, not simply retried.",
-        "The baud rate is misconfigured."
+        "The baud rate is misconfigured.",
+        "A late reply to a request you already timed out is still sitting in the receive buffer, so every following read is answered by the previous request's response. After a timeout the port has to be drained and resynchronised, not simply retried."
       ],
-      "correct": 2,
-      "eliminate": 3,
+      "correct": 3,
+      "eliminate": 2,
       "explanation": "The off-by-one is a genuine trap in these protocols and a great answer to a different question — but an addressing mistake is wrong on every single read, and this one is intermittent and load-dependent. 'Sometimes, when busy' points at state left behind by a timeout. Raising the timeout does help, which is what makes it dangerous: it moves the failure to the next busy day and leaves the desynchronisation bug in place."
     },
     {
@@ -38,13 +38,13 @@
         "content": "loop {\n    match client.read_holding_registers(addr, 8) {\n        Ok(regs) => cache.store(addr, regs),\n        Err(_) => continue,\n    }\n}"
       },
       "options": [
-        "The eight registers should be read one at a time so a single bad register cannot spoil the batch.",
         "A dead device turns this into a busy loop: it retries as fast as the bus will let it, saturating the shared line that everyone else needs, and it discards the error, so nothing anywhere records that the device is gone. It needs backoff between attempts, a point marked stale after N failures, and the error logged with the address.",
+        "The eight registers should be read one at a time so a single bad register cannot spoil the batch.",
         "cache.store should be behind a mutex before it is called from a polling thread.",
         "The match should be written as if let Ok(regs) — the Err arm does nothing anyway."
       ],
-      "correct": 1,
-      "eliminate": 0,
+      "correct": 0,
+      "eliminate": 1,
       "explanation": "The last option is the finding a reviewer offers when they are reading for style: it is true that the arm does nothing, and rewriting it as if let makes the bug tidier and just as harmful. Err(_) is the character of the whole thing — the code has decided in advance that no failure is worth knowing about. On a shared bus a retry storm is not just wasted work; it is a fault in one device becoming an outage across the plant."
     },
     {
@@ -59,11 +59,11 @@
       "prompt": "An operator points out that a temperature on the dashboard hasn't changed in twenty minutes. The value is being served from a cache and the sensor behind it stopped responding half an hour ago.",
       "options": [
         "Poll the sensor more often so the cache is fresher.",
-        "Every reading carries the time it was sampled and a validity window, and once it is outside that window it is presented as stale rather than as a number — greyed out, flagged, or absent. In a control context a confidently wrong value is worse than a missing one, because someone will act on it.",
         "Drop the cache and read straight from the device on every request.",
+        "Every reading carries the time it was sampled and a validity window, and once it is outside that window it is presented as stale rather than as a number — greyed out, flagged, or absent. In a control context a confidently wrong value is worse than a missing one, because someone will act on it.",
         "Keep showing the last value but refresh the display more often so it looks live."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "Reading through to the device every time is the tempting answer because it sounds like choosing correctness over performance, and it does not help at all — the device is not answering, so you are now choosing between hammering a dead bus and showing the same stale number more expensively. The bug is not the cache, it is that the data has no age attached to it. Any value crossing a system boundary in a plant should carry when it was true."
     },
@@ -78,12 +78,12 @@
       "prompt": "A TCP link to a line controller survives a network switch reboot as far as your process is concerned — the socket is still open and writes still succeed — but no data ever comes back again.",
       "options": [
         "TCP guarantees delivery, so the bytes must be arriving and the framing code is dropping them.",
-        "Enable SO_REUSEADDR on the socket.",
         "A half-open connection: your side has no way to learn the peer is gone until something it sends goes unacknowledged long enough to give up, and even then the default retransmit budget is generous. Application heartbeats with a read deadline are what detect this — OS keepalive works too, but its defaults are measured in hours.",
+        "Enable SO_REUSEADDR on the socket.",
         "Switch the link to UDP so a dead peer stops mattering."
       ],
-      "correct": 2,
-      "eliminate": 1,
+      "correct": 1,
+      "eliminate": 2,
       "explanation": "'Writes still succeed' is the detail that makes the first option so attractive, and it means less than it looks: a successful write only says the bytes reached your kernel's send buffer. The rule worth carrying is that a connection is only as alive as your last successful round trip, so anything that must notice a dead peer within seconds has to ask, at the application level, and act on the silence."
     },
     {
@@ -121,12 +121,12 @@
         "content": "Honestly, it's the same as any other backend job. I'd push to main, we have good tests, and if something does break we roll forward fast — I've never really believed in slowing down. Moving fast is how you keep quality up, and the line is just another user."
       },
       "options": [
+        "They have flattened away the one thing that makes this job different: on a running line you often cannot deploy on demand, a bad change stops production rather than an endpoint, and 'roll forward fast' assumes a deploy channel that may only open in a maintenance window. Good instincts for a web service, applied where they don't hold.",
         "They mention rolling forward instead of rolling back, which shows they don't know how deployments work.",
         "They admit to pushing to main, which means they haven't worked with code review.",
-        "They have flattened away the one thing that makes this job different: on a running line you often cannot deploy on demand, a bad change stops production rather than an endpoint, and 'roll forward fast' assumes a deploy channel that may only open in a maintenance window. Good instincts for a web service, applied where they don't hold.",
         "They sound arrogant about their own speed, which suggests they will be difficult to work with."
       ],
-      "correct": 2,
+      "correct": 0,
       "eliminate": 3,
       "explanation": "This one is uncomfortable because everything they said is defensible advice somewhere — continuous delivery and rolling forward are genuinely better than a change-freeze culture in most jobs. The problem is 'the line is just another user': it isn't, and the answer never tests its own assumptions against this environment. Read against a candidate saying the same thing then adding 'though I'd want to understand the deployment window and what the safe state is first', and the gap is obvious."
     }

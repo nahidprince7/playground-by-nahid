@@ -14,13 +14,13 @@
       "prompt": "Two days before release, QA finds that the checkout flow cannot be completed with a keyboard. The product manager wants to ship and fix it next sprint. What do you do?",
       "options": [
         "Agree — it is one group of users and the date has been announced.",
-        "Say what it costs in plain terms — anyone using a keyboard, a screen reader, or a broken trackpad cannot pay you — then offer the small fix and the full fix, and let them choose knowing that.",
         "Refuse to sign off on the release until the flow is fully compliant.",
-        "Log it as a low-priority ticket and let the backlog decide."
+        "Log it as a low-priority ticket and let the backlog decide.",
+        "Say what it costs in plain terms — anyone using a keyboard, a screen reader, or a broken trackpad cannot pay you — then offer the small fix and the full fix, and let them choose knowing that."
       ],
-      "correct": 1,
-      "eliminate": 3,
-      "explanation": "The third option is the one principled engineers reach for, and it converts a solvable conversation into a standoff you will probably lose. What the interviewer is listening for is translation: a technical objection turned into a business consequence, with options attached, so the person who owns the date can make the call with the facts."
+      "correct": 3,
+      "eliminate": 2,
+      "explanation": "The second option is the one principled engineers reach for, and it converts a solvable conversation into a standoff you will probably lose. What the interviewer is listening for is translation: a technical objection turned into a business consequence, with options attached, so the person who owns the date can make the call with the facts."
     },
     {
       "id": "accessibility-02",
@@ -34,12 +34,12 @@
       "type": "mcq",
       "prompt": "The design calls for a custom dropdown, so a developer builds it from divs with click handlers. What is the right correction in review?",
       "options": [
-        "Add role='listbox' and aria-label to the divs so assistive tech announces them correctly.",
         "Start from the native element, or an accessible component from the library, because keyboard interaction, focus management and screen-reader behaviour come with it — ARIA describes those behaviours but does not implement any of them.",
+        "Add role='listbox' and aria-label to the divs so assistive tech announces them correctly.",
         "Add tabindex='0' so the control can be reached by keyboard.",
         "Render a visually hidden <select> alongside it for screen-reader users."
       ],
-      "correct": 1,
+      "correct": 0,
       "eliminate": 3,
       "explanation": "The ARIA option is tempting because it is the one that looks like accessibility work, and it produces a control that announces itself as a listbox and then ignores the arrow keys. tabindex is the same mistake one step further: reachable, still not operable. Roles are labels on behaviour you still have to write."
     },
@@ -60,11 +60,11 @@
       },
       "options": [
         "The overlay handler should be on mousedown so a drag that ends outside doesn't close the modal.",
-        "The placeholder is standing in for a label, the image has no alt text, and the pay control is a span — so a keyboard or screen-reader user cannot label, read, or reach the payment.",
         "The modal should be rendered through a portal so it escapes the parent's stacking context.",
+        "The placeholder is standing in for a label, the image has no alt text, and the pay control is a span — so a keyboard or screen-reader user cannot label, read, or reach the payment.",
         "The input is uncontrolled, so React cannot validate the card number as it is typed."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 0,
       "explanation": "The portal point is real and is a fair second finding — as is the missing focus trap, which is the next thing an auditor writes down. But a span is not focusable and does not fire on Enter or Space, so the only way to complete this payment is with a mouse. That is the finding that stops a release in a regulated product."
     },
@@ -155,11 +155,11 @@
       "prompt": "A form ships with placeholders instead of labels, because the design left no room for them. What do you say in review?",
       "options": [
         "Add aria-label to each input and leave the design as drawn.",
-        "Add a real <label>, visually hidden if the design demands it — a placeholder disappears the moment someone types, so the field loses its name for everyone, while a label survives typing, autofill and screen readers.",
         "Add a title attribute so the field name shows on hover.",
+        "Add a real <label>, visually hidden if the design demands it — a placeholder disappears the moment someone types, so the field loses its name for everyone, while a label survives typing, autofill and screen readers.",
         "Raise the placeholder's contrast so it is easier to read."
       ],
-      "correct": 1,
+      "correct": 2,
       "eliminate": 3,
       "explanation": "This is the accessibility bug that hurts sighted users too: everyone who fills in a form, gets interrupted, and comes back to eight boxes of text with no idea what the third one was. aria-label is the tempting answer because it fixes the screen-reader half and looks like accessibility work — it leaves everyone looking at the screen without a name for the field."
     },

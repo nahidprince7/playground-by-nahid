@@ -123,6 +123,12 @@ Exactly four options. `correct` is 0-based. `eliminate` is the option the *"let 
 think out loud"* lifeline removes — pick the most obviously wrong one, so the
 lifeline helps without handing over the answer.
 
+**Move `correct` around.** Writing the plausible-but-wrong option first and the
+real one second is a habit, and it put two thirds of the answers in slot B before
+anyone noticed — a player who always picks B outscores one who reads. `validate.py`
+now fails the build if any slot holds more than 35% of the correct answers, and
+warns when a single bank clumps.
+
 ### `red-flag`
 
 Shows code or a quoted answer; the player picks what's wrong with it.
