@@ -3197,6 +3197,132 @@ window.CTI_CONTENT = {
     }
    ]
   },
+  "content/skills/dart.json": {
+   "skill": "dart",
+   "label": "Dart, async & null safety",
+   "questions": [
+    {
+     "id": "dart-01",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "One endpoint returns an order's details once. Another pushes a price every time it moves. Which Dart types model them?",
+     "options": [
+      "Future for both — a Stream is only for file I/O.",
+      "Stream for both, because both come from the network.",
+      "Future for both, polled on a Timer.",
+      "Future for the order details, Stream for the price feed: one value that arrives later versus many values over time."
+     ],
+     "correct": 3,
+     "eliminate": 0,
+     "explanation": "The choice follows how many values there are, not where they come from. Polling a Future on a Timer is the answer that works and is still wrong — you pay for a request whether or not the price moved, and you see every change late by up to one interval."
+    },
+    {
+     "id": "dart-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Decoding a 4MB catalogue response freezes the UI for most of a second, even though the call is already `await`ed. Why?",
+     "options": [
+      "await only works on functions marked async — the decode is not.",
+      "await yields while waiting for I/O, but jsonDecode is CPU work that still runs on the UI isolate and blocks the frame. Move it to another isolate with compute().",
+      "The response should be awaited inside initState() rather than a callback.",
+      "The freeze comes from the network, not the decode."
+     ],
+     "correct": 1,
+     "eliminate": 0,
+     "explanation": "async in Dart buys you concurrency, not parallelism: a single isolate runs one thing at a time, and awaiting only helps while something else is doing the work. Anything that burns CPU has to leave the isolate, which is exactly what compute() is for."
+    },
+    {
+     "id": "dart-03",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "A field cannot be set in the constructor but is always assigned before anything reads it. `late String token;` or `String? token;`?",
+     "options": [
+      "late, if you genuinely control the assignment — you keep a non-nullable type and trade a compile-time check for a runtime error if you are wrong.",
+      "String?, always — late is unsafe and should not be used in production code.",
+      "Neither; give it a dummy default like an empty string.",
+      "late, because it also makes the field lazy and thread-safe."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "late is a promise you make to the compiler, and the cost of breaking it is a LateInitializationError at the point of first read. The dummy default is the answer that quietly does the most damage — an empty token is a real value, so nothing ever complains and the failure surfaces as a confusing 401 instead."
+    },
+    {
+     "id": "dart-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "Order submission sometimes fails silently — no error shown, no crash, nothing in the logs.",
+     "subject": {
+      "kind": "code",
+      "language": "dart",
+      "content": "Future<void> submit(Order order) async {\n  try {\n    api.placeOrder(order);        // returns Future<void>\n    showToast('Order placed');\n  } catch (e) {\n    showError(e.toString());\n  }\n}"
+     },
+     "options": [
+      "showToast should be awaited so it does not race the dialog.",
+      "The method does not need to be async at all.",
+      "catch should be on Exception rather than the bare object.",
+      "placeOrder is never awaited, so the try block has already exited by the time the request fails — the error becomes an unhandled async error and the success toast shows regardless."
+     ],
+     "correct": 3,
+     "eliminate": 0,
+     "explanation": "try/catch only covers what runs inside it, and an un-awaited call runs later. Worse than losing the error is the toast: the user is told an order was placed that never was. The `on Exception` answer is real advice about a different problem, which is what makes it a good distractor."
+    },
+    {
+     "id": "dart-05",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A dashboard loads the account summary, saved items and a news feed with `await Future.wait([...])`. The news service goes down and the whole dashboard shows an error. What is the right fix?",
+     "options": [
+      "Replace Future.wait with three sequential awaits.",
+      "Wrap the whole Future.wait in a try/catch and retry it.",
+      "Future.wait rejects as soon as any future fails, so wrap each call in its own catch that returns a fallback — then a dead news feed costs you the news panel, not the dashboard.",
+      "Increase the timeout on the news call."
+     ],
+     "correct": 2,
+     "eliminate": 0,
+     "explanation": "Failing together is a property of Future.wait, so the decision about what is essential has to be made per call. Going sequential is the instinctive fix and the worst one: it does not change the failure at all, and it makes the dashboard as slow as the sum of three round trips."
+    },
+    {
+     "id": "dart-06",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "What makes Dart code in a Flutter app testable without spinning up the whole app?",
+     "modelAnswer": "I keep the logic out of widgets. Parsing, validation, retry rules and anything that decides what the screen shows live in plain Dart classes that take their dependencies through the constructor, so a test constructs one with a fake client and asserts on the result — no pumping, no device. The HTTP client, storage and clock are injected rather than constructed inside, because anything you cannot substitute is something you have to run for real. Widget tests then cover the parts that are genuinely about the tree — a state change reaching the right widget, a tap firing the right callback — and stay a thin layer rather than the whole suite.",
+     "keyPoints": [
+      "Logic in plain Dart, not in widgets",
+      "Dependencies injected, not constructed inside",
+      "Fakes for client, storage and clock",
+      "Widget tests cover tree behaviour only",
+      "Fast unit tests outnumber slow ones"
+     ],
+     "explanation": "Testability in Flutter is mostly a question of where code lives. Logic inside a build method can only be tested by rendering the widget, which is why suites in apps like this drift towards slow, flaky widget tests that fail for reasons nobody can reproduce."
+    }
+   ]
+  },
   "content/skills/defect-management.json": {
    "skill": "defect-management",
    "label": "Defect reporting, triage & severity",
@@ -3547,6 +3673,152 @@ window.CTI_CONTENT = {
      "correct": 3,
      "eliminate": 2,
      "explanation": "Change tracking costs memory and CPU so EF can persist later mutations. A read-only projection does not need that machinery; no-tracking plus a narrow select reduces both retained state and transferred data."
+    }
+   ]
+  },
+  "content/skills/flutter.json": {
+   "skill": "flutter",
+   "label": "Flutter widgets, state & UI",
+   "questions": [
+    {
+     "id": "flutter-01",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A screen calls setState() to update one price label, and the whole page visibly stutters. What is the first thing to look at?",
+     "options": [
+      "Whether the widget should have been a StatelessWidget instead.",
+      "How far up the tree setState() is being called — it rebuilds that widget and everything below it, so state living at the top of the page rebuilds the page.",
+      "Whether the app is missing a global state management package.",
+      "Whether setState() is being called from an async callback."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "setState() marks one element dirty, and every descendant rebuilds with it. Push the state down into the smallest widget that owns it, and the rebuild shrinks to that subtree. Reaching for a state management package is the popular answer, but it does not help while the notifier still sits at the top of the page."
+    },
+    {
+     "id": "flutter-02",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "An order list holds around 3,000 rows. The team builds it with ListView(children: rows). What goes wrong?",
+     "options": [
+      "Nothing — ListView is lazy by default.",
+      "ListView cannot scroll past a fixed number of children.",
+      "Every row is built up front, so opening the screen costs 3,000 widget builds before the first frame. ListView.builder builds only what is on screen.",
+      "The rows need keys or Flutter cannot lay them out."
+     ],
+     "correct": 2,
+     "eliminate": 1,
+     "explanation": "The children list is eager — laziness comes from the builder constructor, which asks for a row only when the viewport reaches it. Keys matter too, but they fix identity when items reorder; they do nothing for a screen that is slow the first time it opens."
+    },
+    {
+     "id": "flutter-03",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Where does the network call for a screen's initial data belong in a StatefulWidget?",
+     "options": [
+      "In initState(), because it runs once when the State is created — build() can run many times per second.",
+      "In build(), so the data is always fresh.",
+      "In the widget's constructor, so it starts as early as possible.",
+      "In dispose(), then cached for the next visit."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "build() is called on every rebuild, on every animation frame if one is running, so a request in there fires repeatedly. The constructor looks earlier and therefore better, but a widget is a configuration object that Flutter may construct and throw away without ever mounting it — initState() is the first point where there is a State with a lifetime."
+    },
+    {
+     "id": "flutter-04",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "You change the initial value of a field held in a State object, hot reload, and the old value is still on screen. Why?",
+     "options": [
+      "Hot reload only works on stateless widgets.",
+      "The file was not saved before the reload.",
+      "Hot reload needs the app to be in debug mode, and it is not.",
+      "Hot reload swaps in the new code but keeps the running State objects alive, so anything already initialised keeps its old value. Hot restart throws that state away."
+     ],
+     "correct": 3,
+     "eliminate": 0,
+     "explanation": "Preserving state is the whole point of hot reload — it means you do not log in and navigate back to the screen after every edit. The cost is exactly this confusion, so when an edit to initialisation code seems ignored, restart before you start debugging code that was never wrong."
+    },
+    {
+     "id": "flutter-05",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "This screen animates, and the animation drops frames badly on mid-range Android devices.",
+     "subject": {
+      "kind": "code",
+      "language": "dart",
+      "content": "@override\nWidget build(BuildContext context) {\n  final controller = AnimationController(\n    duration: const Duration(milliseconds: 300),\n    vsync: this,\n  );\n  final orders = repository.loadOrders();   // returns Future\n  return OrderList(controller: controller, orders: orders);\n}"
+     },
+     "options": [
+      "AnimationController should use a longer duration on slower devices.",
+      "OrderList should be wrapped in a FutureBuilder.",
+      "build() can run on every frame, so this creates a new controller and fires a new repository call each time — the controller belongs in initState() with a dispose(), the load in initState() or a cached future.",
+      "vsync should be SingleTickerProviderStateMixin rather than this."
+     ],
+     "correct": 2,
+     "eliminate": 0,
+     "explanation": "build() must be cheap and free of side effects, because Flutter decides when and how often to call it. Every frame here leaks an undisposed controller and starts another request. The FutureBuilder answer is the near-miss — it is the right widget, but wrapping a future that is recreated on every build just moves the same bug behind a nicer API."
+    },
+    {
+     "id": "flutter-06",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Two sibling screens both need the live order book, and today each one fetches it separately. What actually fixes it?",
+     "options": [
+      "Make the order book a global mutable singleton the widgets read from directly.",
+      "Pass the data down through constructors from the common parent, however many levels that takes.",
+      "Hold it in one place above both screens and expose it through the app's state management layer, so each screen listens to the same source and rebuilds when it changes.",
+      "Cache the HTTP response so the second fetch is cheap."
+     ],
+     "correct": 2,
+     "eliminate": 0,
+     "explanation": "One owner, many listeners — that is the shape, whether the tool is Provider, Riverpod or BLoC. Caching the response is the tempting answer because it makes the symptom cheaper, but the two screens still hold separate copies, so they can still disagree about the same order."
+    },
+    {
+     "id": "flutter-07",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "How do you keep a Flutter screen readable as it grows past a few hundred lines?",
+     "modelAnswer": "I break the tree into named widget classes rather than private build helper methods, because a real widget gets its own element and can be rebuilt — and marked const — independently, while a helper method is rebuilt with its parent every time. State lives in the smallest widget that owns it, and anything shared moves up to a single owner exposed through the state layer. The build method stays free of side effects: no requests, no controller creation, no work that depends on how many times it runs. Anything about how data is fetched or shaped goes behind a repository so the widget only knows about the state it renders.",
+     "keyPoints": [
+      "Extract widgets, not build helper methods",
+      "State lives at the level that owns it",
+      "One owner for shared state",
+      "build() stays pure and cheap",
+      "Data access behind a repository"
+     ],
+     "explanation": "The split between widget classes and helper methods is the one most people get wrong, and it is measurable: a helper method cannot be const, cannot be skipped during a rebuild, and shows up as one giant element in the devtools tree."
     }
    ]
   },

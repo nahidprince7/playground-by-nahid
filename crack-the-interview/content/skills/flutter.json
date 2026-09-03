@@ -1,0 +1,146 @@
+{
+  "skill": "flutter",
+  "label": "Flutter widgets, state & UI",
+  "questions": [
+    {
+      "id": "flutter-01",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A screen calls setState() to update one price label, and the whole page visibly stutters. What is the first thing to look at?",
+      "options": [
+        "Whether the widget should have been a StatelessWidget instead.",
+        "How far up the tree setState() is being called — it rebuilds that widget and everything below it, so state living at the top of the page rebuilds the page.",
+        "Whether the app is missing a global state management package.",
+        "Whether setState() is being called from an async callback."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "setState() marks one element dirty, and every descendant rebuilds with it. Push the state down into the smallest widget that owns it, and the rebuild shrinks to that subtree. Reaching for a state management package is the popular answer, but it does not help while the notifier still sits at the top of the page."
+    },
+    {
+      "id": "flutter-02",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "An order list holds around 3,000 rows. The team builds it with ListView(children: rows). What goes wrong?",
+      "options": [
+        "Nothing — ListView is lazy by default.",
+        "ListView cannot scroll past a fixed number of children.",
+        "Every row is built up front, so opening the screen costs 3,000 widget builds before the first frame. ListView.builder builds only what is on screen.",
+        "The rows need keys or Flutter cannot lay them out."
+      ],
+      "correct": 2,
+      "eliminate": 1,
+      "explanation": "The children list is eager — laziness comes from the builder constructor, which asks for a row only when the viewport reaches it. Keys matter too, but they fix identity when items reorder; they do nothing for a screen that is slow the first time it opens."
+    },
+    {
+      "id": "flutter-03",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Where does the network call for a screen's initial data belong in a StatefulWidget?",
+      "options": [
+        "In initState(), because it runs once when the State is created — build() can run many times per second.",
+        "In build(), so the data is always fresh.",
+        "In the widget's constructor, so it starts as early as possible.",
+        "In dispose(), then cached for the next visit."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "build() is called on every rebuild, on every animation frame if one is running, so a request in there fires repeatedly. The constructor looks earlier and therefore better, but a widget is a configuration object that Flutter may construct and throw away without ever mounting it — initState() is the first point where there is a State with a lifetime."
+    },
+    {
+      "id": "flutter-04",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "You change the initial value of a field held in a State object, hot reload, and the old value is still on screen. Why?",
+      "options": [
+        "Hot reload only works on stateless widgets.",
+        "The file was not saved before the reload.",
+        "Hot reload needs the app to be in debug mode, and it is not.",
+        "Hot reload swaps in the new code but keeps the running State objects alive, so anything already initialised keeps its old value. Hot restart throws that state away."
+      ],
+      "correct": 3,
+      "eliminate": 0,
+      "explanation": "Preserving state is the whole point of hot reload — it means you do not log in and navigate back to the screen after every edit. The cost is exactly this confusion, so when an edit to initialisation code seems ignored, restart before you start debugging code that was never wrong."
+    },
+    {
+      "id": "flutter-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "This screen animates, and the animation drops frames badly on mid-range Android devices.",
+      "subject": {
+        "kind": "code",
+        "language": "dart",
+        "content": "@override\nWidget build(BuildContext context) {\n  final controller = AnimationController(\n    duration: const Duration(milliseconds: 300),\n    vsync: this,\n  );\n  final orders = repository.loadOrders();   // returns Future\n  return OrderList(controller: controller, orders: orders);\n}"
+      },
+      "options": [
+        "AnimationController should use a longer duration on slower devices.",
+        "OrderList should be wrapped in a FutureBuilder.",
+        "build() can run on every frame, so this creates a new controller and fires a new repository call each time — the controller belongs in initState() with a dispose(), the load in initState() or a cached future.",
+        "vsync should be SingleTickerProviderStateMixin rather than this."
+      ],
+      "correct": 2,
+      "eliminate": 0,
+      "explanation": "build() must be cheap and free of side effects, because Flutter decides when and how often to call it. Every frame here leaks an undisposed controller and starts another request. The FutureBuilder answer is the near-miss — it is the right widget, but wrapping a future that is recreated on every build just moves the same bug behind a nicer API."
+    },
+    {
+      "id": "flutter-06",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Two sibling screens both need the live order book, and today each one fetches it separately. What actually fixes it?",
+      "options": [
+        "Make the order book a global mutable singleton the widgets read from directly.",
+        "Pass the data down through constructors from the common parent, however many levels that takes.",
+        "Hold it in one place above both screens and expose it through the app's state management layer, so each screen listens to the same source and rebuilds when it changes.",
+        "Cache the HTTP response so the second fetch is cheap."
+      ],
+      "correct": 2,
+      "eliminate": 0,
+      "explanation": "One owner, many listeners — that is the shape, whether the tool is Provider, Riverpod or BLoC. Caching the response is the tempting answer because it makes the symptom cheaper, but the two screens still hold separate copies, so they can still disagree about the same order."
+    },
+    {
+      "id": "flutter-07",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "How do you keep a Flutter screen readable as it grows past a few hundred lines?",
+      "modelAnswer": "I break the tree into named widget classes rather than private build helper methods, because a real widget gets its own element and can be rebuilt — and marked const — independently, while a helper method is rebuilt with its parent every time. State lives in the smallest widget that owns it, and anything shared moves up to a single owner exposed through the state layer. The build method stays free of side effects: no requests, no controller creation, no work that depends on how many times it runs. Anything about how data is fetched or shaped goes behind a repository so the widget only knows about the state it renders.",
+      "keyPoints": [
+        "Extract widgets, not build helper methods",
+        "State lives at the level that owns it",
+        "One owner for shared state",
+        "build() stays pure and cheap",
+        "Data access behind a repository"
+      ],
+      "explanation": "The split between widget classes and helper methods is the one most people get wrong, and it is measurable: a helper method cannot be const, cannot be skipped during a rebuild, and shows up as one giant element in the devtools tree."
+    }
+  ]
+}
