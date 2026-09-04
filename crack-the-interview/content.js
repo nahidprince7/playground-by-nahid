@@ -6370,6 +6370,113 @@ window.CTI_CONTENT = {
     }
    ]
   },
+  "content/skills/mobile-auth.json": {
+   "skill": "mobile-auth",
+   "label": "Authentication & session handling",
+   "questions": [
+    {
+     "id": "mobile-auth-01",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Where does a refresh token belong on a phone?",
+     "options": [
+      "In the platform's secure store — Keychain on iOS, EncryptedSharedPreferences or the Keystore on Android — reached through a secure storage plugin.",
+      "In SharedPreferences, encrypted with a key hard-coded in the app.",
+      "In a file in the app's documents directory, which is already sandboxed per app.",
+      "In memory only, so the user signs in again on every launch."
+     ],
+     "correct": 0,
+     "eliminate": 1,
+     "explanation": "The sandbox protects you from other apps, not from someone with the device or a rooted phone reading the file, so the documents directory is the near-miss worth naming. Encrypting with a key shipped inside the binary is worse than it looks: the key travels with the ciphertext."
+    },
+    {
+     "id": "mobile-auth-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "Users are being logged out mid-session, seemingly at random.",
+     "subject": {
+      "kind": "code",
+      "language": "dart",
+      "content": "final token = await storage.read('access_token');\nif (token != null) {\n  return authenticated(token);\n}\nreturn signInScreen();"
+     },
+     "options": [
+      "read() should be awaited inside a try/catch.",
+      "A stored token is not a valid token — nothing here checks expiry or refreshes, so the app happily starts a session with a token the server will reject on the next call.",
+      "The token should be read synchronously so the splash screen does not flash.",
+      "The null check should also test for an empty string."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "Presence and validity are different questions, and only the server can answer the second one — which is why the random logouts are actually the first API call of the session rejecting an expired token. The empty-string check is a genuine hardening, and it fixes nothing about this bug."
+    },
+    {
+     "id": "mobile-auth-03",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A screen fires six requests at once. The access token has expired, so all six come back 401 and all six trigger a refresh. What is the fix?",
+     "options": [
+      "Refresh the token on a timer before it expires, so a 401 never happens.",
+      "Retry each failed request after a short random delay.",
+      "Serialise the six requests so only the first can hit a 401.",
+      "Single-flight the refresh: the first 401 starts it, the rest await that same future, and all six retry once it resolves."
+     ],
+     "correct": 3,
+     "eliminate": 2,
+     "explanation": "The problem is a stampede, so the fix is to make concurrent refreshes share one attempt. Proactive refresh on a timer helps and does not replace this — clocks drift, the app is suspended for hours, and the server can invalidate a token early. Serialising every request to dodge a rare race gives up concurrency permanently."
+    },
+    {
+     "id": "mobile-auth-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "The app adds a fingerprint prompt on launch. What has that actually bought you?",
+     "options": [
+      "A local gate in front of a session the app already holds — it stops someone picking up an unlocked phone, and proves nothing to the server about who is holding it.",
+      "Authentication with the backend, since the biometric check replaces the password.",
+      "Nothing, because biometrics can be spoofed.",
+      "It rotates the stored token on every successful scan."
+     ],
+     "correct": 0,
+     "eliminate": 2,
+     "explanation": "The device says yes or no; that answer never leaves the device. It is a real and worthwhile control on a trading app, as long as nobody on the team believes the server is now verifying identity. The spoofing answer is the confident-sounding one that dismisses a genuinely useful control."
+    },
+    {
+     "id": "mobile-auth-05",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "A session expires while the user is halfway through filling in a form. What should the app do?",
+     "modelAnswer": "Not lose their work. I try a silent refresh first, and if that succeeds the user never learns anything happened. If refresh fails, I hold the in-progress form in memory, take them to sign-in, and restore the form when they come back rather than dropping them on the home screen with an empty state. Anything already submitted has to be resolved against the server rather than assumed — for an order I show its real status instead of retrying blind, because a retry after an ambiguous failure can place it twice. And expiry is handled in one place, in the client or interceptor, so every screen behaves the same way instead of each one inventing its own.",
+     "keyPoints": [
+      "Silent refresh before anything visible",
+      "In-progress input is preserved across sign-in",
+      "Return the user to where they were",
+      "Never blind-retry a submitted order",
+      "One central place handles expiry"
+     ],
+     "explanation": "Session expiry is usually treated as an error path and written once, badly, per screen. On an app where the in-progress form might be an order, the difference between preserving and discarding that state is the difference between an annoyance and a support call."
+    }
+   ]
+  },
   "content/skills/mongodb.json": {
    "skill": "mongodb",
    "label": "MongoDB & Mongoose",
@@ -7489,6 +7596,112 @@ window.CTI_CONTENT = {
      "correct": 3,
      "eliminate": 1,
      "explanation": "The performance point is true and is the answer people give, but it is the least of it: the cost of @ is a stack trace that points at code which is fine, several files away from the request that failed. Check the return value, or use a client that throws, so the failure is handled where it happened."
+    }
+   ]
+  },
+  "content/skills/push-notifications.json": {
+   "skill": "push-notifications",
+   "label": "Push notifications & deep links",
+   "questions": [
+    {
+     "id": "push-notifications-01",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A push must always be shown, even when the app is in the foreground, and tapping it must open the right order. How do you send it?",
+     "options": [
+      "A data-only message, and let the OS display it.",
+      "A notification payload so the OS displays it in the background, plus a data section carrying the order id — and the app shows its own banner while it is in the foreground.",
+      "A notification payload alone; the id can be parsed out of the title text.",
+      "Two messages: one to display, one carrying the data."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "A notification payload is displayed by the system when the app is backgrounded and handed to the app when it is not, which is why the foreground banner is yours to show. Data-only messages give you full control and are the tempting choice, but they are best-effort — the OS can delay or drop them, which is not acceptable for an alert that must arrive."
+    },
+    {
+     "id": "push-notifications-02",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "When should an app ask for notification permission?",
+     "options": [
+      "At the point where the value is obvious — after the user sets their first price alert — because on both platforms a denial is effectively permanent and only the OS settings can undo it.",
+      "On first launch, before the app finishes loading, so the token registers as early as possible.",
+      "Never explicitly; the first notification triggers the prompt automatically.",
+      "Only when the user opens the notification settings screen."
+     ],
+     "correct": 0,
+     "eliminate": 2,
+     "explanation": "You get one prompt, and a reflexive no on the splash screen costs you the channel for the life of the install. Asking on the settings screen is safe and self-defeating — almost nobody goes there, so opt-in rates collapse."
+    },
+    {
+     "id": "push-notifications-03",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "The background message handler works in debug and silently does nothing in release builds on Android. What is the usual cause?",
+     "options": [
+      "Release builds strip the notification permission from the manifest.",
+      "The handler runs on the main isolate, which is not alive in the background.",
+      "Background handlers require a foreground service on Android.",
+      "The handler is not a top-level or static function annotated for entry-point retention, so it runs in a separate isolate in debug but gets tree-shaken or fails to resolve in release."
+     ],
+     "correct": 3,
+     "eliminate": 2,
+     "explanation": "A background handler is a fresh isolate with a fresh entry point — it cannot close over anything, and the release build's tree shaker has no way to know it is called. That separate isolate is also why plugins and singletons set up in main() are simply not there, which is the second half of the same surprise."
+    },
+    {
+     "id": "push-notifications-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "Some users report their account summary going stale, and it only happens to a few of them.",
+     "subject": {
+      "kind": "quote",
+      "content": "\"We don't refetch the summary on resume any more — the backend pushes an update whenever the balance changes, so the app just applies whatever arrives in the notification payload.\""
+     },
+     "options": [
+      "Notification payloads are limited in size, so large payloads get truncated.",
+      "The updates should be applied on a background isolate instead.",
+      "Push is best-effort delivery, not a data channel: a message dropped while the device is offline, throttled, or denied permission is never resent, and the app has no way to notice it is behind.",
+      "The backend should batch the updates so fewer messages are sent."
+     ],
+     "correct": 2,
+     "eliminate": 1,
+     "explanation": "Push tells the app something happened; the server stays the source of truth. Fetch on resume — or carry a version the client can compare — so a missed message costs a delay rather than a permanently wrong number. The size limit is real and is the smaller problem here."
+    },
+    {
+     "id": "push-notifications-05",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "A user says an alert never arrived. Where do you start?",
+     "modelAnswer": "I work down the chain and stop at the first place it breaks. Did the backend actually send it, and what did the push service return for that token — success, unregistered, throttled? Is the token we hold the current one for that install, given a reinstall or a restore to a new device issues a new one and quietly orphans the old? Does the OS have permission, and is the notification channel or the alert style still enabled — a user can turn one channel off without disabling the app. Then whether the device was reachable at all, and last whether the app's own handler ran and dropped it. Most of that has to be answered from logs and delivery receipts rather than the phone in front of me, so the ask is usually for token lifecycle logging on the server before the next report comes in.",
+     "keyPoints": [
+      "Confirm the send and the push service's response",
+      "Check the token is current for that install",
+      "OS permission and per-channel settings",
+      "Device reachability and throttling",
+      "Server-side delivery logging, not just the device"
+     ],
+     "explanation": "Undelivered pushes are debugged from the server end, because everything interesting has already happened by the time you have the phone. Stale tokens after a reinstall are the single most common cause and the easiest one to prove if the logging exists."
     }
    ]
   },
