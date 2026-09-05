@@ -6477,6 +6477,153 @@ window.CTI_CONTENT = {
     }
    ]
   },
+  "content/skills/mobile-performance.json": {
+   "skill": "mobile-performance",
+   "label": "App performance, network use & stability",
+   "questions": [
+    {
+     "id": "mobile-performance-01",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A 120Hz phone reports jank on the order list. What is the budget a frame has to stay inside?",
+     "options": [
+      "About 8ms — the refresh rate sets the deadline, so the faster the screen, the less time each frame gets.",
+      "About 16ms, which is the standard budget on every device.",
+      "There is no fixed budget; the engine batches frames when it falls behind.",
+      "One second divided by the number of widgets on screen."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "The budget is one refresh interval, so a high-refresh screen is harder to satisfy, not easier — code that was comfortable at 60Hz starts dropping frames on the newer device. Quoting 16ms is the answer most people give, and it is the right number for exactly one refresh rate."
+    },
+    {
+     "id": "mobile-performance-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "The app burns mobile data. The live dashboard polls a 300KB endpoint every three seconds to keep prices current.",
+     "options": [
+      "Gzip the response, which will roughly halve it.",
+      "Poll every ten seconds instead of every three.",
+      "Stop polling for a full snapshot: hold the connection open and receive only the prices that changed, or at minimum ask the server for a delta since the last version.",
+      "Cache the response so repeated identical payloads are not re-parsed."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "Re-downloading everything to learn that three numbers moved is the actual defect; compression and a slower interval only make the same wrong shape cheaper. Backing off the interval is the near-miss because it does cut data — while also making the prices staler, which is the one thing this screen exists to avoid."
+    },
+    {
+     "id": "mobile-performance-03",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "Scrolling the catalogue list stutters, and on older Android devices the app is killed after a few screens.",
+     "subject": {
+      "kind": "code",
+      "language": "dart",
+      "content": "ListView.builder(\n  itemCount: items.length,\n  itemBuilder: (context, i) => Row(children: [\n    Image.network(items[i].logoUrl),   // 1024x1024 PNGs\n    Text(items[i].name),\n  ]),\n)"
+     },
+     "options": [
+      "itemCount should be null so the list can grow.",
+      "Full-size images are decoded and held in memory at their source resolution — cache them and decode at the display size, with cacheWidth or a caching image widget, so a 48px row does not cost a megapixel bitmap.",
+      "Image.network should be wrapped in a FutureBuilder.",
+      "The Row needs a fixed height for the list to scroll smoothly."
+     ],
+     "correct": 1,
+     "eliminate": 0,
+     "explanation": "A decoded bitmap costs width times height times four bytes no matter how small it is drawn, so a 1024px logo in a 48px row wastes about 4MB each. Fixing the row height is the plausible answer that treats the symptom — it does help the list compute its extent, and it does nothing about the memory that is getting the app killed."
+    },
+    {
+     "id": "mobile-performance-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A developer says the new screen 'feels fine' after testing it on the simulator in debug. Why does that mean very little?",
+     "options": [
+      "Simulators run more slowly than devices, so the real thing will be better.",
+      "Debug builds disable the widget cache.",
+      "Only the release build includes the animations.",
+      "Debug builds run unoptimised code with assertions on and no ahead-of-time compilation, and a simulator uses the host machine's CPU — so you are measuring a build and a device that no user has. Profile mode on a mid-range physical phone is the measurement."
+     ],
+     "correct": 3,
+     "eliminate": 2,
+     "explanation": "Debug numbers are not conservative estimates, they are unrelated ones, and the gap runs both ways: the desktop CPU flatters you while the debug build punishes you. Profile mode exists precisely to give you release-grade code with the tracing still attached."
+    },
+    {
+     "id": "mobile-performance-05",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "order",
+     "prompt": "QA files a report: the catalogue screen 'lags on scroll' on a mid-range Android phone.",
+     "instruction": "Put these in the order you'd actually do them.",
+     "items": [
+      {
+       "id": "a",
+       "text": "Change the code you believe is responsible"
+      },
+      {
+       "id": "b",
+       "text": "Reproduce it on that class of device in a profile build"
+      },
+      {
+       "id": "c",
+       "text": "Record a timeline and find which frames miss the budget, and in which phase"
+      },
+      {
+       "id": "d",
+       "text": "Re-measure the same trace to confirm the frames now fit"
+      },
+      {
+       "id": "e",
+       "text": "Read the expensive frame's tree to identify the widget or layer causing it"
+      }
+     ],
+     "correctOrder": [
+      "b",
+      "c",
+      "e",
+      "a",
+      "d"
+     ],
+     "explanation": "Reproduce, measure, localise, change, re-measure. The step people skip is the last one — without the same trace afterwards you cannot tell a real fix from a placebo, and the change goes in permanently either way."
+    },
+    {
+     "id": "mobile-performance-06",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "How would you know whether the app is getting more or less stable, release over release?",
+     "modelAnswer": "By watching the crash-free user and crash-free session rates per version rather than counting crashes, since a raw count moves with how many people installed the update. I want those broken down by OS version and device class, because a regression usually lives in one segment and gets averaged away across the whole base. Non-fatal errors and ANRs matter as much as crashes — an app that freezes for five seconds and recovers is failing the user and does not appear in any crash figure. Releases go out staged, so the numbers from the first slice decide whether the rollout continues, and I want the trace and the breadcrumbs symbolicated well enough to reach the actual line rather than an obfuscated frame.",
+     "keyPoints": [
+      "Crash-free users and sessions, not raw counts",
+      "Broken down by version, OS and device class",
+      "Non-fatals and ANRs count as instability",
+      "Staged rollout gates on those numbers",
+      "Symbolicated traces with breadcrumbs"
+     ],
+     "explanation": "Counting crashes rewards a release nobody installed. Rates per version are what let a staged rollout be stopped on evidence, which is the difference between catching a regression at 5% of users and hearing about it from the store reviews."
+    }
+   ]
+  },
   "content/skills/mongodb.json": {
    "skill": "mongodb",
    "label": "MongoDB & Mongoose",
