@@ -5,6 +5,19 @@ window.CTI_CONTENT = {
   "content/index.json": {
    "jobs": [
     {
+     "slug": "flutter-mobile-app-developer",
+     "title": "Mobile App Developer (Flutter, 2-4 years)",
+     "stack": [
+      "Flutter",
+      "Dart",
+      "REST APIs",
+      "Android / iOS"
+     ],
+     "level": "mid",
+     "difficulty": 3,
+     "questionCount": 23
+    },
+    {
      "slug": "laravel-fullstack-developer",
      "title": "Laravel Full Stack Developer (PHP & Vue, 2-4 years)",
      "stack": [
@@ -369,6 +382,120 @@ window.CTI_CONTENT = {
      "interviewer": {
       "name": "Kamrul",
       "role": "Head of Platform Engineering"
+     },
+     "count": 5
+    }
+   ],
+   "extra": []
+  },
+  "content/job-titles/flutter-mobile-app-developer.json": {
+   "slug": "flutter-mobile-app-developer",
+   "title": "Mobile App Developer (Flutter, 2-4 years)",
+   "level": "mid",
+   "difficulty": 3,
+   "platform": "any",
+   "stack": [
+    "Flutter",
+    "Dart",
+    "REST APIs",
+    "Android / iOS"
+   ],
+   "briefing": {
+    "summary": "One Dart codebase already in both stores, with real users on it — so this is a maintenance seat as much as a feature seat, and the questions follow the day rather than the tutorial. Expect to be asked why a screen rebuilds too much, why an await did not help, and what a stored token actually proves, rather than to recite what a widget is. The posting names authentication and notifications as things you implement, which means the session and delivery edges are fair game: refresh under concurrency, permission timing, a push that never arrived. It is equally specific about performance, stability and network usage, so be ready to say how you would measure any of it before changing code. The rest is the part of the job that involves other people — defects handed over by QA, a contract disagreed with backend, and builds for both platforms that someone has to prepare and ship.",
+    "requirements": [
+     "Flutter and Dart across Android and iOS from a single codebase",
+     "Widget composition, state ownership and rebuild cost",
+     "REST integration, error handling and the data layer behind the UI",
+     "Authentication, session refresh and push notifications",
+     "Diagnosing production defects rather than reproducing them once",
+     "Performance, stability and network usage you can measure",
+     "Testable code, code review, and Android/iOS production builds"
+    ]
+   },
+   "topics": [
+    {
+     "id": "flutter",
+     "label": "Flutter widgets, state & UI",
+     "skills": [
+      "flutter"
+     ]
+    },
+    {
+     "id": "dart",
+     "label": "Dart, async & null safety",
+     "skills": [
+      "dart"
+     ]
+    },
+    {
+     "id": "api",
+     "label": "REST APIs & the data layer",
+     "skills": [
+      "api-integration"
+     ]
+    },
+    {
+     "id": "auth",
+     "label": "Authentication & notifications",
+     "skills": [
+      "mobile-auth",
+      "push-notifications"
+     ]
+    },
+    {
+     "id": "health",
+     "label": "Performance, stability & production defects",
+     "skills": [
+      "mobile-performance",
+      "incident-response",
+      "defect-management"
+     ]
+    },
+    {
+     "id": "delivery",
+     "label": "Testable code, review & store builds",
+     "skills": [
+      "testing",
+      "git-workflow",
+      "android-release",
+      "ios-release"
+     ]
+    }
+   ],
+   "rounds": [
+    {
+     "id": "hr",
+     "name": "HR Screen",
+     "interviewer": {
+      "name": "Sumaiya",
+      "role": "Recruiter"
+     },
+     "count": 5
+    },
+    {
+     "id": "technical",
+     "name": "Technical Screen",
+     "interviewer": {
+      "name": "Nazmul",
+      "role": "Senior Flutter Engineer"
+     },
+     "count": 7
+    },
+    {
+     "id": "deepdive",
+     "name": "Deep Dive",
+     "interviewer": {
+      "name": "Farzana",
+      "role": "Mobile Tech Lead"
+     },
+     "count": 6
+    },
+    {
+     "id": "ask",
+     "name": "The Ask",
+     "interviewer": {
+      "name": "Adnan",
+      "role": "Engineering Manager"
      },
      "count": 5
     }
