@@ -84,7 +84,7 @@ def pool(job, stage):
             if q["stage"] != stage:                         continue
             if job["level"] not in q["levels"]:             continue
             p = q.get("platform")
-            if p and p != job["platform"]:                  continue
+            if p and job["platform"] != "any" and p != job["platform"]: continue
             out.append((sid, q))
     return out
 

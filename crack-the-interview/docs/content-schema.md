@@ -207,7 +207,9 @@ one or more skills. `behavioral` is never among them.
 how many questions that round draws. 5–7 each, 20–28 in a job overall.
 
 `platform` gates platform-tagged questions. Use `web` for anything that isn't a
-mobile job.
+mobile job, and `any` for a cross-platform job that genuinely ships both stores —
+a Flutter or React Native seat — which lets it draw `ios` and `android` questions
+alike. Custom mode uses `any` for the same reason.
 
 `extra` holds job-specific questions in the same shape as bank questions, for the
 ones too specific to belong in a skill — a question about a fifteen-year-old

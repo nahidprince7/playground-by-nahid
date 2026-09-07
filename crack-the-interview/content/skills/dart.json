@@ -1,0 +1,126 @@
+{
+  "skill": "dart",
+  "label": "Dart, async & null safety",
+  "questions": [
+    {
+      "id": "dart-01",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "One endpoint returns an order's details once. Another pushes a price every time it moves. Which Dart types model them?",
+      "options": [
+        "Future for both — a Stream is only for file I/O.",
+        "Stream for both, because both come from the network.",
+        "Future for both, polled on a Timer.",
+        "Future for the order details, Stream for the price feed: one value that arrives later versus many values over time."
+      ],
+      "correct": 3,
+      "eliminate": 0,
+      "explanation": "The choice follows how many values there are, not where they come from. Polling a Future on a Timer is the answer that works and is still wrong — you pay for a request whether or not the price moved, and you see every change late by up to one interval."
+    },
+    {
+      "id": "dart-02",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "Decoding a 4MB catalogue response freezes the UI for most of a second, even though the call is already `await`ed. Why?",
+      "options": [
+        "await only works on functions marked async — the decode is not.",
+        "await yields while waiting for I/O, but jsonDecode is CPU work that still runs on the UI isolate and blocks the frame. Move it to another isolate with compute().",
+        "The response should be awaited inside initState() rather than a callback.",
+        "The freeze comes from the network, not the decode."
+      ],
+      "correct": 1,
+      "eliminate": 0,
+      "explanation": "async in Dart buys you concurrency, not parallelism: a single isolate runs one thing at a time, and awaiting only helps while something else is doing the work. Anything that burns CPU has to leave the isolate, which is exactly what compute() is for."
+    },
+    {
+      "id": "dart-03",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid"
+      ],
+      "type": "mcq",
+      "prompt": "A field cannot be set in the constructor but is always assigned before anything reads it. `late String token;` or `String? token;`?",
+      "options": [
+        "late, if you genuinely control the assignment — you keep a non-nullable type and trade a compile-time check for a runtime error if you are wrong.",
+        "String?, always — late is unsafe and should not be used in production code.",
+        "Neither; give it a dummy default like an empty string.",
+        "late, because it also makes the field lazy and thread-safe."
+      ],
+      "correct": 0,
+      "eliminate": 3,
+      "explanation": "late is a promise you make to the compiler, and the cost of breaking it is a LateInitializationError at the point of first read. The dummy default is the answer that quietly does the most damage — an empty token is a real value, so nothing ever complains and the failure surfaces as a confusing 401 instead."
+    },
+    {
+      "id": "dart-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "Order submission sometimes fails silently — no error shown, no crash, nothing in the logs.",
+      "subject": {
+        "kind": "code",
+        "language": "dart",
+        "content": "Future<void> submit(Order order) async {\n  try {\n    api.placeOrder(order);        // returns Future<void>\n    showToast('Order placed');\n  } catch (e) {\n    showError(e.toString());\n  }\n}"
+      },
+      "options": [
+        "showToast should be awaited so it does not race the dialog.",
+        "The method does not need to be async at all.",
+        "catch should be on Exception rather than the bare object.",
+        "placeOrder is never awaited, so the try block has already exited by the time the request fails — the error becomes an unhandled async error and the success toast shows regardless."
+      ],
+      "correct": 3,
+      "eliminate": 0,
+      "explanation": "try/catch only covers what runs inside it, and an un-awaited call runs later. Worse than losing the error is the toast: the user is told an order was placed that never was. The `on Exception` answer is real advice about a different problem, which is what makes it a good distractor."
+    },
+    {
+      "id": "dart-05",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A dashboard loads the account summary, saved items and a news feed with `await Future.wait([...])`. The news service goes down and the whole dashboard shows an error. What is the right fix?",
+      "options": [
+        "Replace Future.wait with three sequential awaits.",
+        "Wrap the whole Future.wait in a try/catch and retry it.",
+        "Future.wait rejects as soon as any future fails, so wrap each call in its own catch that returns a fallback — then a dead news feed costs you the news panel, not the dashboard.",
+        "Increase the timeout on the news call."
+      ],
+      "correct": 2,
+      "eliminate": 0,
+      "explanation": "Failing together is a property of Future.wait, so the decision about what is essential has to be made per call. Going sequential is the instinctive fix and the worst one: it does not change the failure at all, and it makes the dashboard as slow as the sum of three round trips."
+    },
+    {
+      "id": "dart-06",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "What makes Dart code in a Flutter app testable without spinning up the whole app?",
+      "modelAnswer": "I keep the logic out of widgets. Parsing, validation, retry rules and anything that decides what the screen shows live in plain Dart classes that take their dependencies through the constructor, so a test constructs one with a fake client and asserts on the result — no pumping, no device. The HTTP client, storage and clock are injected rather than constructed inside, because anything you cannot substitute is something you have to run for real. Widget tests then cover the parts that are genuinely about the tree — a state change reaching the right widget, a tap firing the right callback — and stay a thin layer rather than the whole suite.",
+      "keyPoints": [
+        "Logic in plain Dart, not in widgets",
+        "Dependencies injected, not constructed inside",
+        "Fakes for client, storage and clock",
+        "Widget tests cover tree behaviour only",
+        "Fast unit tests outnumber slow ones"
+      ],
+      "explanation": "Testability in Flutter is mostly a question of where code lives. Logic inside a build method can only be tested by rendering the widget, which is why suites in apps like this drift towards slow, flaky widget tests that fail for reasons nobody can reproduce."
+    }
+  ]
+}

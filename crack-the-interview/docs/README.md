@@ -42,7 +42,7 @@ These are settled. Codex should not re-litigate them.
 
 ## Content so far
 
-371 questions across 55 skills, feeding 11 job titles. Run `python3 validate.py` from the project folder after any content change — it
+400 questions across 60 skills, feeding 12 job titles. Run `python3 validate.py` from the project folder after any content change — it
 checks the banks can still fill every round, then regenerates `content.js`, which
 is the file the browser actually reads.
 
@@ -50,6 +50,7 @@ is the file the browser actually reads.
 |---|---|---|
 | ReactJS Developer (React & Realtime, 1-2 years) | junior | 22 |
 | Laravel Full Stack Developer (PHP & Vue, 2-4 years) | mid | 23 |
+| Mobile App Developer (Flutter, 2-4 years) | mid | 23 |
 | Software Engineer (.NET, 2-4 years) | mid | 24 |
 | Software Engineer (Frontend, 3-5 years) | mid | 24 |
 | Software Quality Assurance Engineer (2-5 years) | mid | 24 |

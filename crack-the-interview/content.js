@@ -5,6 +5,19 @@ window.CTI_CONTENT = {
   "content/index.json": {
    "jobs": [
     {
+     "slug": "flutter-mobile-app-developer",
+     "title": "Mobile App Developer (Flutter, 2-4 years)",
+     "stack": [
+      "Flutter",
+      "Dart",
+      "REST APIs",
+      "Android / iOS"
+     ],
+     "level": "mid",
+     "difficulty": 3,
+     "questionCount": 23
+    },
+    {
      "slug": "laravel-fullstack-developer",
      "title": "Laravel Full Stack Developer (PHP & Vue, 2-4 years)",
      "stack": [
@@ -369,6 +382,120 @@ window.CTI_CONTENT = {
      "interviewer": {
       "name": "Kamrul",
       "role": "Head of Platform Engineering"
+     },
+     "count": 5
+    }
+   ],
+   "extra": []
+  },
+  "content/job-titles/flutter-mobile-app-developer.json": {
+   "slug": "flutter-mobile-app-developer",
+   "title": "Mobile App Developer (Flutter, 2-4 years)",
+   "level": "mid",
+   "difficulty": 3,
+   "platform": "any",
+   "stack": [
+    "Flutter",
+    "Dart",
+    "REST APIs",
+    "Android / iOS"
+   ],
+   "briefing": {
+    "summary": "One Dart codebase already in both stores, with real users on it — so this is a maintenance seat as much as a feature seat, and the questions follow the day rather than the tutorial. Expect to be asked why a screen rebuilds too much, why an await did not help, and what a stored token actually proves, rather than to recite what a widget is. The posting names authentication and notifications as things you implement, which means the session and delivery edges are fair game: refresh under concurrency, permission timing, a push that never arrived. It is equally specific about performance, stability and network usage, so be ready to say how you would measure any of it before changing code. The rest is the part of the job that involves other people — defects handed over by QA, a contract disagreed with backend, and builds for both platforms that someone has to prepare and ship.",
+    "requirements": [
+     "Flutter and Dart across Android and iOS from a single codebase",
+     "Widget composition, state ownership and rebuild cost",
+     "REST integration, error handling and the data layer behind the UI",
+     "Authentication, session refresh and push notifications",
+     "Diagnosing production defects rather than reproducing them once",
+     "Performance, stability and network usage you can measure",
+     "Testable code, code review, and Android/iOS production builds"
+    ]
+   },
+   "topics": [
+    {
+     "id": "flutter",
+     "label": "Flutter widgets, state & UI",
+     "skills": [
+      "flutter"
+     ]
+    },
+    {
+     "id": "dart",
+     "label": "Dart, async & null safety",
+     "skills": [
+      "dart"
+     ]
+    },
+    {
+     "id": "api",
+     "label": "REST APIs & the data layer",
+     "skills": [
+      "api-integration"
+     ]
+    },
+    {
+     "id": "auth",
+     "label": "Authentication & notifications",
+     "skills": [
+      "mobile-auth",
+      "push-notifications"
+     ]
+    },
+    {
+     "id": "health",
+     "label": "Performance, stability & production defects",
+     "skills": [
+      "mobile-performance",
+      "incident-response",
+      "defect-management"
+     ]
+    },
+    {
+     "id": "delivery",
+     "label": "Testable code, review & store builds",
+     "skills": [
+      "testing",
+      "git-workflow",
+      "android-release",
+      "ios-release"
+     ]
+    }
+   ],
+   "rounds": [
+    {
+     "id": "hr",
+     "name": "HR Screen",
+     "interviewer": {
+      "name": "Sumaiya",
+      "role": "Recruiter"
+     },
+     "count": 5
+    },
+    {
+     "id": "technical",
+     "name": "Technical Screen",
+     "interviewer": {
+      "name": "Nazmul",
+      "role": "Senior Flutter Engineer"
+     },
+     "count": 7
+    },
+    {
+     "id": "deepdive",
+     "name": "Deep Dive",
+     "interviewer": {
+      "name": "Farzana",
+      "role": "Mobile Tech Lead"
+     },
+     "count": 6
+    },
+    {
+     "id": "ask",
+     "name": "The Ask",
+     "interviewer": {
+      "name": "Adnan",
+      "role": "Engineering Manager"
      },
      "count": 5
     }
@@ -3197,6 +3324,132 @@ window.CTI_CONTENT = {
     }
    ]
   },
+  "content/skills/dart.json": {
+   "skill": "dart",
+   "label": "Dart, async & null safety",
+   "questions": [
+    {
+     "id": "dart-01",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "One endpoint returns an order's details once. Another pushes a price every time it moves. Which Dart types model them?",
+     "options": [
+      "Future for both — a Stream is only for file I/O.",
+      "Stream for both, because both come from the network.",
+      "Future for both, polled on a Timer.",
+      "Future for the order details, Stream for the price feed: one value that arrives later versus many values over time."
+     ],
+     "correct": 3,
+     "eliminate": 0,
+     "explanation": "The choice follows how many values there are, not where they come from. Polling a Future on a Timer is the answer that works and is still wrong — you pay for a request whether or not the price moved, and you see every change late by up to one interval."
+    },
+    {
+     "id": "dart-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Decoding a 4MB catalogue response freezes the UI for most of a second, even though the call is already `await`ed. Why?",
+     "options": [
+      "await only works on functions marked async — the decode is not.",
+      "await yields while waiting for I/O, but jsonDecode is CPU work that still runs on the UI isolate and blocks the frame. Move it to another isolate with compute().",
+      "The response should be awaited inside initState() rather than a callback.",
+      "The freeze comes from the network, not the decode."
+     ],
+     "correct": 1,
+     "eliminate": 0,
+     "explanation": "async in Dart buys you concurrency, not parallelism: a single isolate runs one thing at a time, and awaiting only helps while something else is doing the work. Anything that burns CPU has to leave the isolate, which is exactly what compute() is for."
+    },
+    {
+     "id": "dart-03",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "A field cannot be set in the constructor but is always assigned before anything reads it. `late String token;` or `String? token;`?",
+     "options": [
+      "late, if you genuinely control the assignment — you keep a non-nullable type and trade a compile-time check for a runtime error if you are wrong.",
+      "String?, always — late is unsafe and should not be used in production code.",
+      "Neither; give it a dummy default like an empty string.",
+      "late, because it also makes the field lazy and thread-safe."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "late is a promise you make to the compiler, and the cost of breaking it is a LateInitializationError at the point of first read. The dummy default is the answer that quietly does the most damage — an empty token is a real value, so nothing ever complains and the failure surfaces as a confusing 401 instead."
+    },
+    {
+     "id": "dart-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "Order submission sometimes fails silently — no error shown, no crash, nothing in the logs.",
+     "subject": {
+      "kind": "code",
+      "language": "dart",
+      "content": "Future<void> submit(Order order) async {\n  try {\n    api.placeOrder(order);        // returns Future<void>\n    showToast('Order placed');\n  } catch (e) {\n    showError(e.toString());\n  }\n}"
+     },
+     "options": [
+      "showToast should be awaited so it does not race the dialog.",
+      "The method does not need to be async at all.",
+      "catch should be on Exception rather than the bare object.",
+      "placeOrder is never awaited, so the try block has already exited by the time the request fails — the error becomes an unhandled async error and the success toast shows regardless."
+     ],
+     "correct": 3,
+     "eliminate": 0,
+     "explanation": "try/catch only covers what runs inside it, and an un-awaited call runs later. Worse than losing the error is the toast: the user is told an order was placed that never was. The `on Exception` answer is real advice about a different problem, which is what makes it a good distractor."
+    },
+    {
+     "id": "dart-05",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A dashboard loads the account summary, saved items and a news feed with `await Future.wait([...])`. The news service goes down and the whole dashboard shows an error. What is the right fix?",
+     "options": [
+      "Replace Future.wait with three sequential awaits.",
+      "Wrap the whole Future.wait in a try/catch and retry it.",
+      "Future.wait rejects as soon as any future fails, so wrap each call in its own catch that returns a fallback — then a dead news feed costs you the news panel, not the dashboard.",
+      "Increase the timeout on the news call."
+     ],
+     "correct": 2,
+     "eliminate": 0,
+     "explanation": "Failing together is a property of Future.wait, so the decision about what is essential has to be made per call. Going sequential is the instinctive fix and the worst one: it does not change the failure at all, and it makes the dashboard as slow as the sum of three round trips."
+    },
+    {
+     "id": "dart-06",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "What makes Dart code in a Flutter app testable without spinning up the whole app?",
+     "modelAnswer": "I keep the logic out of widgets. Parsing, validation, retry rules and anything that decides what the screen shows live in plain Dart classes that take their dependencies through the constructor, so a test constructs one with a fake client and asserts on the result — no pumping, no device. The HTTP client, storage and clock are injected rather than constructed inside, because anything you cannot substitute is something you have to run for real. Widget tests then cover the parts that are genuinely about the tree — a state change reaching the right widget, a tap firing the right callback — and stay a thin layer rather than the whole suite.",
+     "keyPoints": [
+      "Logic in plain Dart, not in widgets",
+      "Dependencies injected, not constructed inside",
+      "Fakes for client, storage and clock",
+      "Widget tests cover tree behaviour only",
+      "Fast unit tests outnumber slow ones"
+     ],
+     "explanation": "Testability in Flutter is mostly a question of where code lives. Logic inside a build method can only be tested by rendering the widget, which is why suites in apps like this drift towards slow, flaky widget tests that fail for reasons nobody can reproduce."
+    }
+   ]
+  },
   "content/skills/defect-management.json": {
    "skill": "defect-management",
    "label": "Defect reporting, triage & severity",
@@ -3547,6 +3800,152 @@ window.CTI_CONTENT = {
      "correct": 3,
      "eliminate": 2,
      "explanation": "Change tracking costs memory and CPU so EF can persist later mutations. A read-only projection does not need that machinery; no-tracking plus a narrow select reduces both retained state and transferred data."
+    }
+   ]
+  },
+  "content/skills/flutter.json": {
+   "skill": "flutter",
+   "label": "Flutter widgets, state & UI",
+   "questions": [
+    {
+     "id": "flutter-01",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A screen calls setState() to update one price label, and the whole page visibly stutters. What is the first thing to look at?",
+     "options": [
+      "Whether the widget should have been a StatelessWidget instead.",
+      "How far up the tree setState() is being called — it rebuilds that widget and everything below it, so state living at the top of the page rebuilds the page.",
+      "Whether the app is missing a global state management package.",
+      "Whether setState() is being called from an async callback."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "setState() marks one element dirty, and every descendant rebuilds with it. Push the state down into the smallest widget that owns it, and the rebuild shrinks to that subtree. Reaching for a state management package is the popular answer, but it does not help while the notifier still sits at the top of the page."
+    },
+    {
+     "id": "flutter-02",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "An order list holds around 3,000 rows. The team builds it with ListView(children: rows). What goes wrong?",
+     "options": [
+      "Nothing — ListView is lazy by default.",
+      "ListView cannot scroll past a fixed number of children.",
+      "Every row is built up front, so opening the screen costs 3,000 widget builds before the first frame. ListView.builder builds only what is on screen.",
+      "The rows need keys or Flutter cannot lay them out."
+     ],
+     "correct": 2,
+     "eliminate": 1,
+     "explanation": "The children list is eager — laziness comes from the builder constructor, which asks for a row only when the viewport reaches it. Keys matter too, but they fix identity when items reorder; they do nothing for a screen that is slow the first time it opens."
+    },
+    {
+     "id": "flutter-03",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Where does the network call for a screen's initial data belong in a StatefulWidget?",
+     "options": [
+      "In initState(), because it runs once when the State is created — build() can run many times per second.",
+      "In build(), so the data is always fresh.",
+      "In the widget's constructor, so it starts as early as possible.",
+      "In dispose(), then cached for the next visit."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "build() is called on every rebuild, on every animation frame if one is running, so a request in there fires repeatedly. The constructor looks earlier and therefore better, but a widget is a configuration object that Flutter may construct and throw away without ever mounting it — initState() is the first point where there is a State with a lifetime."
+    },
+    {
+     "id": "flutter-04",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid"
+     ],
+     "type": "mcq",
+     "prompt": "You change the initial value of a field held in a State object, hot reload, and the old value is still on screen. Why?",
+     "options": [
+      "Hot reload only works on stateless widgets.",
+      "The file was not saved before the reload.",
+      "Hot reload needs the app to be in debug mode, and it is not.",
+      "Hot reload swaps in the new code but keeps the running State objects alive, so anything already initialised keeps its old value. Hot restart throws that state away."
+     ],
+     "correct": 3,
+     "eliminate": 0,
+     "explanation": "Preserving state is the whole point of hot reload — it means you do not log in and navigate back to the screen after every edit. The cost is exactly this confusion, so when an edit to initialisation code seems ignored, restart before you start debugging code that was never wrong."
+    },
+    {
+     "id": "flutter-05",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "This screen animates, and the animation drops frames badly on mid-range Android devices.",
+     "subject": {
+      "kind": "code",
+      "language": "dart",
+      "content": "@override\nWidget build(BuildContext context) {\n  final controller = AnimationController(\n    duration: const Duration(milliseconds: 300),\n    vsync: this,\n  );\n  final orders = repository.loadOrders();   // returns Future\n  return OrderList(controller: controller, orders: orders);\n}"
+     },
+     "options": [
+      "AnimationController should use a longer duration on slower devices.",
+      "OrderList should be wrapped in a FutureBuilder.",
+      "build() can run on every frame, so this creates a new controller and fires a new repository call each time — the controller belongs in initState() with a dispose(), the load in initState() or a cached future.",
+      "vsync should be SingleTickerProviderStateMixin rather than this."
+     ],
+     "correct": 2,
+     "eliminate": 0,
+     "explanation": "build() must be cheap and free of side effects, because Flutter decides when and how often to call it. Every frame here leaks an undisposed controller and starts another request. The FutureBuilder answer is the near-miss — it is the right widget, but wrapping a future that is recreated on every build just moves the same bug behind a nicer API."
+    },
+    {
+     "id": "flutter-06",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Two sibling screens both need the live order book, and today each one fetches it separately. What actually fixes it?",
+     "options": [
+      "Make the order book a global mutable singleton the widgets read from directly.",
+      "Pass the data down through constructors from the common parent, however many levels that takes.",
+      "Hold it in one place above both screens and expose it through the app's state management layer, so each screen listens to the same source and rebuilds when it changes.",
+      "Cache the HTTP response so the second fetch is cheap."
+     ],
+     "correct": 2,
+     "eliminate": 0,
+     "explanation": "One owner, many listeners — that is the shape, whether the tool is Provider, Riverpod or BLoC. Caching the response is the tempting answer because it makes the symptom cheaper, but the two screens still hold separate copies, so they can still disagree about the same order."
+    },
+    {
+     "id": "flutter-07",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "How do you keep a Flutter screen readable as it grows past a few hundred lines?",
+     "modelAnswer": "I break the tree into named widget classes rather than private build helper methods, because a real widget gets its own element and can be rebuilt — and marked const — independently, while a helper method is rebuilt with its parent every time. State lives in the smallest widget that owns it, and anything shared moves up to a single owner exposed through the state layer. The build method stays free of side effects: no requests, no controller creation, no work that depends on how many times it runs. Anything about how data is fetched or shaped goes behind a repository so the widget only knows about the state it renders.",
+     "keyPoints": [
+      "Extract widgets, not build helper methods",
+      "State lives at the level that owns it",
+      "One owner for shared state",
+      "build() stays pure and cheap",
+      "Data access behind a repository"
+     ],
+     "explanation": "The split between widget classes and helper methods is the one most people get wrong, and it is measurable: a helper method cannot be const, cannot be skipped during a rebuild, and shows up as one giant element in the devtools tree."
     }
    ]
   },
@@ -6098,6 +6497,260 @@ window.CTI_CONTENT = {
     }
    ]
   },
+  "content/skills/mobile-auth.json": {
+   "skill": "mobile-auth",
+   "label": "Authentication & session handling",
+   "questions": [
+    {
+     "id": "mobile-auth-01",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "Where does a refresh token belong on a phone?",
+     "options": [
+      "In the platform's secure store — Keychain on iOS, EncryptedSharedPreferences or the Keystore on Android — reached through a secure storage plugin.",
+      "In SharedPreferences, encrypted with a key hard-coded in the app.",
+      "In a file in the app's documents directory, which is already sandboxed per app.",
+      "In memory only, so the user signs in again on every launch."
+     ],
+     "correct": 0,
+     "eliminate": 1,
+     "explanation": "The sandbox protects you from other apps, not from someone with the device or a rooted phone reading the file, so the documents directory is the near-miss worth naming. Encrypting with a key shipped inside the binary is worse than it looks: the key travels with the ciphertext."
+    },
+    {
+     "id": "mobile-auth-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "Users are being logged out mid-session, seemingly at random.",
+     "subject": {
+      "kind": "code",
+      "language": "dart",
+      "content": "final token = await storage.read('access_token');\nif (token != null) {\n  return authenticated(token);\n}\nreturn signInScreen();"
+     },
+     "options": [
+      "read() should be awaited inside a try/catch.",
+      "A stored token is not a valid token — nothing here checks expiry or refreshes, so the app happily starts a session with a token the server will reject on the next call.",
+      "The token should be read synchronously so the splash screen does not flash.",
+      "The null check should also test for an empty string."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "Presence and validity are different questions, and only the server can answer the second one — which is why the random logouts are actually the first API call of the session rejecting an expired token. The empty-string check is a genuine hardening, and it fixes nothing about this bug."
+    },
+    {
+     "id": "mobile-auth-03",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A screen fires six requests at once. The access token has expired, so all six come back 401 and all six trigger a refresh. What is the fix?",
+     "options": [
+      "Refresh the token on a timer before it expires, so a 401 never happens.",
+      "Retry each failed request after a short random delay.",
+      "Serialise the six requests so only the first can hit a 401.",
+      "Single-flight the refresh: the first 401 starts it, the rest await that same future, and all six retry once it resolves."
+     ],
+     "correct": 3,
+     "eliminate": 2,
+     "explanation": "The problem is a stampede, so the fix is to make concurrent refreshes share one attempt. Proactive refresh on a timer helps and does not replace this — clocks drift, the app is suspended for hours, and the server can invalidate a token early. Serialising every request to dodge a rare race gives up concurrency permanently."
+    },
+    {
+     "id": "mobile-auth-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "The app adds a fingerprint prompt on launch. What has that actually bought you?",
+     "options": [
+      "A local gate in front of a session the app already holds — it stops someone picking up an unlocked phone, and proves nothing to the server about who is holding it.",
+      "Authentication with the backend, since the biometric check replaces the password.",
+      "Nothing, because biometrics can be spoofed.",
+      "It rotates the stored token on every successful scan."
+     ],
+     "correct": 0,
+     "eliminate": 2,
+     "explanation": "The device says yes or no; that answer never leaves the device. It is a real and worthwhile control on a trading app, as long as nobody on the team believes the server is now verifying identity. The spoofing answer is the confident-sounding one that dismisses a genuinely useful control."
+    },
+    {
+     "id": "mobile-auth-05",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "A session expires while the user is halfway through filling in a form. What should the app do?",
+     "modelAnswer": "Not lose their work. I try a silent refresh first, and if that succeeds the user never learns anything happened. If refresh fails, I hold the in-progress form in memory, take them to sign-in, and restore the form when they come back rather than dropping them on the home screen with an empty state. Anything already submitted has to be resolved against the server rather than assumed — for an order I show its real status instead of retrying blind, because a retry after an ambiguous failure can place it twice. And expiry is handled in one place, in the client or interceptor, so every screen behaves the same way instead of each one inventing its own.",
+     "keyPoints": [
+      "Silent refresh before anything visible",
+      "In-progress input is preserved across sign-in",
+      "Return the user to where they were",
+      "Never blind-retry a submitted order",
+      "One central place handles expiry"
+     ],
+     "explanation": "Session expiry is usually treated as an error path and written once, badly, per screen. On an app where the in-progress form might be an order, the difference between preserving and discarding that state is the difference between an annoyance and a support call."
+    }
+   ]
+  },
+  "content/skills/mobile-performance.json": {
+   "skill": "mobile-performance",
+   "label": "App performance, network use & stability",
+   "questions": [
+    {
+     "id": "mobile-performance-01",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A 120Hz phone reports jank on the order list. What is the budget a frame has to stay inside?",
+     "options": [
+      "About 8ms — the refresh rate sets the deadline, so the faster the screen, the less time each frame gets.",
+      "About 16ms, which is the standard budget on every device.",
+      "There is no fixed budget; the engine batches frames when it falls behind.",
+      "One second divided by the number of widgets on screen."
+     ],
+     "correct": 0,
+     "eliminate": 3,
+     "explanation": "The budget is one refresh interval, so a high-refresh screen is harder to satisfy, not easier — code that was comfortable at 60Hz starts dropping frames on the newer device. Quoting 16ms is the answer most people give, and it is the right number for exactly one refresh rate."
+    },
+    {
+     "id": "mobile-performance-02",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "The app burns mobile data. The live dashboard polls a 300KB endpoint every three seconds to keep prices current.",
+     "options": [
+      "Gzip the response, which will roughly halve it.",
+      "Poll every ten seconds instead of every three.",
+      "Stop polling for a full snapshot: hold the connection open and receive only the prices that changed, or at minimum ask the server for a delta since the last version.",
+      "Cache the response so repeated identical payloads are not re-parsed."
+     ],
+     "correct": 2,
+     "eliminate": 3,
+     "explanation": "Re-downloading everything to learn that three numbers moved is the actual defect; compression and a slower interval only make the same wrong shape cheaper. Backing off the interval is the near-miss because it does cut data — while also making the prices staler, which is the one thing this screen exists to avoid."
+    },
+    {
+     "id": "mobile-performance-03",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "Scrolling the catalogue list stutters, and on older Android devices the app is killed after a few screens.",
+     "subject": {
+      "kind": "code",
+      "language": "dart",
+      "content": "ListView.builder(\n  itemCount: items.length,\n  itemBuilder: (context, i) => Row(children: [\n    Image.network(items[i].logoUrl),   // 1024x1024 PNGs\n    Text(items[i].name),\n  ]),\n)"
+     },
+     "options": [
+      "itemCount should be null so the list can grow.",
+      "Full-size images are decoded and held in memory at their source resolution — cache them and decode at the display size, with cacheWidth or a caching image widget, so a 48px row does not cost a megapixel bitmap.",
+      "Image.network should be wrapped in a FutureBuilder.",
+      "The Row needs a fixed height for the list to scroll smoothly."
+     ],
+     "correct": 1,
+     "eliminate": 0,
+     "explanation": "A decoded bitmap costs width times height times four bytes no matter how small it is drawn, so a 1024px logo in a 48px row wastes about 4MB each. Fixing the row height is the plausible answer that treats the symptom — it does help the list compute its extent, and it does nothing about the memory that is getting the app killed."
+    },
+    {
+     "id": "mobile-performance-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A developer says the new screen 'feels fine' after testing it on the simulator in debug. Why does that mean very little?",
+     "options": [
+      "Simulators run more slowly than devices, so the real thing will be better.",
+      "Debug builds disable the widget cache.",
+      "Only the release build includes the animations.",
+      "Debug builds run unoptimised code with assertions on and no ahead-of-time compilation, and a simulator uses the host machine's CPU — so you are measuring a build and a device that no user has. Profile mode on a mid-range physical phone is the measurement."
+     ],
+     "correct": 3,
+     "eliminate": 2,
+     "explanation": "Debug numbers are not conservative estimates, they are unrelated ones, and the gap runs both ways: the desktop CPU flatters you while the debug build punishes you. Profile mode exists precisely to give you release-grade code with the tracing still attached."
+    },
+    {
+     "id": "mobile-performance-05",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "order",
+     "prompt": "QA files a report: the catalogue screen 'lags on scroll' on a mid-range Android phone.",
+     "instruction": "Put these in the order you'd actually do them.",
+     "items": [
+      {
+       "id": "a",
+       "text": "Change the code you believe is responsible"
+      },
+      {
+       "id": "b",
+       "text": "Reproduce it on that class of device in a profile build"
+      },
+      {
+       "id": "c",
+       "text": "Record a timeline and find which frames miss the budget, and in which phase"
+      },
+      {
+       "id": "d",
+       "text": "Re-measure the same trace to confirm the frames now fit"
+      },
+      {
+       "id": "e",
+       "text": "Read the expensive frame's tree to identify the widget or layer causing it"
+      }
+     ],
+     "correctOrder": [
+      "b",
+      "c",
+      "e",
+      "a",
+      "d"
+     ],
+     "explanation": "Reproduce, measure, localise, change, re-measure. The step people skip is the last one — without the same trace afterwards you cannot tell a real fix from a placebo, and the change goes in permanently either way."
+    },
+    {
+     "id": "mobile-performance-06",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "How would you know whether the app is getting more or less stable, release over release?",
+     "modelAnswer": "By watching the crash-free user and crash-free session rates per version rather than counting crashes, since a raw count moves with how many people installed the update. I want those broken down by OS version and device class, because a regression usually lives in one segment and gets averaged away across the whole base. Non-fatal errors and ANRs matter as much as crashes — an app that freezes for five seconds and recovers is failing the user and does not appear in any crash figure. Releases go out staged, so the numbers from the first slice decide whether the rollout continues, and I want the trace and the breadcrumbs symbolicated well enough to reach the actual line rather than an obfuscated frame.",
+     "keyPoints": [
+      "Crash-free users and sessions, not raw counts",
+      "Broken down by version, OS and device class",
+      "Non-fatals and ANRs count as instability",
+      "Staged rollout gates on those numbers",
+      "Symbolicated traces with breadcrumbs"
+     ],
+     "explanation": "Counting crashes rewards a release nobody installed. Rates per version are what let a staged rollout be stopped on evidence, which is the difference between catching a regression at 5% of users and hearing about it from the store reviews."
+    }
+   ]
+  },
   "content/skills/mongodb.json": {
    "skill": "mongodb",
    "label": "MongoDB & Mongoose",
@@ -7217,6 +7870,112 @@ window.CTI_CONTENT = {
      "correct": 3,
      "eliminate": 1,
      "explanation": "The performance point is true and is the answer people give, but it is the least of it: the cost of @ is a stack trace that points at code which is fine, several files away from the request that failed. Check the return value, or use a client that throws, so the failure is handled where it happened."
+    }
+   ]
+  },
+  "content/skills/push-notifications.json": {
+   "skill": "push-notifications",
+   "label": "Push notifications & deep links",
+   "questions": [
+    {
+     "id": "push-notifications-01",
+     "stage": "technical",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "A push must always be shown, even when the app is in the foreground, and tapping it must open the right order. How do you send it?",
+     "options": [
+      "A data-only message, and let the OS display it.",
+      "A notification payload so the OS displays it in the background, plus a data section carrying the order id — and the app shows its own banner while it is in the foreground.",
+      "A notification payload alone; the id can be parsed out of the title text.",
+      "Two messages: one to display, one carrying the data."
+     ],
+     "correct": 1,
+     "eliminate": 2,
+     "explanation": "A notification payload is displayed by the system when the app is backgrounded and handed to the app when it is not, which is why the foreground banner is yours to show. Data-only messages give you full control and are the tempting choice, but they are best-effort — the OS can delay or drop them, which is not acceptable for an alert that must arrive."
+    },
+    {
+     "id": "push-notifications-02",
+     "stage": "technical",
+     "levels": [
+      "junior",
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "When should an app ask for notification permission?",
+     "options": [
+      "At the point where the value is obvious — after the user sets their first price alert — because on both platforms a denial is effectively permanent and only the OS settings can undo it.",
+      "On first launch, before the app finishes loading, so the token registers as early as possible.",
+      "Never explicitly; the first notification triggers the prompt automatically.",
+      "Only when the user opens the notification settings screen."
+     ],
+     "correct": 0,
+     "eliminate": 2,
+     "explanation": "You get one prompt, and a reflexive no on the splash screen costs you the channel for the life of the install. Asking on the settings screen is safe and self-defeating — almost nobody goes there, so opt-in rates collapse."
+    },
+    {
+     "id": "push-notifications-03",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "mcq",
+     "prompt": "The background message handler works in debug and silently does nothing in release builds on Android. What is the usual cause?",
+     "options": [
+      "Release builds strip the notification permission from the manifest.",
+      "The handler runs on the main isolate, which is not alive in the background.",
+      "Background handlers require a foreground service on Android.",
+      "The handler is not a top-level or static function annotated for entry-point retention, so it runs in a separate isolate in debug but gets tree-shaken or fails to resolve in release."
+     ],
+     "correct": 3,
+     "eliminate": 2,
+     "explanation": "A background handler is a fresh isolate with a fresh entry point — it cannot close over anything, and the release build's tree shaker has no way to know it is called. That separate isolate is also why plugins and singletons set up in main() are simply not there, which is the second half of the same surprise."
+    },
+    {
+     "id": "push-notifications-04",
+     "stage": "deepdive",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "red-flag",
+     "prompt": "Some users report their account summary going stale, and it only happens to a few of them.",
+     "subject": {
+      "kind": "quote",
+      "content": "\"We don't refetch the summary on resume any more — the backend pushes an update whenever the balance changes, so the app just applies whatever arrives in the notification payload.\""
+     },
+     "options": [
+      "Notification payloads are limited in size, so large payloads get truncated.",
+      "The updates should be applied on a background isolate instead.",
+      "Push is best-effort delivery, not a data channel: a message dropped while the device is offline, throttled, or denied permission is never resent, and the app has no way to notice it is behind.",
+      "The backend should batch the updates so fewer messages are sent."
+     ],
+     "correct": 2,
+     "eliminate": 1,
+     "explanation": "Push tells the app something happened; the server stays the source of truth. Fetch on resume — or carry a version the client can compare — so a missed message costs a delay rather than a permanently wrong number. The size limit is real and is the smaller problem here."
+    },
+    {
+     "id": "push-notifications-05",
+     "stage": "ask",
+     "levels": [
+      "mid",
+      "senior"
+     ],
+     "type": "open",
+     "prompt": "A user says an alert never arrived. Where do you start?",
+     "modelAnswer": "I work down the chain and stop at the first place it breaks. Did the backend actually send it, and what did the push service return for that token — success, unregistered, throttled? Is the token we hold the current one for that install, given a reinstall or a restore to a new device issues a new one and quietly orphans the old? Does the OS have permission, and is the notification channel or the alert style still enabled — a user can turn one channel off without disabling the app. Then whether the device was reachable at all, and last whether the app's own handler ran and dropped it. Most of that has to be answered from logs and delivery receipts rather than the phone in front of me, so the ask is usually for token lifecycle logging on the server before the next report comes in.",
+     "keyPoints": [
+      "Confirm the send and the push service's response",
+      "Check the token is current for that install",
+      "OS permission and per-channel settings",
+      "Device reachability and throttling",
+      "Server-side delivery logging, not just the device"
+     ],
+     "explanation": "Undelivered pushes are debugged from the server end, because everything interesting has already happened by the time you have the phone. Stale tokens after a reinstall are the single most common cause and the easiest one to prove if the logging exists."
     }
    ]
   },

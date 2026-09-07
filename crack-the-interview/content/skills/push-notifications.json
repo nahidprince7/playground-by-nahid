@@ -1,0 +1,106 @@
+{
+  "skill": "push-notifications",
+  "label": "Push notifications & deep links",
+  "questions": [
+    {
+      "id": "push-notifications-01",
+      "stage": "technical",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "A push must always be shown, even when the app is in the foreground, and tapping it must open the right order. How do you send it?",
+      "options": [
+        "A data-only message, and let the OS display it.",
+        "A notification payload so the OS displays it in the background, plus a data section carrying the order id — and the app shows its own banner while it is in the foreground.",
+        "A notification payload alone; the id can be parsed out of the title text.",
+        "Two messages: one to display, one carrying the data."
+      ],
+      "correct": 1,
+      "eliminate": 2,
+      "explanation": "A notification payload is displayed by the system when the app is backgrounded and handed to the app when it is not, which is why the foreground banner is yours to show. Data-only messages give you full control and are the tempting choice, but they are best-effort — the OS can delay or drop them, which is not acceptable for an alert that must arrive."
+    },
+    {
+      "id": "push-notifications-02",
+      "stage": "technical",
+      "levels": [
+        "junior",
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "When should an app ask for notification permission?",
+      "options": [
+        "At the point where the value is obvious — after the user sets their first price alert — because on both platforms a denial is effectively permanent and only the OS settings can undo it.",
+        "On first launch, before the app finishes loading, so the token registers as early as possible.",
+        "Never explicitly; the first notification triggers the prompt automatically.",
+        "Only when the user opens the notification settings screen."
+      ],
+      "correct": 0,
+      "eliminate": 2,
+      "explanation": "You get one prompt, and a reflexive no on the splash screen costs you the channel for the life of the install. Asking on the settings screen is safe and self-defeating — almost nobody goes there, so opt-in rates collapse."
+    },
+    {
+      "id": "push-notifications-03",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "mcq",
+      "prompt": "The background message handler works in debug and silently does nothing in release builds on Android. What is the usual cause?",
+      "options": [
+        "Release builds strip the notification permission from the manifest.",
+        "The handler runs on the main isolate, which is not alive in the background.",
+        "Background handlers require a foreground service on Android.",
+        "The handler is not a top-level or static function annotated for entry-point retention, so it runs in a separate isolate in debug but gets tree-shaken or fails to resolve in release."
+      ],
+      "correct": 3,
+      "eliminate": 2,
+      "explanation": "A background handler is a fresh isolate with a fresh entry point — it cannot close over anything, and the release build's tree shaker has no way to know it is called. That separate isolate is also why plugins and singletons set up in main() are simply not there, which is the second half of the same surprise."
+    },
+    {
+      "id": "push-notifications-04",
+      "stage": "deepdive",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "red-flag",
+      "prompt": "Some users report their account summary going stale, and it only happens to a few of them.",
+      "subject": {
+        "kind": "quote",
+        "content": "\"We don't refetch the summary on resume any more — the backend pushes an update whenever the balance changes, so the app just applies whatever arrives in the notification payload.\""
+      },
+      "options": [
+        "Notification payloads are limited in size, so large payloads get truncated.",
+        "The updates should be applied on a background isolate instead.",
+        "Push is best-effort delivery, not a data channel: a message dropped while the device is offline, throttled, or denied permission is never resent, and the app has no way to notice it is behind.",
+        "The backend should batch the updates so fewer messages are sent."
+      ],
+      "correct": 2,
+      "eliminate": 1,
+      "explanation": "Push tells the app something happened; the server stays the source of truth. Fetch on resume — or carry a version the client can compare — so a missed message costs a delay rather than a permanently wrong number. The size limit is real and is the smaller problem here."
+    },
+    {
+      "id": "push-notifications-05",
+      "stage": "ask",
+      "levels": [
+        "mid",
+        "senior"
+      ],
+      "type": "open",
+      "prompt": "A user says an alert never arrived. Where do you start?",
+      "modelAnswer": "I work down the chain and stop at the first place it breaks. Did the backend actually send it, and what did the push service return for that token — success, unregistered, throttled? Is the token we hold the current one for that install, given a reinstall or a restore to a new device issues a new one and quietly orphans the old? Does the OS have permission, and is the notification channel or the alert style still enabled — a user can turn one channel off without disabling the app. Then whether the device was reachable at all, and last whether the app's own handler ran and dropped it. Most of that has to be answered from logs and delivery receipts rather than the phone in front of me, so the ask is usually for token lifecycle logging on the server before the next report comes in.",
+      "keyPoints": [
+        "Confirm the send and the push service's response",
+        "Check the token is current for that install",
+        "OS permission and per-channel settings",
+        "Device reachability and throttling",
+        "Server-side delivery logging, not just the device"
+      ],
+      "explanation": "Undelivered pushes are debugged from the server end, because everything interesting has already happened by the time you have the phone. Stale tokens after a reinstall are the single most common cause and the easiest one to prove if the logging exists."
+    }
+  ]
+}
