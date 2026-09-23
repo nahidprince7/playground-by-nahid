@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Complete Guide: How to Protect Your GitHub main Branch — Playground by Nahid</title>
+  <meta name="description" content="A step-by-step guide to GitHub Branch Protection Rules and Rulesets: block direct pushes, prevent branch deletion, and require pull requests on your main branch." />
+
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Playground by Nahid" />
+  <meta property="og:title" content="Complete Guide: How to Protect Your GitHub main Branch" />
+  <meta property="og:description" content="Block direct pushes, prevent branch deletion, and require pull requests on main using GitHub Rulesets — step by step." />
+  <meta property="og:url" content="https://playground.devadda.site/articles/github-branch-protection-guide/index.html" />
+  <meta name="theme-color" content="#070d15" />
+  <meta name="twitter:card" content="summary" />
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='24' fill='%23070d15'/%3E%3Ctext x='50' y='68' font-family='Arial,sans-serif' font-size='58' font-weight='800' text-anchor='middle' fill='%237c9cff'%3EN%3C/text%3E%3C/svg%3E" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #070d15; --bg-2: #0a1220; --panel: #0d1726; --panel-2: #101d30;
+      --line: #1b2c44; --line-soft: #16233699;
+      --ink: #eaf1fb; --ink-dim: #9db0c9; --ink-faint: #61748f;
+      --indigo: #7c9cff; --violet: #a78bfa; --amber: #ffb35c; --cyan: #5ad1ff; --green: #3ddc97; --red: #ff6b6b;
+      --radius: 18px; --maxw: 760px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; min-height: 100vh;
+      font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      color: var(--ink); background: var(--bg);
+      -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+      overflow-x: hidden; position: relative;
+    }
+    .aurora {
+      position: fixed; inset: 0; z-index: -2;
+      background:
+        radial-gradient(60% 55% at 15% 0%,  #1b2a6b55 0%, transparent 60%),
+        radial-gradient(55% 50% at 90% 10%, #6b3b8f44 0%, transparent 55%),
+        radial-gradient(60% 60% at 80% 95%, #0e4a6b55 0%, transparent 60%),
+        radial-gradient(50% 45% at 10% 100%, #7a4a1a33 0%, transparent 55%);
+      filter: saturate(115%);
+    }
+    .grid-overlay {
+      position: fixed; inset: 0; z-index: -1;
+      background-image: linear-gradient(var(--line-soft) 1px, transparent 1px), linear-gradient(90deg, var(--line-soft) 1px, transparent 1px);
+      background-size: 46px 46px;
+      -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, #000 30%, transparent 80%);
+              mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, #000 30%, transparent 80%);
+      opacity: .5;
+    }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    .wrap-wide { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+    header { position: sticky; top: 0; z-index: 20; backdrop-filter: blur(12px); background: linear-gradient(180deg, #070d15e6, #070d1580 70%, transparent); border-bottom: 1px solid transparent; transition: border-color .3s; }
+    header.scrolled { border-color: var(--line); }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 66px; }
+    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+    .monogram { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 20px; color: #fff; background: linear-gradient(140deg, var(--indigo), var(--violet)); box-shadow: 0 6px 20px -6px #7c9cff88, inset 0 0 0 1px #ffffff22; }
+    .brand-wordmark { display: flex; flex-direction: column; line-height: 1.05; }
+    .brand-name { font-family: "Space Grotesk", sans-serif; font-weight: 600; font-size: 17px; letter-spacing: -.01em; }
+    .brand-by { font-size: 11px; font-weight: 500; color: var(--ink-faint); letter-spacing: .02em; }
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-links a { color: var(--ink-dim); text-decoration: none; font-size: 14px; font-weight: 500; padding: 8px 12px; border-radius: 9px; transition: all .2s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--ink); background: #ffffff0d; }
+
+    /* Article header */
+    .art-head { padding: 56px 0 28px; }
+    .breadcrumb { font-size: 13px; color: var(--ink-faint); margin-bottom: 20px; }
+    .breadcrumb a { color: var(--ink-faint); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--ink-dim); }
+    .a-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--indigo); padding: 5px 10px; border-radius: 7px; background: #7c9cff14; border: 1px solid #7c9cff33; margin-bottom: 18px; }
+    .art-head h1 { font-family: "Space Grotesk", sans-serif; font-size: clamp(28px, 4.6vw, 42px); line-height: 1.12; letter-spacing: -.02em; font-weight: 700; margin: 0 0 16px; }
+    .art-head .dek { font-size: clamp(15px, 2vw, 17.5px); line-height: 1.6; color: var(--ink-dim); margin: 0 0 22px; max-width: 640px; }
+    .meta-row { display: flex; align-items: center; gap: 14px; font-size: 13px; color: var(--ink-faint); padding-bottom: 26px; border-bottom: 1px solid var(--line); }
+    .meta-row .dot { width: 4px; height: 4px; border-radius: 50%; background: var(--ink-faint); }
+
+    /* Article body */
+    article.body { padding: 36px 0 20px; font-size: 16.5px; line-height: 1.75; color: var(--ink-dim); }
+    article.body h2 {
+      font-family: "Space Grotesk", sans-serif; color: var(--ink); font-size: 24px; letter-spacing: -.01em;
+      margin: 44px 0 16px; display: flex; align-items: center; gap: 10px;
+    }
+    article.body h2 .num {
+      display: inline-grid; place-items: center; width: 30px; height: 30px; flex: none;
+      border-radius: 9px; font-size: 14px; font-weight: 700; color: #fff;
+      background: linear-gradient(140deg, var(--indigo), var(--violet));
+    }
+    article.body h3 { font-family: "Space Grotesk", sans-serif; color: var(--ink); font-size: 18px; margin: 26px 0 10px; }
+    article.body p { margin: 0 0 16px; }
+    article.body a { color: var(--cyan); text-decoration: underline; text-decoration-color: #5ad1ff55; text-underline-offset: 2px; }
+    article.body ul, article.body ol { margin: 0 0 18px; padding-left: 22px; }
+    article.body li { margin-bottom: 8px; }
+    article.body strong { color: var(--ink); font-weight: 600; }
+    article.body code {
+      font-family: "JetBrains Mono", ui-monospace, monospace; font-size: .88em;
+      background: #ffffff0f; border: 1px solid var(--line); border-radius: 5px; padding: 2px 6px; color: var(--cyan);
+    }
+    article.body pre {
+      background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+      padding: 16px 18px; overflow-x: auto; margin: 0 0 20px;
+    }
+    article.body pre code { background: none; border: none; padding: 0; color: #cde3ff; font-size: 13.5px; line-height: 1.6; }
+
+    .steps { display: flex; flex-direction: column; gap: 14px; margin: 4px 0 22px; }
+    .step {
+      display: flex; gap: 16px; border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--panel), var(--bg-2)); border: 1px solid var(--line);
+      padding: 18px 20px;
+    }
+    .step .sn {
+      flex: none; width: 32px; height: 32px; border-radius: 9px; display: grid; place-items: center;
+      font-family: "Space Grotesk", sans-serif; font-weight: 700; font-size: 14px; color: #071018;
+      background: linear-gradient(120deg, var(--indigo), var(--cyan));
+      box-shadow: 0 6px 16px -6px #7c9cff88;
+    }
+    .step .st h4 { margin: 2px 0 6px; font-family: "Space Grotesk", sans-serif; font-size: 15.5px; color: var(--ink); font-weight: 600; }
+    .step .st p { margin: 0; font-size: 14.5px; color: var(--ink-dim); }
+
+    .checklist { list-style: none; padding: 0; margin: 0 0 22px; display: flex; flex-direction: column; gap: 10px; }
+    .checklist li {
+      display: flex; gap: 12px; align-items: flex-start;
+      background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 13px 16px;
+    }
+    .checklist li::before {
+      content: "✓"; flex: none; width: 20px; height: 20px; margin-top: 1px; display: grid; place-items: center;
+      font-size: 12px; font-weight: 700; color: #071018; background: var(--green); border-radius: 6px;
+    }
+    .checklist b { color: var(--ink); }
+
+    .callout {
+      border-radius: 14px; border: 1px solid var(--line); background: var(--panel-2);
+      padding: 16px 18px; margin: 6px 0 22px; display: flex; gap: 12px;
+    }
+    .callout .ic { flex: none; font-size: 18px; line-height: 1; }
+    .callout p { margin: 0; font-size: 14.5px; }
+    .callout.tip { border-color: #3ddc9744; background: #3ddc9712; }
+    .callout.warn { border-color: #ffb35c44; background: #ffb35c12; }
+
+    .toc { border-radius: var(--radius); background: var(--panel); border: 1px solid var(--line); padding: 20px 22px; margin: 30px 0 10px; }
+    .toc h2 { margin: 0 0 12px !important; font-size: 15px !important; text-transform: uppercase; letter-spacing: .08em; color: var(--ink-faint) !important; font-family: "Space Grotesk", sans-serif; }
+    .toc ol { margin: 0; padding-left: 20px; }
+    .toc a { color: var(--ink-dim); text-decoration: none; font-size: 14.5px; }
+    .toc a:hover { color: var(--cyan); text-decoration: underline; }
+
+    .art-foot { border-top: 1px solid var(--line); margin-top: 40px; padding-top: 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .back-link { display: inline-flex; align-items: center; gap: 8px; color: var(--ink-dim); text-decoration: none; font-size: 14.5px; font-weight: 500; padding: 10px 16px; border-radius: 10px; border: 1px solid var(--line); transition: all .2s; }
+    .back-link:hover { color: var(--ink); background: #ffffff0a; border-color: #2b3f5e; }
+
+    footer { border-top: 1px solid var(--line); margin-top: 20px; padding: 34px 0 48px; }
+    .copy { color: var(--ink-faint); font-size: 13px; text-align: center; }
+    a:focus-visible { outline: 2px solid var(--indigo); outline-offset: 3px; border-radius: 8px; }
+
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
+  </style>
+</head>
+<body>
+  <div class="aurora"></div>
+  <div class="grid-overlay"></div>
+
+  <header id="top">
+    <div class="wrap-wide nav">
+      <a class="brand" href="../../index.html" aria-label="Playground by Nahid — home">
+        <span class="monogram">N</span>
+        <span class="brand-wordmark">
+          <span class="brand-name">Playground</span>
+          <span class="brand-by">by Nahid</span>
+        </span>
+      </a>
+      <nav class="nav-links">
+        <a href="../../index.html#projects">Projects</a>
+        <a href="../index.html" class="active">Article</a>
+        <a href="https://github.com/nahidprince7" target="_blank" rel="noopener">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="art-head">
+      <p class="breadcrumb"><a href="../index.html">Articles</a> / GitHub Branch Protection</p>
+      <span class="a-tag">GitHub · Git Workflow</span>
+      <h1>The Complete Guide: How to Protect Your GitHub <code style="font-size:.75em; padding:2px 8px;">main</code> Branch</h1>
+      <p class="dek">Stop accidental force-pushes, direct commits, and branch deletion before they happen. This guide walks through setting up GitHub Rulesets step by step, plus the extra settings worth turning on for a healthy pull-request workflow.</p>
+      <div class="meta-row">
+        <span>Playground by Nahid</span>
+        <span class="dot"></span>
+        <span>GitHub Settings Guide</span>
+        <span class="dot"></span>
+        <span>8 min read</span>
+      </div>
+    </div>
+
+    <nav class="toc" aria-label="Table of contents">
+      <h2>In this guide</h2>
+      <ol>
+        <li><a href="#why">Why protect your main branch?</a></li>
+        <li><a href="#steps">Step-by-step: creating a ruleset</a></li>
+        <li><a href="#best-practices">Extra best practices worth enabling</a></li>
+        <li><a href="#verify">How to verify it actually works</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ol>
+    </nav>
+
+    <article class="body">
+      <p id="why"></p>
+      <h2><span class="num">·</span>Why protect your main branch?</h2>
+      <p>
+        On GitHub, the <code>main</code> branch is usually the source of truth — what gets deployed, what teammates build on top of, what a release is cut from. Without any protection, anyone with write access can push directly to it, force-push over its history, or even delete it outright. A single mistaken command on someone's laptop can undo weeks of work.
+      </p>
+      <p>
+        GitHub solves this with <strong>Branch Protection Rules</strong>, or their newer, more flexible replacement, <strong>Rulesets</strong>. Both let you lock down a branch so that changes can only land through a reviewed pull request — never a direct push, and never a delete.
+      </p>
+      <div class="callout tip">
+        <span class="ic">💡</span>
+        <p><strong>Rulesets vs. classic branch protection:</strong> Rulesets are the modern approach — they support multiple branch patterns, layered rules, and finer-grained targeting. This guide uses Rulesets, but the same protections (restrict deletions, block force pushes, require a pull request) exist under the older <strong>Settings → Branches</strong> screen too, if you prefer that interface.</p>
+      </div>
+
+      <h2 id="steps"><span class="num">1</span>Step-by-step: creating a ruleset</h2>
+
+      <div class="steps">
+        <div class="step">
+          <span class="sn">1</span>
+          <div class="st">
+            <h4>Open your repository's Settings</h4>
+            <p>Go to your GitHub repository, then click the <strong>Settings</strong> tab at the top of the page.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="sn">2</span>
+          <div class="st">
+            <h4>Find Rulesets in the sidebar</h4>
+            <p>In the left sidebar, under <strong>Code and automation</strong>, click <strong>Rules → Rulesets</strong>. (If you'd rather use the classic interface, go to <strong>Branches</strong> instead.)</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="sn">3</span>
+          <div class="st">
+            <h4>Create a new ruleset</h4>
+            <p>Click <strong>New ruleset → New branch ruleset</strong> to start configuring your rule.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="sn">4</span>
+          <div class="st">
+            <h4>Name it and set the target branch</h4>
+            <p>
+              Give it a clear <strong>Ruleset Name</strong> (e.g. <code>Main Branch Protection</code>), keep <strong>Enforcement status</strong> set to <strong>Active</strong>, then under <strong>Target branches</strong> click <strong>Add target → Include default branch</strong> (or type <code>main</code> directly).
+            </p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="sn">5</span>
+          <div class="st">
+            <h4>Enable the core protection rules</h4>
+            <p>Check the boxes below to block direct pushes and deletion — details in the checklist right after this step.</p>
+          </div>
+        </div>
+        <div class="step">
+          <span class="sn">6</span>
+          <div class="st">
+            <h4>Save your ruleset</h4>
+            <p>Scroll down and click <strong>Create</strong> (or <strong>Save changes</strong>) to apply the ruleset immediately.</p>
+          </div>
+        </div>
+      </div>
+
+      <h3>The rules you actually need to check</h3>
+      <ul class="checklist">
+        <li><b>Restrict deletions</b> — prevents anyone from deleting the <code>main</code> branch entirely.</li>
+        <li><b>Block force pushes</b> — stops history-rewriting pushes (<code>git push --force</code>) that could overwrite or erase commits.</li>
+        <li><b>Require a pull request before merging</b> — forces every change to go through a PR instead of a direct push. Optionally set <b>Required approvals</b> to <code>1</code> (or more) so a teammate must review and approve before merge.</li>
+      </ul>
+
+      <h2 id="best-practices"><span class="num">2</span>Extra best practices worth enabling</h2>
+      <p>Once the basics are in place, a few more rules make the workflow noticeably safer for a real team:</p>
+
+      <h3>Require status checks to pass before merging</h3>
+      <p>
+        If you have CI set up (GitHub Actions, or any automated test/build pipeline), enable this so a pull request can't be merged until those checks are green. It keeps broken builds off <code>main</code>.
+      </p>
+
+      <h3>Require conversation resolution before merging</h3>
+      <p>
+        When reviewers leave comments on a pull request, this rule blocks merging until every conversation thread is marked resolved — so feedback doesn't get silently ignored.
+      </p>
+
+      <h3>Restrict who can push to matching branches</h3>
+      <p>
+        Limit direct interaction with the protected branch to specific people or teams (e.g. admins or leads), so everyone else is required to go through a pull request by default.
+      </p>
+
+      <h2 id="verify"><span class="num">3</span>How to verify it actually works</h2>
+      <p>Test the setup from your local machine by trying to push a small change directly to <code>main</code>:</p>
+      <pre><code>git checkout main
+echo "test" >> README.md
+git commit -am "test: verify branch protection"
+git push origin main</code></pre>
+      <p>
+        If the ruleset is active, GitHub will reject the push and tell you a pull request is required. That's confirmation the rule is working — from here on, every change needs to go through a branch and a PR.
+      </p>
+      <div class="callout warn">
+        <span class="ic">⚠️</span>
+        <p>Don't forget to revert the local test commit (<code>git reset --soft HEAD~1</code>) before you move on, so it doesn't linger on your branch.</p>
+      </div>
+
+      <h2 id="faq"><span class="num">?</span>FAQ</h2>
+      <h3>Does this also block me, the repository owner?</h3>
+      <p>
+        By default, rules apply to everyone, including admins, unless you explicitly enable an admin bypass for the ruleset. Keeping it strict — no bypass — is usually the safer default, since it means <em>every</em> change, including yours, gets reviewed.
+      </p>
+      <h3>Can I protect more than one branch?</h3>
+      <p>
+        Yes. Rulesets support branch name patterns (e.g. <code>release/*</code>), so you can add multiple targets or create separate rulesets for <code>main</code>, <code>develop</code>, and release branches.
+      </p>
+      <h3>What if I need to make an emergency fix directly?</h3>
+      <p>
+        Open a pull request even for urgent fixes — it can be merged within minutes once approved. If a true bypass is unavoidable, GitHub lets ruleset admins temporarily grant bypass access rather than disabling protection entirely.
+      </p>
+    </article>
+
+    <div class="art-foot">
+      <a class="back-link" href="../index.html">← Back to Articles</a>
+      <a class="back-link" href="../../index.html">Playground home</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p class="copy">© <span id="year">2026</span> Playground by Nahid · Made with curiosity.</p>
+    </div>
+  </footer>
+
+  <script>
+    const header = document.querySelector('header');
+    const onScroll = () => header.classList.toggle('scrolled', window.scrollY > 8);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+
+<script src="../../assets/subscribe-nudge.js" defer></script>
+</body>
+</html>
