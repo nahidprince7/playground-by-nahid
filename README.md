@@ -20,6 +20,22 @@ Each project is fully self-contained — the hub page just links into its folder
 
 ---
 
+## Articles
+
+Short, practical write-ups live under [`articles/`](./articles/), linked from the **Article** item in the top nav. `articles/index.html` is the hub listing every write-up as a card; each article gets its own folder with an `index.html`.
+
+| Article | What it covers |
+|---|---|
+| **[The Complete Guide: How to Protect Your GitHub main Branch](./articles/github-branch-protection-guide/)** | Step-by-step GitHub Rulesets setup — block direct pushes and branch deletion, require pull requests, plus best-practice extras (status checks, conversation resolution, push restrictions). |
+
+### Adding a new article
+
+1. Create `articles/<slug>/index.html`, copying the styling pattern from an existing article page.
+2. Add a card for it to `articles/index.html`.
+3. Keep relative links correct — article pages sit two levels below the repo root (`../../index.html`, `../../assets/...`).
+
+---
+
 ## Run locally
 
 Everything is static, so any simple web server works:
@@ -58,6 +74,9 @@ Then map your custom subdomain (e.g. `arcade.yourdomain`) to it.
 │   ├── content.js        # generated bundle, what the browser actually reads
 │   ├── docs/             # design notes and the spec the game was built from
 │   └── validate.py       # checks the content, then rebuilds content.js
+├── articles/             # write-ups, linked from the "Article" nav item
+│   ├── index.html        # articles hub (lists every article as a card)
+│   └── <slug>/index.html # one folder per article
 └── README.md
 ```
 
