@@ -378,6 +378,19 @@
     .iv-conf-copy { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
     .iv-conf-copy b { color: #64748b; font: 700 8.5px/1 "Space Grotesk", sans-serif; letter-spacing: .14em; text-transform: uppercase; }
     .iv-conf-copy i { color: #dbe4f0; font-style: normal; font-size: 13.5px; font-weight: 700; }
+    /* ---------- Ship It preview: a burndown racing a deadline ---------- */
+    .ship-preview { height: 268px; background: radial-gradient(120% 90% at 50% 0%, #3a2a0c 0%, #151a24 55%, #080f1c 100%); }
+    .sh-board { position: absolute; inset: 46px 22px 20px; display: flex; flex-direction: column; gap: 10px; align-items: center; justify-content: center; }
+    .sh-meters { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; max-width: 360px; }
+    .sh-m { padding: 7px 9px; border-radius: 10px; background: #07101ccc; border: 1px solid #2a3347; }
+    .sh-m b { display: block; color: #64748b; font: 700 8px/1 "Space Grotesk", sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+    .sh-m i { display: block; margin-top: 5px; color: #eaf1fb; font: 700 13px/1 "Space Grotesk", sans-serif; font-style: normal; }
+    .sh-chart { width: 100%; max-width: 360px; padding: 8px 10px 6px; border-radius: 12px; background: #0a1322cc; border: 1px solid #2a3347; }
+    .sh-chart svg { display: block; width: 100%; height: 86px; }
+    .sh-line { stroke-dasharray: 260; stroke-dashoffset: 260; animation: shDraw 4.5s ease-in-out infinite; }
+    @keyframes shDraw { 0% { stroke-dashoffset: 260; } 60%, 100% { stroke-dashoffset: 0; } }
+    .sh-pill { display: inline-flex; gap: 8px; align-items: center; padding: 6px 11px; border-radius: 999px; background: #4a3606; color: #fde68a; font: 700 10.5px/1 "Space Grotesk", sans-serif; animation: shPulse 2.4s ease-in-out infinite; }
+    @keyframes shPulse { 50% { box-shadow: 0 0 0 5px #fbbf2414; } }
   </style>
 </head>
 <body>
@@ -524,7 +537,7 @@
       </article>
 
       <!-- ===== Crack the Interview (shown first) ===== -->
-      <article class="card featured" style="--accent:#818cf8;--accent-2:#38bdf8; order:-2;">
+      <article class="card" style="--accent:#818cf8;--accent-2:#38bdf8; order:-2;">
         <div class="preview interview-preview">
           <span class="tag">Interview Simulation</span>
           <div class="iv-call" aria-hidden="true">
@@ -560,6 +573,35 @@
           <p class="sub">Pick a software role, revise three topics against the clock, and survive four interview rounds. Use real candidate moves when you are unsure—because admitting what you do not know beats bluffing.</p>
           <div class="badges"><span class="badge">Interview Skills</span><span class="badge">Vanilla JS</span><span class="badge">Replayable</span></div>
           <div class="card-actions"><a class="btn btn-play" href="./crack-the-interview/index.html">Play now <span class="arrow">→</span></a><a class="btn btn-ghost" href="https://github.com/nahidprince7" target="_blank" rel="noopener">Source</a></div>
+        </div>
+      </article>
+
+      <!-- ===== Card 4: Ship It ===== -->
+      <article class="card featured" style="--accent:#fbbf24;--accent-2:#34d399; order:-3;">
+        <div class="preview ship-preview">
+          <span class="tag">PM Simulation</span>
+          <div class="sh-board" aria-hidden="true">
+            <div class="sh-meters">
+              <div class="sh-m"><b>Week</b><i>6 / 8</i></div>
+              <div class="sh-m"><b>Budget</b><i>$41.2k</i></div>
+              <div class="sh-m"><b>Morale</b><i>58</i></div>
+            </div>
+            <div class="sh-chart">
+              <svg viewBox="0 0 300 86" preserveAspectRatio="none">
+                <line x1="8" y1="8" x2="240" y2="78" stroke="#475569" stroke-width="1.5" stroke-dasharray="4 4"/>
+                <line x1="240" y1="4" x2="240" y2="80" stroke="#fb718566" stroke-width="1"/>
+                <polyline class="sh-line" points="8,8 38,16 68,22 98,34 128,38 158,50 188,54 218,63 248,70 278,78" fill="none" stroke="#fbbf24" stroke-width="2.5" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <span class="sh-pill">finish ≈ week 9 · deadline week 8</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <h2>Ship It</h2>
+          <p class="tagline">On time, on budget, team intact. Pick two.</p>
+          <p class="sub">Five projects are dealt at random. Choose one, then plan every week: who works on what, how hard to push, when to hire, what to cut. Scope creep, resignations and surprise bugs will test every plan.</p>
+          <div class="badges"><span class="badge">Project Management</span><span class="badge">Vanilla JS</span><span class="badge">10 Scenarios</span></div>
+          <div class="card-actions"><a class="btn btn-play" href="./ship-it/index.html">Play now <span class="arrow">→</span></a><a class="btn btn-ghost" href="https://github.com/nahidprince7" target="_blank" rel="noopener">Source</a></div>
         </div>
       </article>
 
