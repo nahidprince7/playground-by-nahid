@@ -1,7 +1,7 @@
 # Playground by Nahid
 
 A small collection of interactive things I build to make hard ideas **playable**.
-One landing page, three browser games — no install, no build, no sign-up.
+One landing page, four browser games — no install, no build, no sign-up.
 
 > **Live:** open `index.html` (the hub) → pick a project → play full-screen.
 > Suggested subdomain: **`playground.yourdomain`**
@@ -12,11 +12,28 @@ One landing page, three browser games — no install, no build, no sign-up.
 
 | Project | What it is | Play |
 |---|---|---|
+| **Ship It** | *On time, on budget, team intact.* Five projects are dealt at random from a pool of ten — an Eid sale, a banking app, a wedding expo, a tax portal. Pick one and run it week by week: allocate people, set the pace, hire, cut scope, and survive the events. Scored on schedule, budget, scope, quality and stakeholders. | [`ship-it/`](./ship-it/) |
 | **Crack the Interview** | *Survive a real job interview, question by question.* Pick a role, get 30 seconds to revise three topics, then face four rounds. Every answer moves the interviewer's confidence — let it hit zero and the interview ends mid-sentence. | [`crack-the-interview/`](./crack-the-interview/) |
 | **Fish Brain** | *Build a fish brain by neural networking.* Grow a real neural network one node at a time and watch the consequences swim around underneath it. Add a sense, see the net rewire, learn whether it was worth anything against the predator. | [`neural-network/`](./neural-network/) |
 | **Are You DevOps?** | A system-design simulation game. Deploy CDNs, load balancers, caches and databases to keep your infrastructure alive as traffic surges from a viral tweet to a full DDoS — without blowing the budget. | [`DevOps Challange/`](./DevOps%20Challange/) |
 
 Each project is fully self-contained — the hub page just links into its folder, and the games share a slim "Playground by Nahid" top bar + footer that link back to the hub.
+
+---
+
+## Articles
+
+Short, practical write-ups live under [`articles/`](./articles/), linked from the **Article** item in the top nav. `articles/index.html` is the hub listing every write-up as a card; each article gets its own folder with an `index.html`.
+
+| Article | What it covers |
+|---|---|
+| **[The Complete Guide: How to Protect Your GitHub main Branch](./articles/github-branch-protection-guide/)** | Step-by-step GitHub Rulesets setup — block direct pushes and branch deletion, require pull requests, plus best-practice extras (status checks, conversation resolution, push restrictions). |
+
+### Adding a new article
+
+1. Create `articles/<slug>/index.html`, copying the styling pattern from an existing article page.
+2. Add a card for it to `articles/index.html`.
+3. Keep relative links correct — article pages sit two levels below the repo root (`../../index.html`, `../../assets/...`).
 
 ---
 
@@ -53,13 +70,30 @@ Then map your custom subdomain (e.g. `arcade.yourdomain`) to it.
 ├── index.html            # the hub / landing page (personal branding + cards)
 ├── DevOps Challange/     # "Are You DevOps?" — untouched
 ├── neural-network/       # "Fish Brain" — untouched
+├── ship-it/              # "Ship It" — a project management simulation
+│   ├── scenarios.js      # the ten projects, as data
+│   ├── engine.js         # the rules (no DOM), shared by the page and the balance tool
+│   ├── game.js           # rendering and input
+│   ├── tools/balance.mjs # plays every scenario headless and reports how it finishes
+│   └── docs/             # design notes, scenario schema, decision log
 ├── crack-the-interview/  # "Crack the Interview" — an interview simulation
 │   ├── content/          # questions, authored as JSON — see below
 │   ├── content.js        # generated bundle, what the browser actually reads
 │   ├── docs/             # design notes and the spec the game was built from
 │   └── validate.py       # checks the content, then rebuilds content.js
+├── articles/             # write-ups, linked from the "Article" nav item
+│   ├── index.html        # articles hub (lists every article as a card)
+│   └── <slug>/index.html # one folder per article
 └── README.md
 ```
+
+### Adding a project to Ship It
+
+1. Add an entry to `ship-it/scenarios.js` — `ship-it/docs/scenario-schema.md`
+   is the contract, including the event effect grammar.
+2. Run `node tools/balance.mjs <id>` from `ship-it/` and tune its points until
+   the on-time rate matches its difficulty rating.
+3. The pick screen deals from the whole array, so there is nothing else to wire up.
 
 ### Adding a role to Crack the Interview
 
@@ -84,7 +118,7 @@ React question written once is reused by every role that touches React.
 Pure HTML / CSS / vanilla JavaScript throughout — no build step, no bundler, no
 framework anywhere. The hub page is a single self-contained file, and its previews
 are CSS art, so there are no image assets to load. The games bring their own
-styling: Canvas 2D for Fish Brain, Tailwind CDN for the other two.
+styling: Canvas 2D for Fish Brain, Tailwind CDN for Are You DevOps? and Crack the Interview, and plain CSS for Ship It.
 
 Crack the Interview is the only one with content separate from code. Its questions
 live as JSON under `content/`, and `validate.py` bundles them into `content.js`

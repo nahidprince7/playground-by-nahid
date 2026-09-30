@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="A project management simulation: deliver on time, on budget, with your team intact.">
+<meta property="og:title" content="Ship It — project management simulator"><meta property="og:description" content="Pick a project, spend the budget, beat the deadline. A playable PM simulation from Playground by Nahid."><meta property="og:site_name" content="Playground by Nahid"><meta property="og:url" content="https://playground.devadda.site/ship-it/"><meta name="twitter:card" content="summary_large_image">
+<title>Ship It</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:dark;--ink:#e8eef8;--muted:#8ea0b8;--faint:#64748b;--line:#223149;--panel:#0d1727eb;--accent:#fbbf24;--accent-2:#34d399;--good:#34d399;--bad:#fb7185;--warn:#fbbf24;--info:#38bdf8}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;overflow-x:hidden}
+body{min-height:100vh;display:flex;flex-direction:column;background:radial-gradient(circle at 12% 10%,#f59e0b17,transparent 30rem),radial-gradient(circle at 88% 30%,#10b98112,transparent 26rem),#070d17;color:var(--ink);font-family:"Plus Jakarta Sans",system-ui,sans-serif}
+button,select{font:inherit}button{-webkit-tap-highlight-color:transparent}
+.app-shell{width:100%;max-width:1180px;margin:0 auto;padding:22px 14px 56px;flex:1}
+.screen[hidden]{display:none!important}.screen{animation:in .25s ease}@keyframes in{from{opacity:0;transform:translateY(6px)}}
+h1,h2,h3,p{overflow-wrap:anywhere}
+.mono{font-family:"Fira Code",monospace}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;margin:0 0 12px;color:#fcd34d;font:600 11px/1 "Fira Code",monospace;letter-spacing:.13em;text-transform:uppercase}
+.eyebrow:before{content:"";width:22px;height:1px;background:#f59e0b}
+.hero-title{margin:0;font-size:clamp(2rem,9vw,4.4rem);line-height:.98;letter-spacing:-.055em;font-weight:800}
+.hero-title span{color:#94a3b8}
+.hero-copy{max-width:700px;margin:18px 0 0;color:var(--muted);font-size:14px;line-height:1.75}
+.panel{min-width:0;border:1px solid var(--line);border-radius:18px;background:var(--panel);box-shadow:0 24px 70px -45px #000}
+.label{color:var(--faint);font:600 9.5px/1.2 "Fira Code",monospace;letter-spacing:.14em;text-transform:uppercase}
+.action{min-height:44px;padding:11px 18px;border:0;border-radius:11px;cursor:pointer;font-weight:800;font-size:13px}
+.action:disabled{opacity:.4;cursor:not-allowed}
+.primary{color:#1a1203;background:linear-gradient(135deg,#fbbf24,#f59e0b);box-shadow:0 10px 26px -12px #f59e0b}
+.primary:not(:disabled):hover{filter:brightness(1.07)}
+.secondary{color:#cbd5e1;background:#172337;border:1px solid #2b3b54}
+.ghost{color:#9fb0c7;background:transparent;border:1px solid #2b3b54}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:5px 9px;border:1px solid #263751;border-radius:999px;color:#aab8cb;background:#07101c99;font:600 10px/1 "Fira Code",monospace}
+
+/* ---------- pick ---------- */
+.pick-head{display:flex;flex-direction:column;gap:18px}
+.deal-row{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:22px}
+.status-line{display:inline-flex;align-items:center;gap:9px;padding:8px 14px;border:1px solid #3a2f14;border-radius:999px;background:#1a140699;color:#fde68a;font-size:12.5px}
+.status-line:before{content:"";width:7px;height:7px;border-radius:50%;background:#fbbf24;box-shadow:0 0 10px #fbbf24;animation:livedot 2s ease-in-out infinite}
+@keyframes livedot{50%{opacity:.35}}
+.scn-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;margin-top:26px}
+.scn{position:relative;display:flex;flex-direction:column;width:100%;min-width:0;padding:20px;text-align:left;color:inherit;cursor:pointer;border-radius:18px;background:linear-gradient(145deg,#141d2ef5,#0b1422f5);border:1px solid var(--line);transition:.18s;overflow:hidden}
+.scn:hover{transform:translateY(-3px);border-color:#6b5520}
+.scn:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:.3s;background:radial-gradient(120% 90% at 50% 0%,#f59e0b1c,transparent 60%)}
+.scn:hover:before{opacity:1}
+.scn-top{display:flex;justify-content:space-between;gap:10px}
+.scn-kicker{color:#fcd34d;font:500 10px/1.3 "Fira Code",monospace;letter-spacing:.1em;text-transform:uppercase}
+.scn h2{margin:8px 0 0;font-size:19px;letter-spacing:-.02em}
+.scn p{margin:10px 0 0;color:#93a3b9;font-size:12.5px;line-height:1.6}
+.scn-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:auto;padding-top:18px}
+.scn-stat{padding:9px 10px;border:1px solid #223149;border-radius:11px;background:#07101c}
+.scn-stat b{display:block;margin-top:5px;color:#e8eef8;font:700 14px/1 "Fira Code",monospace}
+.diff{display:inline-flex;gap:4px;align-items:center}
+.diff i{width:7px;height:7px;border-radius:2px;background:#26344a}
+.diff i.on{background:#fbbf24}
+.pick-foot{margin-top:22px;color:#61748f;font-size:12px}
+
+/* ---------- charter ---------- */
+.charter{max-width:980px;margin:0 auto;padding:22px}
+.charter h1{margin:0;font-size:clamp(26px,6vw,40px);letter-spacing:-.035em;line-height:1.05}
+.goal{margin:16px 0 0;padding:12px 14px;border-left:3px solid #f59e0b;background:#f59e0b12;color:#fde68a;font-size:13px}
+.stat-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:20px}
+.stat{padding:12px 13px;border:1px solid #223149;border-radius:12px;background:#07101c}
+.stat b{display:block;margin-top:6px;font:700 19px/1 "Fira Code",monospace}
+.stat small{display:block;margin-top:5px;color:#64748b;font-size:11px}
+.cols{display:grid;grid-template-columns:minmax(0,1fr);gap:18px;margin-top:22px}
+.section-title{margin:0 0 10px;font-size:14px;letter-spacing:-.01em}
+.list{display:grid;gap:8px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid #1f2d44;border-radius:11px;background:#0a1321;font-size:13px}
+.row .sub{color:#71829a;font-size:11px}
+.role{padding:3px 7px;border-radius:6px;background:#1a2438;color:#9fb3cf;font:600 9.5px/1 "Fira Code",monospace;text-transform:uppercase;letter-spacing:.06em;white-space:nowrap}
+.warnflag{color:#fbbf24;font:600 10px/1 "Fira Code",monospace}
+.feat{cursor:pointer;text-align:left;width:100%;color:inherit}
+.feat.cut{opacity:.55;border-style:dashed}
+.feat.cut .fname{text-decoration:line-through}
+.toggle{flex:none;padding:5px 9px;border-radius:7px;font:700 10px/1 "Fira Code",monospace;background:#064e3b;color:#a7f3d0}
+.feat.cut .toggle{background:#3b1520;color:#fecdd3}
+.tip{margin-top:18px;padding:13px 14px;border:1px solid #223149;border-radius:12px;background:#0a1424;color:#a9b8cc;font-size:12.5px;line-height:1.65}
+.tip b{color:#fde68a}
+.action-row{display:flex;flex-direction:column;gap:9px;margin-top:20px}
+
+/* ---------- play ---------- */
+.hud{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:14px}
+.meter{min-width:0;padding:10px 11px;border:1px solid #1f2d44;border-radius:12px;background:#07101c}
+.meter .val{display:flex;align-items:baseline;justify-content:space-between;gap:6px;margin-top:6px;font:700 17px/1 "Fira Code",monospace}
+.meter .val small{color:#64748b;font-size:10px;font-weight:500}
+.bar{height:5px;margin-top:8px;border-radius:5px;background:#18253a;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:5px;transition:width .5s ease,background .4s}
+.forecast{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin-top:12px;padding:11px 14px;border-radius:13px;border:1px solid #223149;background:#0a1321;font-size:12.5px;color:#b6c3d6}
+.forecast .pill{padding:5px 9px;border-radius:999px;font:700 10.5px/1 "Fira Code",monospace}
+.pill.ok{background:#064e3b;color:#a7f3d0}.pill.risk{background:#4a3606;color:#fde68a}.pill.bad{background:#4c0f1f;color:#fecdd3}
+.play-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;margin-top:14px}
+.card{padding:16px}
+.card h2{margin:0 0 12px;font-size:14px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.card h2 small{color:#64748b;font:500 10.5px/1 "Fira Code",monospace}
+.ws{padding:10px 0;border-bottom:1px solid #16233a}
+.ws:last-child{border-bottom:0}
+.ws-top{display:flex;justify-content:space-between;gap:10px;font-size:13px}
+.ws-top .n{font-weight:700}
+.ws-top .p{color:#8ea0b8;font:500 11px/1.4 "Fira Code",monospace;white-space:nowrap}
+.ws-bar{position:relative;height:8px;margin-top:7px;border-radius:6px;background:#16233a;overflow:hidden}
+.ws-bar .done{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#f59e0b,#fbbf24);border-radius:6px;transition:width .5s ease}
+.ws-bar .next{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(135deg,#34d39988 0 4px,#34d39944 4px 8px);transition:all .3s}
+.ws.complete .ws-bar .done{background:linear-gradient(90deg,#10b981,#34d399)}
+.ws-meta{display:flex;gap:10px;margin-top:6px;color:#64748b;font-size:10.5px}
+.ws-meta .gain{color:#6ee7b7}
+.ws-meta .idle{color:#fbbf24}
+.chart{width:100%;height:auto;display:block}
+.chart text{fill:#64748b;font:9px "Fira Code",monospace}
+.legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px;color:#8ea0b8;font-size:10.5px}
+.legend i{display:inline-block;width:14px;height:2px;margin-right:5px;vertical-align:middle}
+
+.member{display:grid;grid-template-columns:minmax(0,1fr);gap:8px;padding:10px 0;border-bottom:1px solid #16233a}
+.member:last-child{border-bottom:0}
+.member-head{display:flex;align-items:center;gap:9px;min-width:0}
+.avatar{flex:none;width:32px;height:32px;display:grid;place-items:center;border-radius:50%;background:linear-gradient(145deg,#b45309,#0f766e);color:#fff;font-weight:800;font-size:11px}
+.avatar.contract{background:linear-gradient(145deg,#475569,#1e293b)}
+.member-name{min-width:0;font-weight:700;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.member-sub{color:#64748b;font-size:10.5px}
+.member-out{margin-left:auto;color:#fb7185;font:600 10px/1 "Fira Code",monospace;white-space:nowrap}
+.member-ramp{margin-left:auto;color:#38bdf8;font:600 10px/1 "Fira Code",monospace;white-space:nowrap}
+.member-pts{margin-left:auto;color:#6ee7b7;font:600 11px/1 "Fira Code",monospace;white-space:nowrap}
+.sel{width:100%;padding:9px 10px;color:#e2e8f0;border:1px solid #2b3b54;border-radius:9px;background:#07101c;font-size:12.5px}
+.sel.off{border-color:#5a4318;color:#fde68a}
+.seg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.seg button{padding:10px 6px;color:#93a4bb;border:1px solid #293a54;border-radius:11px;background:#091321;cursor:pointer;font-weight:700;font-size:12px}
+.seg button small{display:block;margin-top:5px;color:#64748b;font:500 9.5px/1.3 "Fira Code",monospace}
+.seg button.on{color:#fff;border-color:#f59e0b;background:#f59e0b24}
+.seg button.on small{color:#fcd34d}
+.seg button[data-pace="crunch"].on{border-color:#fb7185;background:#fb718522}
+.moves{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+.move{padding:10px;text-align:left;color:#aebbd0;border:1px solid #293a54;border-radius:11px;background:#091321;cursor:pointer;font-size:11px;line-height:1.4}
+.move strong{display:block;color:#e2e8f0;font-size:12px;margin-bottom:3px}
+.move.on{border-color:#f59e0b;background:#f59e0b1c}
+.move:disabled{opacity:.33;cursor:not-allowed}
+.move-arg{margin-top:9px}
+.plan-sum{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;margin-top:14px;padding:11px 12px;border:1px dashed #334766;border-radius:11px;color:#b6c3d6;font-size:12px}
+.plan-sum b{font-family:"Fira Code",monospace;color:#fde68a}
+.subhead{margin:16px 0 8px}
+.log{max-height:230px;overflow:auto;margin:0;padding:0;list-style:none}
+.log li{display:grid;grid-template-columns:38px minmax(0,1fr);gap:8px;padding:6px 0;border-bottom:1px solid #121e31;color:#9fb0c7;font-size:11.5px;line-height:1.5}
+.log li span{color:#64748b;font:600 10px/1.6 "Fira Code",monospace}
+.log li.log-event{color:#fde68a}.log li.log-cut{color:#fda4af}.log li.log-move{color:#a5f3fc}
+.toast{position:fixed;left:50%;bottom:22px;z-index:30;transform:translateX(-50%);max-width:calc(100% - 28px);padding:11px 16px;border:1px solid #3a4d6c;border-radius:12px;background:#0f1a2cf2;color:#e2e8f0;font-size:12.5px;box-shadow:0 18px 40px -18px #000;animation:toast 2.6s ease forwards;pointer-events:none}
+@keyframes toast{0%{opacity:0;transform:translate(-50%,10px)}10%,80%{opacity:1;transform:translate(-50%,0)}100%{opacity:0}}
+
+/* ---------- event ---------- */
+.overlay{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:18px;background:#040910e6;animation:in .25s ease}
+.overlay[hidden]{display:none}
+.event{width:100%;max-width:560px;padding:22px}
+.event h2{margin:0;font-size:clamp(20px,5vw,26px);letter-spacing:-.025em;line-height:1.15}
+.event p.body{margin:12px 0 0;color:#b6c3d6;font-size:14px;line-height:1.65}
+.choices{display:grid;gap:9px;margin-top:18px}
+.choice{padding:13px 14px;text-align:left;color:#cbd5e1;border:1px solid #293a54;border-radius:12px;background:#0a1321;cursor:pointer}
+.choice:hover:not(:disabled){border-color:#f59e0b}
+.choice strong{display:block;color:#f1f5f9;font-size:14px}
+.choice span{display:block;margin-top:4px;color:#8ea0b8;font-size:12px}
+.choice:disabled{opacity:.35;cursor:not-allowed}
+
+/* ---------- verdict ---------- */
+.verdict{max-width:900px;margin:2vh auto;padding:26px 18px;text-align:center}
+.grade{width:84px;height:84px;display:grid;place-items:center;margin:0 auto 18px;border-radius:24px;font:800 40px/1 "Fira Code",monospace;border:1px solid}
+.grade.S{color:#fde68a;border-color:#f59e0b;background:#f59e0b24;box-shadow:0 0 50px -10px #f59e0b}
+.grade.A{color:#a7f3d0;border-color:#10b981;background:#10b9811f}
+.grade.B{color:#bae6fd;border-color:#0ea5e9;background:#0ea5e91a}
+.grade.C{color:#fde68a;border-color:#92400e;background:#92400e22}
+.grade.F{color:#fecdd3;border-color:#9f1239;background:#9f123922}
+.verdict h1{margin:0;font-size:clamp(28px,8vw,48px);letter-spacing:-.04em;line-height:1.05}
+.verdict .copy{max-width:560px;margin:14px auto 0;color:var(--muted);font-size:14px;line-height:1.7}
+.scores{display:grid;gap:10px;max-width:560px;margin:26px auto 0;text-align:left}
+.score-row{display:grid;grid-template-columns:110px minmax(0,1fr) 44px;gap:10px;align-items:center;font-size:12.5px}
+.score-row .v{text-align:right;font:700 13px/1 "Fira Code",monospace}
+.score-row .note{grid-column:2/-1;margin-top:-4px;color:#64748b;font-size:10.5px}
+.total{margin:22px auto 0;display:inline-flex;align-items:baseline;gap:8px;padding:12px 18px;border:1px solid #253650;border-radius:14px;background:#08111e}
+.total b{font:700 30px/1 "Fira Code",monospace}
+.debrief{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;margin-top:26px;text-align:left}
+.debrief .panel{padding:16px;background:#08111e}
+.debrief h2{margin:0 0 10px;font-size:13px}
+.lesson{padding:10px 0;border-bottom:1px solid #16233a}
+.lesson:last-child{border-bottom:0}
+.lesson b{color:#fde68a;font-size:13px}
+.lesson p{margin:5px 0 0;color:#9fb0c7;font-size:12px;line-height:1.65}
+details summary{cursor:pointer;color:#9fb0c7;font-size:12.5px}
+.verdict-actions{display:grid;gap:9px;max-width:440px;margin:24px auto 0}
+
+/* ---------- playground chrome ---------- */
+.pg-bar,.pg-foot,.pg-bar *,.pg-foot *{box-sizing:border-box}
+.pg-bar{position:relative;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;height:54px;padding:0 20px;background:#070d15;border-bottom:1px solid #1b2c44;color:#eaf1fb}
+.pg-brand{display:flex;align-items:center;gap:10px;text-decoration:none;color:#eaf1fb}
+.pg-mono{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;font-weight:700;font-size:16px;color:#fff;background:linear-gradient(140deg,#7c9cff,#a78bfa);box-shadow:0 6px 18px -6px rgba(124,156,255,.53)}
+.pg-wm{display:flex;flex-direction:column;line-height:1.05}.pg-name{font-weight:600;font-size:15px}.pg-by{font-size:10.5px;color:#61748f;font-weight:500}
+.pg-right{display:flex;align-items:center;gap:8px}
+.pg-back{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#9db0c9;font-size:13px;font-weight:600;padding:8px 12px;border-radius:9px;border:1px solid #1b2c44;background:#ffffff06}
+.pg-back:hover{color:#fff;background:#ffffff0f}
+.pg-soc{width:34px;height:34px;border-radius:9px;display:inline-grid;place-items:center;color:#9db0c9;border:1px solid #1b2c44;background:#ffffff06;text-decoration:none}
+.pg-soc svg{width:16px;height:16px;fill:currentColor}.pg-soc:hover{color:#fff}
+.pg-foot{border-top:1px solid #1b2c44;padding:20px;display:flex;flex-direction:column;align-items:center;gap:11px;background:#070d15;color:#9db0c9;text-align:center}
+.pg-foot-top{display:flex;align-items:center;gap:10px;font-size:13.5px}.pg-socs{display:flex;gap:8px}.pg-copy{color:#61748f;font-size:12.5px}
+@media(max-width:560px){.pg-back{display:none}.pg-bar{padding:0 14px}}
+
+@media(min-width:640px){
+  .app-shell{padding:40px 24px 64px}
+  .scn-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stat-row{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .hud{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .action-row{flex-direction:row;justify-content:flex-end}
+  .verdict{padding:40px}
+  .verdict-actions{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .member{grid-template-columns:minmax(0,1fr) 200px;align-items:center}
+  .moves{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .debrief{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .debrief .wide{grid-column:1/-1}
+}
+@media(min-width:900px){
+  .cols{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .hud{grid-template-columns:repeat(6,minmax(0,1fr))}
+  .play-grid{grid-template-columns:minmax(0,5fr) minmax(0,6fr)}
+}
+@media(min-width:1000px){.scn-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+</style></head><body>
+<div class="pg-bar">
+  <a class="pg-brand" href="../index.html" aria-label="Playground by Nahid — home"><span class="pg-mono">N</span><span class="pg-wm"><span class="pg-name">Playground</span><span class="pg-by">by Nahid</span></span></a>
+  <div class="pg-right"><a class="pg-back" href="../index.html#projects">← All projects</a><a class="pg-soc gh" href="https://github.com/nahidprince7" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.75.4-1.27.73-1.56-2.56-.29-5.26-1.28-5.26-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.41-5.28 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg></a></div>
+</div>
+
+<main class="app-shell">
+  <!-- 1. Pick a project -->
+  <section class="screen" data-screen="pick">
+    <p class="eyebrow">Project management simulator</p>
+    <h1 class="hero-title">Ship it.<br><span>On time, on budget, team intact.</span></h1>
+    <p class="hero-copy">Five projects are on the table. Each has its own budget, deadline, people and problems. Pick one, plan every week, and deal with whatever the week throws at you. Scope, time and money — you rarely get to keep all three.</p>
+    <div class="deal-row"><p class="status-line" id="deal-status">Dealing projects…</p><button class="action ghost" id="deal-button">↻ Deal new projects</button></div>
+    <div class="scn-grid" id="scn-grid"></div>
+    <p class="pick-foot">Five of ten projects are dealt at random each visit.</p>
+  </section>
+
+  <!-- 2. Project charter -->
+  <section class="screen" data-screen="charter" hidden>
+    <article class="panel charter" id="charter"></article>
+  </section>
+
+  <!-- 3. The weeks -->
+  <section class="screen" data-screen="play" hidden>
+    <header class="panel">
+      <div class="hud" id="hud"></div>
+    </header>
+    <div class="forecast" id="forecast"></div>
+    <div class="play-grid">
+      <div style="display:grid;gap:14px;align-content:start">
+        <section class="panel card"><h2>Workstreams <small id="ws-total"></small></h2><div id="ws-list"></div></section>
+        <section class="panel card"><h2>Burndown <small>points left</small></h2><div id="burndown"></div></section>
+        <section class="panel card"><h2>Project log</h2><ul class="log" id="log"></ul></section>
+      </div>
+      <section class="panel card">
+        <h2 id="plan-title">Plan the week</h2>
+        <p class="label">Who works on what</p>
+        <div id="team"></div>
+        <p class="label subhead">Pace</p>
+        <div class="seg" id="pace"></div>
+        <p class="label subhead">One management move</p>
+        <div class="moves" id="moves"></div>
+        <div class="move-arg" id="move-arg"></div>
+        <div class="plan-sum" id="plan-sum"></div>
+        <div class="action-row">
+          <button class="action secondary" id="ship-now" hidden>Ship what we have</button>
+          <button class="action primary" id="run-week">Run the week →</button>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- 4. Verdict -->
+  <section class="screen" data-screen="verdict" hidden>
+    <div class="panel verdict" id="verdict"></div>
+  </section>
+</main>
+
+<div class="overlay" id="event-overlay" hidden><div class="panel event" role="dialog" aria-modal="true" aria-labelledby="event-title">
+  <p class="eyebrow" id="event-week"></p>
+  <h2 id="event-title"></h2>
+  <p class="body" id="event-body"></p>
+  <div class="choices" id="event-choices"></div>
+</div></div>
+
+<div class="pg-foot">
+  <div class="pg-foot-top"><span class="pg-mono" style="width:28px;height:28px;font-size:14px;">N</span><span><strong style="color:#eaf1fb;">Playground by Nahid</strong> — interactive learning, made to play.</span></div>
+  <div class="pg-socs">
+    <a class="pg-soc gh" href="https://github.com/nahidprince7" target="_blank" rel="noopener" aria-label="GitHub" title="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5A11.5 11.5 0 0 0 .5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.3-1.7-1.3-1.7-1.06-.72.08-.71.08-.71 1.17.08 1.79 1.2 1.79 1.2 1.04 1.78 2.73 1.27 3.4.97.1-.75.4-1.27.73-1.56-2.56-.29-5.26-1.28-5.26-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.7 5.41-5.28 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12 11.5 11.5 0 0 0 12 .5Z"/></svg></a>
+    <a class="pg-soc yt" href="https://www.youtube.com/@devAI070" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.2a3 3 0 0 0-2.11-2.13C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.57A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.13C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.57a3 3 0 0 0 2.11-2.13A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8ZM9.6 15.6V8.4l6.2 3.6-6.2 3.6Z"/></svg></a>
+    <a class="pg-soc li" href="https://www.linkedin.com/in/iammdnahidhasan/" target="_blank" rel="noopener" aria-label="LinkedIn" title="LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg></a>
+    <a class="pg-soc fb" href="https://www.facebook.com/search/top?q=dev%20ai" target="_blank" rel="noopener" aria-label="Facebook" title="Facebook"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/></svg></a>
+  </div>
+  <div class="pg-copy">© 2026 Playground by Nahid · Made with curiosity.</div>
+</div>
+<script src="scenarios.js"></script><script src="engine.js"></script><script src="game.js"></script>
+<!-- Subscribe nudge — shared by every page; edit assets/subscribe-nudge.js, not this line -->
+<script src="../assets/subscribe-nudge.js" defer></script>
+</body></html>
